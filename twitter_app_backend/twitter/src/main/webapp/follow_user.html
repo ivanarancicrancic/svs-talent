@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</head>
+<body>
+<form action="http://localhost:8191/api/v1/follow" method="POST">
+    <label name="mail_label" id="lbl_id"></label>
+    <input type="text" id="txt_id" name="mail_input" value=""/>
+    <input type="submit" value="FOLLOW" />
+</form>
+
+</body>
+
+<script>
+    document.getElementById("lbl_id").innerHTML = window.location.search;
+    document.getElementById('txt_id').value = window.location.search;
+</script>
+</html>
+
+
