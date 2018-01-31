@@ -73,7 +73,6 @@ public class JSONService {
 				 
 				 VerificationToken verificationToken = projectManager.getVerificationToken(providerId);
 				    if (verificationToken == null) {
-				    	System.out.println("User must have token!");
 				        String message = "User must have token!";
 				        return message;
 				    }
@@ -81,8 +80,7 @@ public class JSONService {
 				    int provider_id = verificationToken.getProvider_id();
 				    Calendar cal = Calendar.getInstance();
 				    if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-				    	System.out.println("Token expired!");
-				    	String messageValue = "token expired!";
+				        String messageValue = "token expired!";
 				        return messageValue;
 				    } 
 				
@@ -92,7 +90,7 @@ public class JSONService {
 				Gson gson = new Gson();
 				System.out.println(gson.toJson(t_items));
 				t_tems_str = gson.toJson(t_items);
-				System.out.println(t_tems_str);
+
 //				if (t_items.isEmpty()){
 //					 throw new WebApplicationException(404);
 //				}
@@ -449,15 +447,9 @@ public class JSONService {
 	
 	 @POST
 	 @Path("/insertprovider")
-	// @Consumes({MediaType.APPLICATION_JSON })
+	 @Consumes({MediaType.APPLICATION_JSON })
 	 @Produces("application/json")
-	 public String insertProvider() {
-		 Calendar cal = Calendar.getInstance();
-    	 java.util.Date utilDate1 = cal.getTime();
-		 Providers p_provider = new Providers(1, "Ivana", "type", "middle", "Rancic", 
-					"st. Vambel", "Skopje", "Macedonia", "1000", "076806125", "07777777", 1, 
-					utilDate1, 0, utilDate1, 0, "534", 565656,
-					"1234", "t64644", "5366BB", 1);
+	 public String insertProvider(Providers p_provider) {
 		 System.out.println("init");
 		 Providers p_prov=new Providers();
 		String t_tems_str = null;
@@ -515,9 +507,9 @@ public class JSONService {
 	
 	
    @GET
-   @Path("/patients/providerId={providerId}")
+   @Path("/patients/providerId={providerId}&&securityToken={securityToken}")
    @Produces("application/json")
-   public String getPatientsAllCascade(@PathParam("providerId") Integer providerId) throws Exception 
+   public String getPatientsAllCascade(@PathParam("providerId") Integer providerId, @PathParam("securityToken") String securityToken) throws Exception 
 	{
 		 System.out.println("init");
 		List<PatientsCascade> t_items = null;
@@ -525,7 +517,7 @@ public class JSONService {
 		
 		try{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getPatientsByProvider(providerId);
+			t_items = projectManager.getPatientsByProvider(providerId, securityToken);
 			//StringBuffer sb = new StringBuffer();
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
@@ -729,16 +721,16 @@ public class JSONService {
 	
 
 	@GET
-	@Path("/getprovidersdatabyprovider/ProviderProviderId={ProviderProviderId}")
+	@Path("/getprovidersdatabyprovider/ProviderProviderId={ProviderProviderId}&&securityToken={securityToken}")
 	@Produces("application/json")
-   public String getprovidersdatabyprovider(@PathParam("ProviderProviderId")int ProviderProviderId)
+   public String getprovidersdatabyprovider(@PathParam("ProviderProviderId")int ProviderProviderId, @PathParam("securityToken")String securityToken)
 	{
 		List<ProviderProvider> t_items = null;
 		String t_tems_str  = null;
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getprovidersdatabyprovider(ProviderProviderId);
+			t_items = projectManager.getprovidersdatabyprovider(ProviderProviderId, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
 			t_tems_str = gson.toJson(t_items);
@@ -799,7 +791,7 @@ public class JSONService {
 	}	
 	
 	@GET
-	@Path("/CheckProviderActivationKey/{deviceId}&&{phone}&&{ActivationCode}") 
+	@Path("/CheckProviderActivationKey/{deviceId}&&{phone}&&{ActivationCode}&&{securityToken}") 
     @Produces("application/json") 
     public Providers CheckProviderActivationKey(@PathParam("deviceId")String deviceId,@PathParam("phone")String phone ,@PathParam("ActivationCode")int ActivationCode, @PathParam("securityToken")String securityToken)throws Exception 
 	{

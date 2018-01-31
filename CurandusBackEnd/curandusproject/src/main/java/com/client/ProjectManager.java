@@ -337,13 +337,13 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		return t_items;
 	}	
 	
-	public List<PatientsCascade> getPatientsByProvider(int PatientID) throws Exception {
+	public List<PatientsCascade> getPatientsByProvider(int PatientID, String securityToken) throws Exception {
 		List<PatientsCascade> t_items= null;
 		try {
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			project.getPatientsByProvider(connection, PatientID);
+			t_items=project.getPatientsByProvider(connection, PatientID, securityToken);
 	
 	} catch (Exception e) {
 		throw e;		
@@ -428,13 +428,13 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	
 	
 	
-	public List<ProviderProvider> getprovidersdatabyprovider(int ProviderProviderId) throws Exception {
+	public List<ProviderProvider> getprovidersdatabyprovider(int ProviderProviderId, String securityToken) throws Exception {
 		List<ProviderProvider> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getprovidersdatabyprovider(connection, ProviderProviderId);
+				t_items=project.getprovidersdatabyprovider(connection, ProviderProviderId, securityToken);
 		
 		} catch (Exception e) {
 			throw e;
