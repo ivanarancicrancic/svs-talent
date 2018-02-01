@@ -59,6 +59,189 @@ public class Project {
 		}
 	}
 	
+	
+// public VerificationToken generateSecurityToken(Connection connection, int providerId) {
+//	
+//	 String selectTableSQL1 = "SELECT * FROM providers WHERE providers.ProviderID="+ providerId;
+//     PreparedStatement preparedStatement1= connection.prepareStatement(selectTableSQL1);
+//     ResultSet rs123 = preparedStatement1.executeQuery();
+//     Providers p = rs123.next();
+//     
+//    if(==true) {
+//    	 String token = UUID.randomUUID().toString(); 
+//         VerificationToken new_token = createVerificationToken(p_provider, token);
+//        	
+//    	
+//    }
+//	 
+//	 System.out.println("Generated token: " + token + " for provider with id: " + new_token.getProvider_id() + ", with expiryDate: " + new_token.getExpiryDate());
+//     String selectTableSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.ProviderID="+ p_provider.getProviderId();
+//     PreparedStatement preparedStatement1= connection.prepareStatement(selectTableSQL);
+//     ResultSet rs1 = preparedStatement1.executeQuery();
+//    // System.out.println("Token for this user found: " + rs1.next());
+//     String insertTableSQL = "";
+//     if(rs1.next()==true){
+//     	System.out.println("Token updated");
+//     	Calendar cal = Calendar.getInstance();
+////     	 java.util.Date utilDate1 = new java.util.Date();
+////     	java.sql.Date sqlDate11 = new java.sql.Date(utilDate1.getTime());
+//     	java.util.Date now = new java.util.Date();        	
+//			cal.setTime(now);
+//			cal.add(Calendar.HOUR_OF_DAY, 1); // <--
+//			DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+//			java.util.Date dateTime = sdf.parse(cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND));
+//			Time time = new Time(dateTime.getTime());
+//			
+//			//java.sql.Date sqlDateTime11 = new java.sql.Date(dateTime.getTime());
+//     	
+//			//cal.add(Calendar.DAY_OF_YEAR, 1); // <--
+//			java.util.Date today = cal.getTime();
+//			java.sql.Date sqlDate11 = new java.sql.Date(today.getTime());
+//     	insertTableSQL = "UPDATE verificationtoken SET Token = ?, ExpiryDate= ?, ExpiryTime = ? WHERE verificationtoken.ProviderID = ?";	
+//     	PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
+//         preparedStatement.setString(1, new_token.getToken());
+//         preparedStatement.setDate(2, sqlDate11);
+//         preparedStatement.setTime(3, time);
+//         preparedStatement.setInt(4, new_token.getProvider_id());
+//        preparedStatement.executeUpdate();
+//     }
+//     
+//     else{
+//     	System.out.println("New token is generated and inserted");
+//         insertTableSQL = "INSERT INTO verificationtoken (Token, ProviderID, ExpiryDate, ExpiryTime) VALUES (?, ?, ?, ?)";
+//         PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
+//         preparedStatement.setString(1, new_token.getToken());
+//         preparedStatement.setInt(2, new_token.getProvider_id());
+//         java.util.Date utilDate = new_token.getExpiryDate();
+//         java.sql.Date sqlDate3 = new java.sql.Date(utilDate.getTime());
+//         preparedStatement.setDate(3, sqlDate3);
+//         preparedStatement.setTime(4, new_token.getTime());
+//        preparedStatement.executeUpdate();
+//     }
+//	 
+//	 
+//	 
+// } 	
+//	
+// public boolean checkSecurityToken(Connection connection, int providerId, String securityToken) {
+//	 
+//	 System.out.println("ProviderID: " + providerId);
+//	  
+//	   System.out.println("Token entered:" + securityToken);
+//	   String checkSecurityTokenSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.Token = '" + securityToken + "' AND verificationtoken.ProviderID = '" + providerId + "'";
+//     PreparedStatement preparedStatement= connection.prepareStatement(checkSecurityTokenSQL);    
+//     ResultSet rs2 = preparedStatement.executeQuery();
+//    // System.out.println("Found token: "+ rs1.next());
+//     
+//	  // if (rs.next()&&rs1.next()){
+//     if (rs2.next()){
+//  	   System.out.println("Found token!");
+//       System.out.println("Correct token entered for this provider");
+//       System.out.println("Checking if token expired....");	  
+//	   }
+//     else {System.out.println("Entered token not found! Enter valid token!"); return false;}
+//	  
+//		try
+//		{
+//          	VerificationToken found_token = GetVerificationToken(connection, providerId);
+//			if (found_token.getToken().equals("NOTOKEN")){
+//				System.out.println("User don't have a token!");
+//				
+//				
+//                      return false;			       		
+//			}
+//			
+//			else {
+//				Calendar cal = Calendar.getInstance();
+//				Calendar cal1 = Calendar.getInstance();
+//				cal1.setTime(found_token.getExpiryDate());
+//				
+//				
+//				int expirationDay = cal1.get(Calendar.DAY_OF_YEAR);
+//				System.out.println("Expiration day of date: " + expirationDay);
+//				int currentDay = cal.get(Calendar.DAY_OF_YEAR);
+//				System.out.println("Current day of date: " + currentDay);
+//              
+//				int currentHour = cal.get(Calendar.HOUR_OF_DAY);
+//				int currentMinute = cal.get(Calendar.MINUTE);
+//				int currentSecond = cal.get(Calendar.SECOND);
+//				
+//				Time expirationTime = found_token.getTime();
+//				System.out.println("Expiration time: " + expirationTime);
+//				cal1.setTime(expirationTime);
+//				int expirationHour = cal1.get(Calendar.HOUR_OF_DAY);
+//				int expirationMinute = cal1.get(Calendar.MINUTE);
+//				int expirationSecond = cal1.get(Calendar.SECOND);
+//				System.out.println("Expiration time: " + expirationHour +":"+expirationMinute+":"+expirationSecond);
+//				System.out.println("Current time: " + currentHour+":"+currentMinute+":"+currentSecond);
+//			//	if((found_token.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)
+//				
+//				int leftDays = expirationDay - currentDay;
+//				if(leftDays>=0)
+//				System.out.println("Left days until expiration:" + leftDays);
+//			    int leftHours = (expirationDay - currentDay)*24 + (expirationHour - currentHour); 
+//				if(leftHours>=0)
+//			    System.out.println("Left hours until expiration:" + leftHours);
+//				int leftMinutes = (((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute));
+//				if(leftMinutes>=0)
+//				System.out.println("Left minutes until expiration:" + leftMinutes);
+//				int leftSeconds = ((((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute))*60 + (expirationHour - currentHour));
+//				if(leftSeconds>=0)
+//				System.out.println("Left seconds until expiration:" + leftSeconds);
+//				
+//				
+//				if(expirationDay - currentDay < 0) {
+//				   t_items=null;
+//				throw new Exception("Token invalid due to day expiration!");	
+//				}
+//				
+//				else if((expirationDay == currentDay) && (expirationHour - currentHour < 0))
+//				{     t_items = null;
+//					throw new Exception("Token invalid due to hour expiration!");	
+//				}
+//				
+//				else if(((expirationDay == currentDay) && (expirationHour == currentHour)) && expirationMinute - currentMinute < 0) {
+//					t_items = null;
+//					throw new Exception("Token invalid due to minute expiration!");	
+//				}
+//				
+//				else if((expirationDay == currentDay) && (expirationHour == currentHour) && expirationMinute == currentMinute && expirationSecond - currentSecond < 0) {
+//					t_items=null;
+//					throw new Exception("Token invalid due to seconds expiration!");	
+//				}
+//				
+//				
+//			}
+//			System.out.println("Token verification passed!");
+//			
+//			//String uname = request.getParameter("uname");
+//			//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
+//		   // ps = connection.prepareStatement("CALL GetPatientsByProvider(?)");
+////			ps.setInt(1,PatientID);
+////			ResultSet rs = ps.executeQuery();
+//			
+//			if (t_items.isEmpty()){
+//				 throw new WebApplicationException(404);
+//			}
+//			else
+//			{
+//				return t_items;
+//			}
+//		}  
+//			catch(Exception e)
+//			{
+//				e.printStackTrace();
+//				throw e;
+//			}
+//		finally{
+//				ps.close();
+//		        connection.close();
+//		}
+//	 
+//	 
+//	 
+// } 	
+//	
 	public List<ReminderNotification> GetNotificationForReminder(Connection connection) throws Exception
 	{
 		List<ReminderNotification> t_items = new ArrayList<ReminderNotification>();
