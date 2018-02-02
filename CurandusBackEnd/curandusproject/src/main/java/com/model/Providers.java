@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Providers {
 
- private Integer providerId;
+ private int providerId;
  private String firstName;
  private String typeProvider;
  private String middleInitial;
@@ -15,17 +15,17 @@ public class Providers {
  private String zip;
  private String phone;
  private String alternatePhone;
- private Integer status;
+ private int status;
  private Date created;
- private Integer createdBy;
+ private int createdBy;
  private Date modified;
- private Integer modifiedBy;
+ private int modifiedBy;
  private String deviceId;
- private Integer activationCode;
+ private int activationCode;
  private String chatId;
  private String ProfileImageUrl;
  private String RegId; 
- private Integer NotificationEnabled; 
+ private int NotificationEnabled; 
 // private String token; 
  
 // public String getToken() {
@@ -81,11 +81,11 @@ public Providers(Integer providerId, String firstName, String typeProvider, Stri
 	NotificationEnabled = notificationEnabled;
 }
 
-public Integer getProviderId() {
+public int getProviderId() {
 	return providerId;
 }
 
-public void setProviderId(Integer providerId) {
+public void setProviderId(int providerId) {
 	this.providerId = providerId;
 }
 
@@ -169,11 +169,11 @@ public void setAlternatePhone(String alternatePhone) {
 	this.alternatePhone = alternatePhone;
 }
 
-public Integer getStatus() {
+public int getStatus() {
 	return status;
 }
 
-public void setStatus(Integer status) {
+public void setStatus(int status) {
 	this.status = status;
 }
 
@@ -185,11 +185,11 @@ public void setCreated(Date created) {
 	this.created = created;
 }
 
-public Integer getCreatedBy() {
+public int getCreatedBy() {
 	return createdBy;
 }
 
-public void setCreatedBy(Integer createdBy) {
+public void setCreatedBy(int createdBy) {
 	this.createdBy = createdBy;
 }
 
@@ -201,11 +201,11 @@ public void setModified(Date modified) {
 	this.modified = modified;
 }
 
-public Integer getModifiedBy() {
+public int getModifiedBy() {
 	return modifiedBy;
 }
 
-public void setModifiedBy(Integer modifiedBy) {
+public void setModifiedBy(int modifiedBy) {
 	this.modifiedBy = modifiedBy;
 }
 
@@ -217,11 +217,11 @@ public void setDeviceId(String deviceId) {
 	this.deviceId = deviceId;
 }
 
-public Integer getActivationCode() {
+public int getActivationCode() {
 	return activationCode;
 }
 
-public void setActivationCode(Integer activationCode) {
+public void setActivationCode(int activationCode) {
 	this.activationCode = activationCode;
 }
 
@@ -249,11 +249,11 @@ public void setRegId(String regId) {
 	RegId = regId;
 }
 
-public Integer getNotificationEnabled() {
+public int getNotificationEnabled() {
 	return NotificationEnabled;
 }
 
-public void setNotificationEnabled(Integer notificationEnabled) {
+public void setNotificationEnabled(int notificationEnabled) {
 	NotificationEnabled = notificationEnabled;
 }
  	

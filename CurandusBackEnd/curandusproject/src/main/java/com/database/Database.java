@@ -11,10 +11,10 @@ public class Database {
 		try
 		{
 			
-		String connectionURL ="jdbc:mysql://69.87.218.82:3306/curandusofficial";// "jdbc:mysql://localhost:3306/workingbrain";
+		String connectionURL ="jdbc:mysql://localhost:3306/curandusofficial";// "jdbc:mysql://localhost:3306/workingbrain";
 		Connection connection = null;
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		connection = DriverManager.getConnection(connectionURL, "administrator", "Interway1102");
+		connection = DriverManager.getConnection(connectionURL, "root", "password");
 	    return connection;
 		}
 		catch (SQLException e)

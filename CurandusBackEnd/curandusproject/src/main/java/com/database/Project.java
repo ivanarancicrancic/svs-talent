@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -60,195 +61,234 @@ public class Project {
 	}
 	
 	
-// public VerificationToken generateSecurityToken(Connection connection, int providerId) {
-//	
-//	 String selectTableSQL1 = "SELECT * FROM providers WHERE providers.ProviderID="+ providerId;
-//     PreparedStatement preparedStatement1= connection.prepareStatement(selectTableSQL1);
-//     ResultSet rs123 = preparedStatement1.executeQuery();
-//     Providers p = rs123.next();
-//     
-//    if(==true) {
-//    	 String token = UUID.randomUUID().toString(); 
-//         VerificationToken new_token = createVerificationToken(p_provider, token);
-//        	
-//    	
-//    }
-//	 
-//	 System.out.println("Generated token: " + token + " for provider with id: " + new_token.getProvider_id() + ", with expiryDate: " + new_token.getExpiryDate());
-//     String selectTableSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.ProviderID="+ p_provider.getProviderId();
-//     PreparedStatement preparedStatement1= connection.prepareStatement(selectTableSQL);
-//     ResultSet rs1 = preparedStatement1.executeQuery();
-//    // System.out.println("Token for this user found: " + rs1.next());
-//     String insertTableSQL = "";
-//     if(rs1.next()==true){
-//     	System.out.println("Token updated");
-//     	Calendar cal = Calendar.getInstance();
-////     	 java.util.Date utilDate1 = new java.util.Date();
-////     	java.sql.Date sqlDate11 = new java.sql.Date(utilDate1.getTime());
-//     	java.util.Date now = new java.util.Date();        	
-//			cal.setTime(now);
-//			cal.add(Calendar.HOUR_OF_DAY, 1); // <--
-//			DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-//			java.util.Date dateTime = sdf.parse(cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND));
-//			Time time = new Time(dateTime.getTime());
-//			
-//			//java.sql.Date sqlDateTime11 = new java.sql.Date(dateTime.getTime());
-//     	
-//			//cal.add(Calendar.DAY_OF_YEAR, 1); // <--
-//			java.util.Date today = cal.getTime();
-//			java.sql.Date sqlDate11 = new java.sql.Date(today.getTime());
-//     	insertTableSQL = "UPDATE verificationtoken SET Token = ?, ExpiryDate= ?, ExpiryTime = ? WHERE verificationtoken.ProviderID = ?";	
-//     	PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
-//         preparedStatement.setString(1, new_token.getToken());
-//         preparedStatement.setDate(2, sqlDate11);
-//         preparedStatement.setTime(3, time);
-//         preparedStatement.setInt(4, new_token.getProvider_id());
-//        preparedStatement.executeUpdate();
-//     }
-//     
-//     else{
-//     	System.out.println("New token is generated and inserted");
-//         insertTableSQL = "INSERT INTO verificationtoken (Token, ProviderID, ExpiryDate, ExpiryTime) VALUES (?, ?, ?, ?)";
-//         PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
-//         preparedStatement.setString(1, new_token.getToken());
-//         preparedStatement.setInt(2, new_token.getProvider_id());
-//         java.util.Date utilDate = new_token.getExpiryDate();
-//         java.sql.Date sqlDate3 = new java.sql.Date(utilDate.getTime());
-//         preparedStatement.setDate(3, sqlDate3);
-//         preparedStatement.setTime(4, new_token.getTime());
-//        preparedStatement.executeUpdate();
-//     }
-//	 
-//	 
-//	 
-// } 	
-//	
-// public boolean checkSecurityToken(Connection connection, int providerId, String securityToken) {
-//	 
-//	 System.out.println("ProviderID: " + providerId);
-//	  
-//	   System.out.println("Token entered:" + securityToken);
-//	   String checkSecurityTokenSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.Token = '" + securityToken + "' AND verificationtoken.ProviderID = '" + providerId + "'";
-//     PreparedStatement preparedStatement= connection.prepareStatement(checkSecurityTokenSQL);    
-//     ResultSet rs2 = preparedStatement.executeQuery();
-//    // System.out.println("Found token: "+ rs1.next());
-//     
-//	  // if (rs.next()&&rs1.next()){
-//     if (rs2.next()){
-//  	   System.out.println("Found token!");
-//       System.out.println("Correct token entered for this provider");
-//       System.out.println("Checking if token expired....");	  
-//	   }
-//     else {System.out.println("Entered token not found! Enter valid token!"); return false;}
-//	  
-//		try
-//		{
-//          	VerificationToken found_token = GetVerificationToken(connection, providerId);
-//			if (found_token.getToken().equals("NOTOKEN")){
-//				System.out.println("User don't have a token!");
-//				
-//				
-//                      return false;			       		
-//			}
-//			
-//			else {
-//				Calendar cal = Calendar.getInstance();
-//				Calendar cal1 = Calendar.getInstance();
-//				cal1.setTime(found_token.getExpiryDate());
-//				
-//				
-//				int expirationDay = cal1.get(Calendar.DAY_OF_YEAR);
-//				System.out.println("Expiration day of date: " + expirationDay);
-//				int currentDay = cal.get(Calendar.DAY_OF_YEAR);
-//				System.out.println("Current day of date: " + currentDay);
-//              
-//				int currentHour = cal.get(Calendar.HOUR_OF_DAY);
-//				int currentMinute = cal.get(Calendar.MINUTE);
-//				int currentSecond = cal.get(Calendar.SECOND);
-//				
-//				Time expirationTime = found_token.getTime();
-//				System.out.println("Expiration time: " + expirationTime);
-//				cal1.setTime(expirationTime);
-//				int expirationHour = cal1.get(Calendar.HOUR_OF_DAY);
-//				int expirationMinute = cal1.get(Calendar.MINUTE);
-//				int expirationSecond = cal1.get(Calendar.SECOND);
-//				System.out.println("Expiration time: " + expirationHour +":"+expirationMinute+":"+expirationSecond);
-//				System.out.println("Current time: " + currentHour+":"+currentMinute+":"+currentSecond);
-//			//	if((found_token.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)
-//				
-//				int leftDays = expirationDay - currentDay;
-//				if(leftDays>=0)
-//				System.out.println("Left days until expiration:" + leftDays);
-//			    int leftHours = (expirationDay - currentDay)*24 + (expirationHour - currentHour); 
-//				if(leftHours>=0)
-//			    System.out.println("Left hours until expiration:" + leftHours);
-//				int leftMinutes = (((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute));
-//				if(leftMinutes>=0)
-//				System.out.println("Left minutes until expiration:" + leftMinutes);
-//				int leftSeconds = ((((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute))*60 + (expirationHour - currentHour));
-//				if(leftSeconds>=0)
-//				System.out.println("Left seconds until expiration:" + leftSeconds);
-//				
-//				
-//				if(expirationDay - currentDay < 0) {
-//				   t_items=null;
-//				throw new Exception("Token invalid due to day expiration!");	
+	 public VerificationToken generateSecurityToken(Connection connection, int providerId) throws SQLException, ParseException {
+		
+		 String selectTableSQL1 = "SELECT * FROM providers WHERE providers.ProviderID="+ providerId;
+		 
+		 PreparedStatement preparedStatement123= connection.prepareStatement(selectTableSQL1);
+	     ResultSet rs123 = preparedStatement123.executeQuery();
+	    	String token = UUID.randomUUID().toString(); 
+	    	VerificationToken new_token = null;
+	    	PreparedStatement preparedStatement1=null;
+	    	
+	    	
+	    	try {
+	    if(rs123.next()==true) {
+	    	Providers provider = new Providers(
+					rs123.getInt(1),
+					rs123.getString(2),
+					rs123.getString(3),
+					rs123.getString(4),
+					rs123.getString(5),
+					rs123.getString(6),
+					rs123.getString(7),
+					rs123.getString(8),
+					rs123.getString(9),
+					rs123.getString(10),
+					rs123.getString(11),
+					rs123.getInt(12),
+					rs123.getDate(13),
+					rs123.getInt(14),
+					rs123.getDate(15),
+					rs123.getInt(16),
+					rs123.getString(17),
+					rs123.getInt(18),
+					rs123.getString(19),
+					rs123.getString(20),
+					rs123.getString(21),
+					rs123.getInt(22)
+					);
+                  
+	          new_token = createVerificationToken(provider, token);
+	    	 System.out.println("Generated token: " + token + " for provider with id: " + new_token.getProvider_id() + ", with expiryDate: " + new_token.getExpiryDate());
+		     String selectTableSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.ProviderID="+ provider.getProviderId();
+		     
+	    
+		        
+				preparedStatement1 = connection.prepareStatement(selectTableSQL);
+				 ResultSet rs1 = preparedStatement1.executeQuery();
+				 // System.out.println("Token for this user found: " + rs1.next());
+			     String insertTableSQL = "";
+			     if(rs1.next()==true){
+			     	System.out.println("Token will be updated in verificationtoken.");
+			     	Calendar cal = Calendar.getInstance();
+//			     	 java.util.Date utilDate1 = new java.util.Date();
+//			     	java.sql.Date sqlDate11 = new java.sql.Date(utilDate1.getTime());
+			     	java.util.Date now = new java.util.Date();        	
+						cal.setTime(now);
+						cal.add(Calendar.HOUR_OF_DAY, 1); // <--
+						DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+						java.util.Date dateTime = sdf.parse(cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND));
+						Time time = new Time(dateTime.getTime());
+						
+						//java.sql.Date sqlDateTime11 = new java.sql.Date(dateTime.getTime());
+			     	
+						//cal.add(Calendar.DAY_OF_YEAR, 1); // <--
+						java.util.Date today = cal.getTime();
+						java.sql.Date sqlDate11 = new java.sql.Date(today.getTime());
+			     	insertTableSQL = "UPDATE verificationtoken SET Token = ?, ExpiryDate= ?, ExpiryTime = ? WHERE verificationtoken.ProviderID = ?";	
+			     	PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
+			         preparedStatement.setString(1, new_token.getToken());
+			         preparedStatement.setDate(2, sqlDate11);
+			         preparedStatement.setTime(3, time);
+			         preparedStatement.setInt(4, new_token.getProvider_id());
+			        preparedStatement.executeUpdate();
+			     }
+			     
+			     else{
+			     	System.out.println("New token is generated and will be inserted into verificationtoken.");
+			         insertTableSQL = "INSERT INTO verificationtoken (Token, ProviderID, ExpiryDate, ExpiryTime) VALUES (?, ?, ?, ?)";
+			         PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
+			         preparedStatement.setString(1, new_token.getToken());
+			         preparedStatement.setInt(2, new_token.getProvider_id());
+			         java.util.Date utilDate = new_token.getExpiryDate();
+			         java.sql.Date sqlDate3 = new java.sql.Date(utilDate.getTime());
+			         preparedStatement.setDate(3, sqlDate3);
+			         preparedStatement.setTime(4, new_token.getTime());
+			        preparedStatement.executeUpdate();
+			     }
+		        	
+			
+			 
+			}
+	    
+	      } catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return new_token;
+				
+			}
+			finally{
+				
+				preparedStatement1.close();
+		        connection.close();
+		      
+		           }
+	    	
+	    	  return new_token;
+		 
+	 } 	
+		
+	 public boolean checkSecurityToken(Connection connection, String securityToken) throws Exception {
+		// System.out.println("ProviderID: " + providerId);
+	    boolean allowed=false;
+		System.out.println("Token entered:" + securityToken);
+		String checkSecurityTokenSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.Token = '" + securityToken + "'";
+		PreparedStatement preparedStatement = null;
+		VerificationToken found_token = new VerificationToken(); 
+		 try
+			{
+		preparedStatement= connection.prepareStatement(checkSecurityTokenSQL);    
+	     ResultSet rs2 = preparedStatement.executeQuery();
+	      // if (rs.next()&&rs1.next()){
+	     if (rs2.next()){
+	  	   System.out.println("Found token!");
+	       System.out.println("Correct token entered for this provider");
+	       System.out.println("Checking if token expired....");	  
+	       //found_token.setProvider_id(rs2.getInt("ProviderID"));
+	       found_token.setToken(rs2.getString("Token"));
+         	found_token.setExpiryDate(rs2.getDate("ExpiryDate"));
+         	found_token.setTime(rs2.getTime("ExpiryTime"));
+         	
+        	Calendar cal = Calendar.getInstance();
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(found_token.getExpiryDate());
+			
+			int expirationDay = cal1.get(Calendar.DAY_OF_YEAR);
+			System.out.println("Expiration day of date: " + expirationDay);
+			int currentDay = cal.get(Calendar.DAY_OF_YEAR);
+			System.out.println("Current day of date: " + currentDay);
+          
+			int currentHour = cal.get(Calendar.HOUR_OF_DAY);
+			int currentMinute = cal.get(Calendar.MINUTE);
+			int currentSecond = cal.get(Calendar.SECOND);
+			
+			Time expirationTime = found_token.getTime();
+			System.out.println("Expiration time: " + expirationTime);
+			cal1.setTime(expirationTime);
+			int expirationHour = cal1.get(Calendar.HOUR_OF_DAY);
+			int expirationMinute = cal1.get(Calendar.MINUTE);
+			int expirationSecond = cal1.get(Calendar.SECOND);
+			System.out.println("Expiration time: " + expirationHour +":"+expirationMinute+":"+expirationSecond);
+			System.out.println("Current time: " + currentHour+":"+currentMinute+":"+currentSecond);
+		//	if((found_token.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)
+			
+			int leftDays = expirationDay - currentDay;
+			if(leftDays>=0)
+			System.out.println("Left days until expiration:" + leftDays);
+		    int leftHours = (expirationDay - currentDay)*24 + (expirationHour - currentHour); 
+			if(leftHours>=0)
+		    System.out.println("Left hours until expiration:" + leftHours);
+			int leftMinutes = (((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute));
+			if(leftMinutes>=0)
+			System.out.println("Left minutes until expiration:" + leftMinutes);
+			int leftSeconds = ((((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute))*60 + (expirationHour - currentHour));
+			if(leftSeconds>=0)
+			System.out.println("Left seconds until expiration:" + leftSeconds);
+			
+			
+			if(expirationDay - currentDay < 0) {
+			  System.out.println("Token invalid due to day expiration!");
+			  return false;
+              //  throw new Exception("Token invalid due to day expiration!");	
+			}
+			
+			else if((expirationDay == currentDay) && (expirationHour - currentHour < 0))
+			{       System.out.println("Token invalid due to hour expiration!");
+		         	return false;
+			//	throw new Exception("Token invalid due to hour expiration!");	
+			}
+			
+			else if(((expirationDay == currentDay) && (expirationHour == currentHour)) && expirationMinute - currentMinute < 0) {
+				System.out.println("Token invalid due to minute expiration!");
+				return false;
+				//throw new Exception("Token invalid due to minute expiration!");	
+			}
+			
+			else if((expirationDay == currentDay) && (expirationHour == currentHour) && expirationMinute == currentMinute && expirationSecond - currentSecond < 0) {
+				System.out.println("Token invalid due to seconds expiration!");
+				return false;
+				//throw new Exception("Token invalid due to seconds expiration!");	
+			}
+			
+			System.out.println("Token verification passed!");
+            return true;	 
+	     } // if rs2.next() != null
+	     else {System.out.println("Entered token not found! Enter valid token!"); return false;}  
+
+//				if (found_token.getToken().equals("NOTOKEN")){
+//					System.out.println("User don't have a token!");
+//					
+//	                      return false;			       		
 //				}
-//				
-//				else if((expirationDay == currentDay) && (expirationHour - currentHour < 0))
-//				{     t_items = null;
-//					throw new Exception("Token invalid due to hour expiration!");	
-//				}
-//				
-//				else if(((expirationDay == currentDay) && (expirationHour == currentHour)) && expirationMinute - currentMinute < 0) {
-//					t_items = null;
-//					throw new Exception("Token invalid due to minute expiration!");	
-//				}
-//				
-//				else if((expirationDay == currentDay) && (expirationHour == currentHour) && expirationMinute == currentMinute && expirationSecond - currentSecond < 0) {
-//					t_items=null;
-//					throw new Exception("Token invalid due to seconds expiration!");	
-//				}
-//				
-//				
-//			}
-//			System.out.println("Token verification passed!");
-//			
-//			//String uname = request.getParameter("uname");
-//			//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
-//		   // ps = connection.prepareStatement("CALL GetPatientsByProvider(?)");
-////			ps.setInt(1,PatientID);
-////			ResultSet rs = ps.executeQuery();
-//			
-//			if (t_items.isEmpty()){
-//				 throw new WebApplicationException(404);
-//			}
-//			else
-//			{
-//				return t_items;
-//			}
-//		}  
-//			catch(Exception e)
-//			{
-//				e.printStackTrace();
-//				throw e;
-//			}
-//		finally{
-//				ps.close();
-//		        connection.close();
-//		}
-//	 
-//	 
-//	 
-// } 	
-//	
-	public List<ReminderNotification> GetNotificationForReminder(Connection connection) throws Exception
+				
+		//String uname = request.getParameter("uname");
+				//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
+			   // ps = connection.prepareStatement("CALL GetPatientsByProvider(?)");
+//				ps.setInt(1,PatientID);
+//				ResultSet rs = ps.executeQuery();	
+				 }
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					throw e;
+				}
+			finally{
+					preparedStatement.close();
+			        connection.close();
+			} 
+	 } 	
+			
+	
+	public List<ReminderNotification> GetNotificationForReminder(Connection connection, String securityToken) throws Exception
 	{
 		List<ReminderNotification> t_items = new ArrayList<ReminderNotification>();
 		PreparedStatement ps=null;
 			try
 			{
-
+				if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404); 
+		 		}
 			    ps = connection.prepareStatement("CALL SENDINGNOTIFICATIONS()");
 				ResultSet rs = ps.executeQuery();
 				
@@ -283,7 +323,7 @@ public class Project {
 					t_items.add(p_eden);
 				}
 				
-				if (t_items.isEmpty()){
+				if (t_items==null || t_items.isEmpty()){
 					 throw new WebApplicationException(404);
 				}
 				else
@@ -303,13 +343,16 @@ public class Project {
 	}	
 	
 	
-	public List<TreatmentItemListRegid> getTreatmentItemListLoadPatient(Connection connection, int p_patientid) throws Exception
+	public List<TreatmentItemListRegid> getTreatmentItemListLoadPatient(Connection connection, int p_patientid, String securityToken) throws Exception
 	{
 		List<TreatmentItemListRegid> t_items = new ArrayList<TreatmentItemListRegid>();
 		PreparedStatement ps=null;
 			try
 			{
-
+				if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404);
+					 
+		 		}
 			    ps = connection.prepareStatement("CALL TREATMENTITEMLISTLOADPATIENTPOM(?)");
 				ps.setInt(1, p_patientid);
 				ResultSet rs = ps.executeQuery();
@@ -343,7 +386,7 @@ public class Project {
 					t_items.add(p_eden);
 				}
 				
-				if (t_items.isEmpty()){
+				if (t_items==null || t_items.isEmpty()){
 					 throw new WebApplicationException(404);
 				}
 				else
@@ -363,7 +406,7 @@ public class Project {
 	}	
 	
 	
-	public Patients InsertPatient(Connection connection, Patients p_patient) throws Exception
+	public Patients InsertPatient(Connection connection, Patients p_patient, String securityToken) throws Exception
 	 {
 	  PreparedStatement ps=null;
 	  Providers result=new Providers();
@@ -371,6 +414,12 @@ public class Project {
 	  System.out.println("phone "+p_patient.getPhone());	
 	  try
 	  {
+	       if(checkSecurityToken(connection, securityToken)==false) {
+				 throw new WebApplicationException(404);
+				 
+	 		}
+		  
+		  
 	      ps =connection.prepareStatement("call InsertPatient(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 	      ps.setString(1,p_patient.getPhone());
 	      ps.setString(2,p_patient.getFirstName());
@@ -403,7 +452,7 @@ public class Project {
 	   if (rs.next()){
 		   p_patient.setPatientId(rs.getInt(1));
 	   }
-	   return p_patient;
+      return p_patient;
 	  }
 	  catch(Exception e)
 	  {
@@ -459,12 +508,15 @@ public class Project {
 //	}
 	
 	
-	public List<SavedTemplate> getSavedTemplate(Connection connection, int ProviderDetail) throws Exception
+	public List<SavedTemplate> getSavedTemplate(Connection connection, int ProviderDetail, String securityToken) throws Exception
 	{
 		List<SavedTemplate> t_items = new ArrayList<SavedTemplate>();
 		PreparedStatement ps=null;
 			try
 			{
+			       if(checkSecurityToken(connection, securityToken)==false) {
+				   throw new WebApplicationException(404);		 
+			 		}
 				ps = connection.prepareStatement("CALL GetSavedTreatmentTemplateByProviderId(?)");
 				ps.setInt(1,ProviderDetail);
 				ResultSet rs = ps.executeQuery();
@@ -482,7 +534,7 @@ public class Project {
 					t_items.add(p_eden);
 				}
 				
-				if (t_items.isEmpty()){
+				if (t_items==null || t_items.isEmpty()){
 					 throw new WebApplicationException(404);
 				}
 				else
@@ -501,13 +553,15 @@ public class Project {
 				}
 	}	
 	
-	public List<TreatmentItemListScroll> getTreatmentItemListLoad(Connection connection, int p_activetreatmentid) throws Exception
+	public List<TreatmentItemListScroll> getTreatmentItemListLoad(Connection connection, int p_activetreatmentid, String securityToken) throws Exception
 	{
 		List<TreatmentItemListScroll> t_items = new ArrayList<TreatmentItemListScroll>();
 		PreparedStatement ps=null;
 			try
 			{
-
+			       if(checkSecurityToken(connection, securityToken)==false) {
+				   throw new WebApplicationException(404);			 
+			 		}				
 			    ps = connection.prepareStatement("CALL TreatmentItemListLoad(?)");
 				ps.setInt(1, p_activetreatmentid);
 				ResultSet rs = ps.executeQuery();
@@ -538,9 +592,8 @@ public class Project {
 										);
 					t_items.add(p_eden);
 				}
-				
-				if (t_items.isEmpty()){
-					 throw new WebApplicationException(404);
+				if (t_items==null || t_items.isEmpty()){
+				throw new WebApplicationException(404);
 				}
 				else
 				{
@@ -558,12 +611,17 @@ public class Project {
 				}
 	}	
 	
-	public List<TreatmentItemListRegid> getTreatmentItemListScroll(Connection connection, int TreatmentItemListID, String T_UP_DOWN, int range) throws Exception
+	public List<TreatmentItemListRegid> getTreatmentItemListScroll(Connection connection, int TreatmentItemListID, String T_UP_DOWN, int range, String securityToken) throws Exception
 	{
 		List<TreatmentItemListRegid> t_items = new ArrayList<TreatmentItemListRegid>();
 		PreparedStatement ps=null;
 			try
 			{
+				if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404);
+					 
+		 		}
+				
 			    ps = connection.prepareStatement("CALL ScrollTreatmentItemList_1(?, ?, ?)");
 				ps.setInt(1, TreatmentItemListID);
 				ps.setString(2,T_UP_DOWN);
@@ -599,7 +657,7 @@ public class Project {
 					t_items.add(p_eden);
 				}
 				
-				if (t_items.isEmpty()){
+				if (t_items==null || t_items.isEmpty()){
 					 throw new WebApplicationException(404);
 				}
 				else
@@ -618,18 +676,20 @@ public class Project {
 				}
 	}
 	
-	public List<TreatmentItemListRegid> getTreatmentItemListScrollPatient(Connection connection, int TreatmentItemListID, String T_UP_DOWN, int range) throws Exception
+	public List<TreatmentItemListRegid> getTreatmentItemListScrollPatient(Connection connection, int TreatmentItemListID, String T_UP_DOWN, int range, String securityToken) throws Exception
 	{
 		List<TreatmentItemListRegid> t_items = new ArrayList<TreatmentItemListRegid>();
 		PreparedStatement ps=null;
 			try
 			{
+				if(checkSecurityToken(connection, securityToken)==false) {
+				throw new WebApplicationException(404);	 
+		 		}
 			    ps = connection.prepareStatement("CALL ScrollTreatmentItemListPatient(?, ?, ?)");
 				ps.setInt(1, TreatmentItemListID);
 				ps.setString(2,T_UP_DOWN);
 				ps.setInt(3, range);
 				ResultSet rs = ps.executeQuery();
-				
 				System.out.println(rs);
 				while(rs.next())
 				{	
@@ -659,7 +719,7 @@ public class Project {
 					t_items.add(p_eden);
 				}
 				
-				if (t_items.isEmpty()){
+				if (t_items==null || t_items.isEmpty()){
 					 throw new WebApplicationException(404);
 				}
 				else
@@ -679,8 +739,9 @@ public class Project {
 	}
 	
 	
-	public boolean UpdateSavedTreatment(Connection connection, List<TreatmentItem> t_items, int p_savedtreatmentid) throws Exception
+	public boolean UpdateSavedTreatment(Connection connection, List<TreatmentItem> t_items, int p_savedtreatmentid, String securityToken) throws Exception
 	{	
+		
 		PreparedStatement pss=null;
 		PreparedStatement ps=null;
 		System.out.println("start");
@@ -696,6 +757,12 @@ public class Project {
 		boolean flag_insert=true;
 				Gson gson = new Gson();
 			try{
+			       
+			       if(checkSecurityToken(connection, securityToken)==false) {
+						 throw new WebApplicationException(404);
+						 
+			 		}
+				
 				connection.setAutoCommit(false);
 				for(TreatmentItem tt:t_items)
 				{
@@ -801,8 +868,10 @@ public class Project {
 		}
 	}	
 	
-	public SubTreatment UpdateActiveSubTreatment(Connection connection, List<TreatmentItem> t_items, int p_subtreatmentid) throws Exception
+	public SubTreatment UpdateActiveSubTreatment(Connection connection, List<TreatmentItem> t_items, int p_subtreatmentid, String securityToken) throws Exception
 	{	
+		
+		
 		PreparedStatement pss=null;
 		PreparedStatement ps=null;
 		PreparedStatement pss1=null;
@@ -822,6 +891,12 @@ public class Project {
 		
 				Gson gson = new Gson();
 			try{
+				
+				if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404);
+					 
+		 		}
+				 
 				connection.setAutoCommit(false);
 				for(TreatmentItem tt:t_items)
 				{
@@ -935,8 +1010,9 @@ public class Project {
 		}
 	}	
 	
-	public int CheckNameSavedTreatment(Connection connection, int ProviderID, String NameTreatment, List<TreatmentItem> t_items) throws Exception
+	public int CheckNameSavedTreatment(Connection connection, int ProviderID, String NameTreatment, List<TreatmentItem> t_items, String securityToken) throws Exception
 	{	
+		
 		PreparedStatement ps=null;
 		PreparedStatement pss=null;
 		
@@ -952,6 +1028,11 @@ public class Project {
 		
 		try
 		{
+			
+	       if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404);				 
+		 		}
+			
 		    ps =connection.prepareStatement("call CHECK_NAME_SAVE_TREATMENT(?,?)", Statement.RETURN_GENERATED_KEYS);
 		    ps.setInt(1,ProviderID);
 		    ps.setString(2,NameTreatment);
@@ -1068,13 +1149,18 @@ public class Project {
 	}	
 	
 	public boolean InsertSavedTreatment(Connection connection, int ProviderID, 
-			String NameTreatment, List<TreatmentItem> t_items) throws Exception
+			String NameTreatment, List<TreatmentItem> t_items, String securityToken) throws Exception
 	{	
+		
 		PreparedStatement ps=null;
 		PreparedStatement pss=null;
 		int p_savedTreatmentID;	
 		try
 		{
+		       if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404);					 
+		 		}
+
 		    ps =connection.prepareStatement("call InsertSavedTreatment(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		    ps.setInt(1,ProviderID);
 		    ps.setString(2,NameTreatment);
@@ -1120,7 +1206,7 @@ public class Project {
 	
 	public SubTreatment InsertActiveSubTreatment(Connection connection, int activeTreatmentID , 
 			int ProviderID, int PatientID, String NameTreatment, String SubNameTreatment, 
-			List<TreatmentItem> t_items) throws Exception
+			List<TreatmentItem> t_items, String securityToken) throws Exception
 	{	
 		PreparedStatement ps=null;
 		PreparedStatement pss=null;
@@ -1135,8 +1221,12 @@ public class Project {
 		String Ime_fajl="";
 		String comment="";		
 	
-		try
-		{
+		 try
+		   {
+                   if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404); 
+		    	     }
+                   
 			connection.setAutoCommit(false);
 		    ps =connection.prepareStatement("call InsertActiveSubTreatment(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		    ps.setInt(1,activeTreatmentID);
@@ -1146,7 +1236,6 @@ public class Project {
 		    ps.setString(5,SubNameTreatment);
 	
 			ResultSet rs = ps.executeQuery();
-			
 			if (rs.next()){
 				p_subTreatmentID=rs.getInt(1);
 				ret_sub_t.setSubtreatmentid(rs.getInt(1));
@@ -1252,14 +1341,17 @@ public class Project {
 	}
 	
 	
-	public Providers GetProviderDataByChatId(Connection connection, int p_chatid) throws Exception
+	public Providers GetProviderDataByChatId(Connection connection, int p_chatid, String securityToken) throws Exception
 	 {
 	  PreparedStatement ps=null;
 	  Providers p_eden=new Providers();
-	  
 	  Providers proverka=new Providers();
 	  try
 	  {
+	       if(checkSecurityToken(connection, securityToken)==false) {
+				 throw new WebApplicationException(404);		 
+	 		}
+		  
 	      ps =connection.prepareStatement("call GetProviderDataByChatId(?)", Statement.RETURN_GENERATED_KEYS);
 	      ps.setInt(1,p_chatid);
 
@@ -1292,7 +1384,6 @@ public class Project {
 								rs.getInt(22)
 								);
 		}
-		
 		if (p_eden.equals(proverka)){
 			 throw new WebApplicationException(404);
 		}
@@ -1311,7 +1402,6 @@ public class Project {
 	        connection.close();
 		}
 	 }
-	
 	
 //	public Providers InsertProvider(Connection connection, Providers p_provider) throws Exception
 //	 {
@@ -1409,41 +1499,39 @@ public class Project {
 	  {
 //	      ps =connection.prepareStatement("INSERT INTO providers (ProviderID, FirstName, TypeProvider, MiddleInitial, LastName, StreetAdress, City, State, Zip, Phone, AlternatePhone, Status, Created, CreatedBy, Modified, ModifiedBy, DeviceId, ActivationCode, ChatId, ProfileImageUrl, RegId, NotificationEnabled)" + 
 //	      		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-//		  ps =connection.prepareStatement("call InsertProvider(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-//		 // ps.setInt(1,p_provider.getProviderId());
-//	      ps.setString(1,p_provider.getFirstName());
-//	      ps.setString(2,p_provider.getTypeProvider());
-//	      ps.setString(3,p_provider.getMiddleInitial());
-//	      ps.setString(4,p_provider.getLastName());
-//	      ps.setString(5,p_provider.getStreetAdress());
-//	      ps.setString(6,p_provider.getCity());
-//	      ps.setString(7,p_provider.getState());
-//	      ps.setString(8,p_provider.getZip());
-//	      ps.setString(9,p_provider.getPhone());
-//	      ps.setString(10,p_provider.getAlternatePhone());
-//	      ps.setInt(11,NVL(p_provider.getStatus()));
+//	//	  ps =connection.prepareStatement("call InsertProvider(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+//		  ps.setInt(1,p_provider.getProviderId());
+//	      ps.setString(2,p_provider.getFirstName());
+//	      ps.setString(3,p_provider.getTypeProvider());
+//	      ps.setString(4,p_provider.getMiddleInitial());
+//	      ps.setString(5,p_provider.getLastName());
+//	      ps.setString(6,p_provider.getStreetAdress());
+//	      ps.setString(7,p_provider.getCity());
+//	      ps.setString(8,p_provider.getState());
+//	      ps.setString(9,p_provider.getZip());
+//	      ps.setString(10,p_provider.getPhone());
+//	      ps.setString(11,p_provider.getAlternatePhone());
+//	      ps.setInt(12,NVL(p_provider.getStatus()));
 //	      Calendar cal1 = Calendar.getInstance();
 //	    	 java.util.Date utilDate1 = cal1.getTime();
 //	    	  java.sql.Date sqlDate = new java.sql.Date(p_provider.getCreated().getTime());
 //	    	 p_provider.setCreated(sqlDate);
 //	    	 p_provider.setModified(sqlDate);
 //	      System.out.println("Time on creation:" + p_provider.getCreated().getTime());
-//	      System.out.println("Time on creation:" + sqlDate);
-//	      
-//	      ps.setDate(12,(Date) sqlDate);
-//	      ps.setInt(13,NVL(p_provider.getCreatedBy()));
+//	      System.out.println("Time on creation:" + sqlDate); 
+//	      ps.setDate(13,(Date) sqlDate);
+//	      ps.setInt(14,NVL(p_provider.getCreatedBy()));
 //	      java.sql.Date sqlDate1 = new java.sql.Date(p_provider.getModified().getTime());
-//	      ps.setDate(14,(Date) sqlDate1);
-//	      ps.setInt(15,NVL(p_provider.getModifiedBy()));      
-//	      ps.setString(16,p_provider.getDeviceId());
-//	      ps.setInt(17,NVL(p_provider.getActivationCode()));
-//	      ps.setString(18,p_provider.getChatId());
-//	      ps.setString(19,p_provider.getProfileImageUrl());
-//	      ps.setString(20,p_provider.getRegId());
-//	      ps.setInt(21,p_provider.getNotificationEnabled());
-//	      
-//	  ps.executeUpdate();
-		  
+//	      ps.setDate(15,(Date) sqlDate1);
+//	      ps.setInt(16,NVL(p_provider.getModifiedBy()));      
+//	      ps.setString(17,p_provider.getDeviceId());
+//	      ps.setInt(18,NVL(p_provider.getActivationCode()));
+//	      ps.setString(19,p_provider.getChatId());
+//	      ps.setString(20,p_provider.getProfileImageUrl());
+//	      ps.setString(21,p_provider.getRegId());
+//	      ps.setInt(22,p_provider.getNotificationEnabled());
+	      
+	      ps.executeUpdate();
 		  ps =connection.prepareStatement("call InsertProvider(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 	      ps.setString(1,p_provider.getFirstName());
 	      ps.setString(2,p_provider.getTypeProvider());
@@ -1473,52 +1561,50 @@ public class Project {
 	            //prest.executeQuery(); Throws an error   
 	//ps.executeUpdate();
 	ResultSet rs = ps.getGeneratedKeys();   
-	  p_provider.setProviderId(927);
+	 // p_provider.setProviderId(927);
 	   
 	//System.out.println("User inserted with id:" + rs.getInt(1));
 	   if (rs.next()){
 //		   System.out.println("User inserted with id:" + rs.getInt(1));
-	    //p_provider.setProviderId(rs.getInt(1));
-	    
+	    p_provider.setProviderId(rs.getInt(1));
 	   }
 	  
-		String token = UUID.randomUUID().toString();
-	
+	   //FROM THIS POINT SECURITY TOKEN IS GENERATED
+	   String token = UUID.randomUUID().toString();
        VerificationToken new_token = createVerificationToken(p_provider, token);
-       System.out.println("Generated token: " + token + " for provider with id: " + new_token.getProvider_id() + ", with expiryDate: " + new_token.getExpiryDate());
+       System.out.println("Generated token: " + token + " for provider with id: " + new_token.getProvider_id() + ", with expiryDate: " + new_token.getExpiryDate() + "and with expiryTime: " + new_token.getTime());
        String selectTableSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.ProviderID="+ p_provider.getProviderId();
        PreparedStatement preparedStatement1= connection.prepareStatement(selectTableSQL);
        ResultSet rs1 = preparedStatement1.executeQuery();
       // System.out.println("Token for this user found: " + rs1.next());
        String insertTableSQL = "";
        if(rs1.next()==true){
-       	System.out.println("Token updated");
+       	System.out.println("Token will be updated...");
        	Calendar cal = Calendar.getInstance();
 //       	 java.util.Date utilDate1 = new java.util.Date();
 //       	java.sql.Date sqlDate11 = new java.sql.Date(utilDate1.getTime());
        	java.util.Date now = new java.util.Date();        	
-			cal.setTime(now);
-			cal.add(Calendar.HOUR_OF_DAY, 1); // <--
-			DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-			java.util.Date dateTime = sdf.parse(cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND));
-			Time time = new Time(dateTime.getTime());
-			
+		cal.setTime(now);
+		cal.add(Calendar.HOUR_OF_DAY, 1); // <--
+		DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+		java.util.Date dateTime = sdf.parse(cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND));
+		Time time = new Time(dateTime.getTime());
+		
 			//java.sql.Date sqlDateTime11 = new java.sql.Date(dateTime.getTime());
-       	
 			//cal.add(Calendar.DAY_OF_YEAR, 1); // <--
-			java.util.Date today = cal.getTime();
-			java.sql.Date sqlDate11 = new java.sql.Date(today.getTime());
-       	insertTableSQL = "UPDATE verificationtoken SET Token = ?, ExpiryDate= ?, ExpiryTime = ? WHERE verificationtoken.ProviderID = ?";	
-       	PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
+		   java.util.Date today = cal.getTime();
+		   java.sql.Date sqlDate11 = new java.sql.Date(today.getTime());
+       	   insertTableSQL = "UPDATE verificationtoken SET Token = ?, ExpiryDate= ?, ExpiryTime = ? WHERE verificationtoken.ProviderID = ?";	
+       	   PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
            preparedStatement.setString(1, new_token.getToken());
            preparedStatement.setDate(2, sqlDate11);
            preparedStatement.setTime(3, time);
            preparedStatement.setInt(4, new_token.getProvider_id());
-          preparedStatement.executeUpdate();
+           preparedStatement.executeUpdate();
        }
        
        else{
-       	System.out.println("New token is generated and inserted");
+       	   System.out.println("New token is generated and inserted");
            insertTableSQL = "INSERT INTO verificationtoken (Token, ProviderID, ExpiryDate, ExpiryTime) VALUES (?, ?, ?, ?)";
            PreparedStatement preparedStatement= connection.prepareStatement(insertTableSQL);
            preparedStatement.setString(1, new_token.getToken());
@@ -1527,7 +1613,7 @@ public class Project {
            java.sql.Date sqlDate3 = new java.sql.Date(utilDate.getTime());
            preparedStatement.setDate(3, sqlDate3);
            preparedStatement.setTime(4, new_token.getTime());
-          preparedStatement.executeUpdate();
+           preparedStatement.executeUpdate();
        }
        
 	    return p_provider;
@@ -1546,12 +1632,10 @@ public class Project {
 	
 	
 	public VerificationToken GetVerificationToken(Connection connection, int providerId) throws Exception{
-		
 		 PreparedStatement ps=null;
 		  try
 		  {
 		      ps =connection.prepareStatement("SELECT * FROM verificationtoken WHERE ProviderID="+ providerId);
-		      
 		   //ps.executeUpdate();
 		   
 		            //prest.executeUpdate(query, PreparedStatement.RETURN_GENERATED_KEYS); Throws an error
@@ -1572,12 +1656,10 @@ public class Project {
 		   e.printStackTrace();
 		   throw e;
 		  }
-
 		  finally {
 		    ps.close();
 		        connection.close();
 		  }
-		
 	}
 	
 	
@@ -1587,7 +1669,6 @@ public class Project {
 		try {
 			System.out.println(provider.getProviderId());
 			System.out.println(token);
-			
 			myToken = new VerificationToken(token, provider.getProviderId());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -1597,13 +1678,16 @@ public class Project {
          return myToken;	
 	}
 	
-	public PatientsCascade getTreatmentByRoomId(Connection connection, String p_roomid) throws Exception
+	public PatientsCascade getTreatmentByRoomId(Connection connection, String p_roomid, String securityToken) throws Exception
 	{
 		PatientsCascade p_eden = new PatientsCascade();
 		PatientsCascade proverka = new PatientsCascade();
 		PreparedStatement ps=null;
 			try
 			{
+				if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404);	 
+		 		}	
 				//String uname = request.getParameter("uname");
 				//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
 			    ps = connection.prepareStatement("CALL getTreatmentByRoomId(?)");
@@ -1612,7 +1696,6 @@ public class Project {
 				while(rs.next())
 				{
 					//TreatmentItem p_eden = new TreatmentItem();
-					
 					 p_eden = new PatientsCascade(
 										rs.getInt(1),
 										rs.getString(2),
@@ -1647,12 +1730,15 @@ public class Project {
 			}
 	}	
 	
-	public List<RoomId> GetActiveContactsByProvider(Connection connection, int PatientID) throws Exception
+	public List<RoomId> GetActiveContactsByProvider(Connection connection, int PatientID, String securityToken) throws Exception
 	{
 		List<RoomId> t_items = new ArrayList<RoomId>();
 		PreparedStatement ps=null;
 			try
 			{
+			       if(checkSecurityToken(connection, securityToken)==false) {
+						 throw new WebApplicationException(404);						 
+			 		}
 				//String uname = request.getParameter("uname");
 				//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
 			    ps = connection.prepareStatement("CALL GetActiveContactsByProvider(?)");
@@ -1661,14 +1747,13 @@ public class Project {
 				while(rs.next())
 				{
 					//TreatmentItem p_eden = new TreatmentItem();
-					
 					RoomId p_eden = new RoomId(
 										rs.getString(1)
 										);
 					t_items.add(p_eden);
 				}
 				
-				if (t_items.isEmpty()){
+				if (t_items==null || t_items.isEmpty()){
 					 throw new WebApplicationException(404);
 				}
 				else
@@ -1749,19 +1834,15 @@ public class Project {
 //			}
 //	}	
 	
-	
 	public List<PatientsCascade> getPatientsByProvider(Connection connection, int PatientID, String securityToken) throws Exception
 	{
-		
-	    
 		List<PatientsCascade> t_items = new ArrayList<PatientsCascade>();
 		PreparedStatement ps = connection.prepareStatement("CALL GetPatientsByProvider(?)"); 
 		ps.setInt(1,PatientID);
      	ResultSet rs = ps.executeQuery();
      	while(rs.next())
 		{
-			//TreatmentItem p_eden = new TreatmentItem();
-			
+			//TreatmentItem p_eden = new TreatmentItem();		
 			PatientsCascade p_eden = new PatientsCascade(
 								rs.getInt(1),
 								rs.getString(2),
@@ -1777,114 +1858,108 @@ public class Project {
 								);
 			t_items.add(p_eden);
 		}
-		
-		
      	System.out.println("ProviderID: " + PatientID);
-		  
+    	try
+		{
 		   System.out.println("Token entered:" + securityToken);
-		   String checkSecurityTokenSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.Token = '" + securityToken + "' AND verificationtoken.ProviderID = '" + PatientID + "'";
+		   String checkSecurityTokenSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.Token = '" + securityToken + "'";
 	       PreparedStatement preparedStatement= connection.prepareStatement(checkSecurityTokenSQL);    
 	       ResultSet rs2 = preparedStatement.executeQuery();
 	      // System.out.println("Found token: "+ rs1.next());
-	       
 		  // if (rs.next()&&rs1.next()){
 	       if (rs2.next()){
 	    	   System.out.println("Found token!");
+	    	   System.out.println("Correct token entered for this provider");
+		       System.out.println("Checking if token expired....");
+		       VerificationToken found_token = new VerificationToken();
+		       found_token.setProvider_id(rs2.getInt("ProviderID"));
+		       found_token.setToken(rs2.getString("Token"));
+		       found_token.setTime(rs2.getTime("ExpiryTime"));
+		       found_token.setExpiryDate(rs2.getDate("ExpiryDate"));
 			  
-		   }
+			   Calendar cal = Calendar.getInstance();
+			   Calendar cal1 = Calendar.getInstance();
+			   cal1.setTime(found_token.getExpiryDate());
+				
+			int expirationDay = cal1.get(Calendar.DAY_OF_YEAR);
+			System.out.println("Expiration day of date: " + expirationDay);
+			int currentDay = cal.get(Calendar.DAY_OF_YEAR);
+			System.out.println("Current day of date: " + currentDay);
+            
+			int currentHour = cal.get(Calendar.HOUR_OF_DAY);
+			int currentMinute = cal.get(Calendar.MINUTE);
+			int currentSecond = cal.get(Calendar.SECOND);
+			
+			Time expirationTime = found_token.getTime();
+			System.out.println("Expiration time: " + expirationTime);
+			cal1.setTime(expirationTime);
+			int expirationHour = cal1.get(Calendar.HOUR_OF_DAY);
+			int expirationMinute = cal1.get(Calendar.MINUTE);
+			int expirationSecond = cal1.get(Calendar.SECOND);
+			System.out.println("Expiration time: " + expirationHour +":"+expirationMinute+":"+expirationSecond);
+			System.out.println("Current time: " + currentHour+":"+currentMinute+":"+currentSecond);
+		//	if((found_token.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)
+			int leftDays = expirationDay - currentDay;
+			if(leftDays>=0)
+			System.out.println("Left days until expiration:" + leftDays);
+		    int leftHours = (expirationDay - currentDay)*24 + (expirationHour - currentHour); 
+			if(leftHours>=0)
+		    System.out.println("Left hours until expiration:" + leftHours);
+			int leftMinutes = (((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute));
+			if(leftMinutes>=0)
+			System.out.println("Left minutes until expiration:" + leftMinutes);
+			int leftSeconds = ((((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute))*60 + (expirationHour - currentHour));
+			if(leftSeconds>=0)
+			System.out.println("Left seconds until expiration:" + leftSeconds);
+
+			if(expirationDay - currentDay < 0) {
+			   t_items=null;
+				System.out.println("Token invalid due to day expiration!");
+			//throw new Exception("Token invalid due to day expiration!");	
+			}
+			
+			else if((expirationDay == currentDay) && (expirationHour - currentHour < 0))
+			{     t_items = null;
+			System.out.println("Token invalid due to hour expiration!");
+//				throw new Exception("Token invalid due to hour expiration!");	
+			}
+			
+			else if(((expirationDay == currentDay) && (expirationHour == currentHour)) && expirationMinute - currentMinute < 0) {
+				t_items = null;
+				System.out.println("Token invalid due to minute expiration!");
+			//	throw new Exception("Token invalid due to minute expiration!");	
+			}
+			
+			else if((expirationDay == currentDay) && (expirationHour == currentHour) && expirationMinute == currentMinute && expirationSecond - currentSecond < 0) {
+				t_items=null;
+				System.out.println("Token invalid due to seconds expiration!");
+				//throw new Exception("Token invalid due to seconds expiration!");	
+			}
+		       
+		   }//if rs2.next() != null 
 	       else {System.out.println("Entered token not found! Enter valid token!"); t_items=null;}
-		  
-	       System.out.println("Correct token entered for this provider");
-	       System.out.println("Checking if token expired....");
-	     	
-     	
-     	
-			try
-			{
-                	VerificationToken found_token = GetVerificationToken(connection, PatientID);
-				if (found_token.getToken().equals("NOTOKEN")){
-					throw new Exception("User don't have a token!");
-				}
-				
-				else {
-					Calendar cal = Calendar.getInstance();
-					Calendar cal1 = Calendar.getInstance();
-					cal1.setTime(found_token.getExpiryDate());
-					
-					
-					int expirationDay = cal1.get(Calendar.DAY_OF_YEAR);
-					System.out.println("Expiration day of date: " + expirationDay);
-					int currentDay = cal.get(Calendar.DAY_OF_YEAR);
-					System.out.println("Current day of date: " + currentDay);
-                    
-					int currentHour = cal.get(Calendar.HOUR_OF_DAY);
-					int currentMinute = cal.get(Calendar.MINUTE);
-					int currentSecond = cal.get(Calendar.SECOND);
-					
-					Time expirationTime = found_token.getTime();
-					System.out.println("Expiration time: " + expirationTime);
-					cal1.setTime(expirationTime);
-					int expirationHour = cal1.get(Calendar.HOUR_OF_DAY);
-					int expirationMinute = cal1.get(Calendar.MINUTE);
-					int expirationSecond = cal1.get(Calendar.SECOND);
-					System.out.println("Expiration time: " + expirationHour +":"+expirationMinute+":"+expirationSecond);
-					System.out.println("Current time: " + currentHour+":"+currentMinute+":"+currentSecond);
-				//	if((found_token.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)
-					
-					int leftDays = expirationDay - currentDay;
-					if(leftDays>=0)
-					System.out.println("Left days until expiration:" + leftDays);
-				    int leftHours = (expirationDay - currentDay)*24 + (expirationHour - currentHour); 
-					if(leftHours>=0)
-				    System.out.println("Left hours until expiration:" + leftHours);
-					int leftMinutes = (((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute));
-					if(leftMinutes>=0)
-					System.out.println("Left minutes until expiration:" + leftMinutes);
-					int leftSeconds = ((((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute))*60 + (expirationHour - currentHour));
-					if(leftSeconds>=0)
-					System.out.println("Left seconds until expiration:" + leftSeconds);
-					
-					
-					if(expirationDay - currentDay < 0) {
-					   t_items=null;
-					throw new Exception("Token invalid due to day expiration!");	
-					}
-					
-					else if((expirationDay == currentDay) && (expirationHour - currentHour < 0))
-					{     t_items = null;
-						throw new Exception("Token invalid due to hour expiration!");	
-					}
-					
-					else if(((expirationDay == currentDay) && (expirationHour == currentHour)) && expirationMinute - currentMinute < 0) {
-						t_items = null;
-						throw new Exception("Token invalid due to minute expiration!");	
-					}
-					
-					else if((expirationDay == currentDay) && (expirationHour == currentHour) && expirationMinute == currentMinute && expirationSecond - currentSecond < 0) {
-						t_items=null;
-						throw new Exception("Token invalid due to seconds expiration!");	
-					}
-					
-					
-				}
-				System.out.println("Token verification passed!");
-				
+	       if (t_items==null || t_items.isEmpty()){
+				 throw new WebApplicationException(404);
+			}	     
+//                	VerificationToken found_token = GetVerificationToken(connection, PatientID);
+//				if (found_token.getToken().equals("NOTOKEN")){
+//					System.out.println("User don't have a token!");
+//					//throw new Exception("User don't have a token!");
+//			       t_items=null;
+//				}				
 				//String uname = request.getParameter("uname");
 				//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
 			   // ps = connection.prepareStatement("CALL GetPatientsByProvider(?)");
 //				ps.setInt(1,PatientID);
-//				ResultSet rs = ps.executeQuery();
-				
-				if (t_items.isEmpty()){
-					 throw new WebApplicationException(404);
-				}
+//				ResultSet rs = ps.executeQuery();				
 				else
 				{
+					System.out.println("Token verification passed!");
 					return t_items;
 				}
 			}  
 				catch(Exception e)
-				{
+				{   
 					e.printStackTrace();
 					throw e;
 				}
@@ -1895,11 +1970,14 @@ public class Project {
 	}	
 	
 	public boolean AddContactPatient(Connection connection, Integer providerid, String telephoneNumber, 
-			String firstName, String lastName,  String ChatId, String RoomId) throws Exception
+			String firstName, String lastName,  String ChatId, String RoomId, String securityToken) throws Exception
 	{
 		PreparedStatement ps=null;
 		try
 		{
+		       if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404);			 
+		 		}	
 		    ps =connection.prepareStatement("call AddPatientContact(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		    ps.setInt(1,providerid);
 		    ps.setString(2,telephoneNumber);
@@ -1933,11 +2011,14 @@ public class Project {
 	
 	
 	public boolean AddContactDoctor(Connection connection, Integer providerid, String telephoneNumber, 
-			String firstName, String lastName, String ChatId, String RoomId) throws Exception
+			String firstName, String lastName, String ChatId, String RoomId, String securityToken) throws Exception
 	{
 		PreparedStatement ps=null;
 		try
-		{
+		{			   
+		       if(checkSecurityToken(connection, securityToken)==false) {
+					 throw new WebApplicationException(404);		 
+		 		}		
 			System.out.println("Prvo");
 		    ps =connection.prepareStatement("call AddProviderContact(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		    ps.setInt(1,providerid);
@@ -1947,12 +2028,10 @@ public class Project {
 			ps.setString(5,ChatId);
 			ps.setString(6,RoomId);
 			//ps.setString(4,"0");
-			ps.executeUpdate();
-			
+			ps.executeUpdate();			
             //prest.executeUpdate(query, PreparedStatement.RETURN_GENERATED_KEYS); Throws an error
             //prest.executeQuery(); Throws an error			
 			ResultSet rs = ps.executeQuery();
-			
 			if (rs.next()){
 				System.out.println("Result");
 			}
@@ -1968,15 +2047,16 @@ public class Project {
 		      connection.close();
 		}
 	}	
-	
-
-	
-	public List<TreatmentItem> getTreatmentItemsByTreatment(Connection connection, int TreatmentID, String TT) throws Exception
+		
+	public List<TreatmentItem> getTreatmentItemsByTreatment(Connection connection, int TreatmentID, String TT, String securityToken) throws Exception
 	{
 		List<TreatmentItem> t_items = new ArrayList<TreatmentItem>();
 		PreparedStatement ps=null;
 			try
 			{
+			       if(checkSecurityToken(connection, securityToken)==false) {
+				   throw new WebApplicationException(404);			 
+			 		}	
 				System.out.println("Try");
 				//String uname = request.getParameter("uname");
 				//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
@@ -1984,16 +2064,13 @@ public class Project {
 				ps.setString(1, TT);
 				ps.setInt(2,TreatmentID);
 				ResultSet rs = ps.executeQuery();
-				
 				System.out.println(rs);
 				//System.out.println(rs.getInt(1));
-				
 				System.out.println("Finish");
 				while(rs.next())
 				{
 					System.out.println("rs.next");
 					//TreatmentItem p_eden = new TreatmentItem();
-					
 					TreatmentItem p_eden = new TreatmentItem(
 										rs.getInt(1),
 										rs.getInt(2),
@@ -2011,12 +2088,10 @@ public class Project {
 										rs.getString(14),
 										rs.getString(15)
 										);
-			
-
 					t_items.add(p_eden);
 				}
 				
-				if (t_items.isEmpty()){
+				if (t_items==null || t_items.isEmpty()){
 					 throw new WebApplicationException(404);
 				}
 				else
@@ -2035,13 +2110,15 @@ public class Project {
 				}
 	}
 	
-	
-	public Patients getPatientsData(Connection connection , int patientId) throws Exception
+	public Patients getPatientsData(Connection connection , int patientId, String securityToken) throws Exception
 	{
 		Patients t_items = new Patients();
 		PreparedStatement ps=null;
 			try
-			{
+			{     
+			       if(checkSecurityToken(connection, securityToken)==false) {
+				   throw new WebApplicationException(404);			 
+			 		}		
 				//String uname = request.getParameter("uname");
 				//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
 			    ps = connection.prepareStatement("CALL getPatientData(?)");
@@ -2049,8 +2126,7 @@ public class Project {
 				ResultSet rs = ps.executeQuery();
 				while(rs.next())
 				{
-					//TreatmentItem p_eden = new TreatmentItem();
-					
+					//TreatmentItem p_eden = new TreatmentItem();	
 					Patients p_eden = new Patients(
 										rs.getInt(1),
 										rs.getString(2),
@@ -2078,7 +2154,6 @@ public class Project {
 										);
 					t_items = p_eden;
 				}
-				
 				if (t_items.getPatientId() == 0){
 					 throw new NotFoundException();
 				}
@@ -2098,12 +2173,15 @@ public class Project {
 			}
 	}
 	
-	public Patients getPatientsDataByChatID(Connection connection , int p_chatid) throws Exception
+	public Patients getPatientsDataByChatID(Connection connection , int p_chatid, String securityToken) throws Exception
 	{
 		Patients t_items = new Patients();
 		PreparedStatement ps=null;
 			try
 			{
+			       if(checkSecurityToken(connection, securityToken)==false) {
+						 throw new WebApplicationException(404);		 
+			 		}
 				//String uname = request.getParameter("uname");
 				//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
 			    ps = connection.prepareStatement("CALL getPatientDatabyChatId(?)");
@@ -2111,8 +2189,7 @@ public class Project {
 				ResultSet rs = ps.executeQuery();
 				while(rs.next())
 				{
-					//TreatmentItem p_eden = new TreatmentItem();
-					
+					//TreatmentItem p_eden = new TreatmentItem();	
 					Patients p_eden = new Patients(
 										rs.getInt(1),
 										rs.getString(2),
@@ -2140,7 +2217,6 @@ public class Project {
 										);
 					t_items = p_eden;
 				}
-				
 				if (t_items.getPatientId() == 0){
 					 throw new NotFoundException();
 				}
@@ -2160,13 +2236,15 @@ public class Project {
 			}
 	}
 	
-	
-	public Patients getPatientsDataRoomId(Connection connection , int patientId, int providerId) throws Exception
+	public Patients getPatientsDataRoomId(Connection connection , int patientId, int providerId, String securityToken) throws Exception
 	{
 		Patients t_items = new Patients();
 		PreparedStatement ps=null;
 			try
 			{
+			       if(checkSecurityToken(connection, securityToken)==false) {
+						 throw new WebApplicationException(404);		 
+			 		}	
 				//String uname = request.getParameter("uname");
 				//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
 			    ps = connection.prepareStatement("CALL getPatientDataRoomId(?,?)");
@@ -2176,7 +2254,6 @@ public class Project {
 				while(rs.next())
 				{
 					//TreatmentItem p_eden = new TreatmentItem();
-					
 					Patients p_eden = new Patients(
 										rs.getInt(1),
 										rs.getString(2),
@@ -2224,15 +2301,16 @@ public class Project {
 			}
 	}	
 	
-	
-	
-	public TreatmentItemList updatetreatmenitemlist(Connection connection, TreatmentItemList t_items, int TreatmentItemListId) throws Exception
+	public TreatmentItemList updatetreatmenitemlist(Connection connection, TreatmentItemList t_items, int TreatmentItemListId, String securityToken) throws Exception
 	{	
 		connection.setAutoCommit(false);
 		PreparedStatement pss=null;
 		System.out.println("start");
 				Gson gson = new Gson();
 			try{
+			       if(checkSecurityToken(connection, securityToken)==false) {
+						 throw new WebApplicationException(404);		 
+			 		}	
 				pss =connection.prepareStatement("call updateTreatmentItemList(?,?,?,?,?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS); 
 				pss.setInt(1,NVL(t_items.getTreatmentItemListId())); 
 				pss.setInt(2,NVL(t_items.getTreatmentitem())); 
@@ -2290,8 +2368,6 @@ public class Project {
 		}
 	}
 	
-	
-	
 	public List<ProviderProvider> getprovidersdatabyprovider(Connection connection, int ProviderDetail, String securityToken) throws Exception
 	{
 		List<ProviderProvider> t_items = new ArrayList<ProviderProvider>();
@@ -2301,7 +2377,6 @@ public class Project {
 				ps = connection.prepareStatement("CALL getprovidersdatabyprovider(?)");
 				ps.setInt(1,ProviderDetail);
 				ResultSet rs = ps.executeQuery();
-				
 				while(rs.next())
 				{
 					ProviderProvider p_eden = new ProviderProvider(
@@ -2321,16 +2396,13 @@ public class Project {
 							);
 					t_items.add(p_eden);
 				}
-				
-				
-				System.out.println("ProviderID: " + ProviderDetail);
-				  
+  				 
+				   System.out.println("ProviderID: " + ProviderDetail);			  
 				   System.out.println("Token entered:" + securityToken);
 				   String checkSecurityTokenSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.Token = '" + securityToken + "' AND verificationtoken.ProviderID = '" + ProviderDetail + "'";
 			       PreparedStatement preparedStatement= connection.prepareStatement(checkSecurityTokenSQL);    
 			       ResultSet rs2 = preparedStatement.executeQuery();
-			      // System.out.println("Found token: "+ rs1.next());
-			       
+			      // System.out.println("Found token: "+ rs1.next());   
 				  // if (rs.next()&&rs1.next()){
 			       if (rs2.next()){
 			    	   System.out.println("Found token!");
@@ -2338,9 +2410,6 @@ public class Project {
 				       System.out.println("Checking if token expired....");  
 				   }
 			       else {System.out.println("Entered token not found! Enter valid token!"); t_items=null; return t_items;}
-				  
-			       
-			
 			       VerificationToken found_token = GetVerificationToken(connection, ProviderDetail);
 					if (found_token.getToken().equals("NOTOKEN")){
 						throw new Exception("User don't have a token!");
@@ -2349,18 +2418,14 @@ public class Project {
 					else {
 						Calendar cal = Calendar.getInstance();
 						Calendar cal1 = Calendar.getInstance();
-						cal1.setTime(found_token.getExpiryDate());
-						
-						
+						cal1.setTime(found_token.getExpiryDate());		
 						int expirationDay = cal1.get(Calendar.DAY_OF_YEAR);
 						System.out.println("Expiration day of date: " + expirationDay);
 						int currentDay = cal.get(Calendar.DAY_OF_YEAR);
-						System.out.println("Current day of date: " + currentDay);
-	                    
+						System.out.println("Current day of date: " + currentDay);	                    
 						int currentHour = cal.get(Calendar.HOUR_OF_DAY);
 						int currentMinute = cal.get(Calendar.MINUTE);
-						int currentSecond = cal.get(Calendar.SECOND);
-						
+						int currentSecond = cal.get(Calendar.SECOND);						
 						Time expirationTime = found_token.getTime();
 						System.out.println("Expiration time: " + expirationTime);
 						cal1.setTime(expirationTime);
@@ -2369,8 +2434,7 @@ public class Project {
 						int expirationSecond = cal1.get(Calendar.SECOND);
 						System.out.println("Expiration time: " + expirationHour +":"+expirationMinute+":"+expirationSecond);
 						System.out.println("Current time: " + currentHour+":"+currentMinute+":"+currentSecond);
-					//	if((found_token.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)
-						
+					//	if((found_token.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)						
 						int leftDays = expirationDay - currentDay;
 						if(leftDays>=0)
 						System.out.println("Left days until expiration:" + leftDays);
@@ -2382,53 +2446,34 @@ public class Project {
 						System.out.println("Left minutes until expiration:" + leftMinutes);
 						int leftSeconds = ((((expirationDay - currentDay)*24 + (expirationHour - currentHour))*60 + (expirationMinute-currentMinute))*60 + (expirationHour - currentHour));
 						if(leftSeconds>=0)
-						System.out.println("Left seconds until expiration:" + leftSeconds);
-						
-						
+						System.out.println("Left seconds until expiration:" + leftSeconds);					
 						if(expirationDay - currentDay < 0) {
 						   t_items=null;
 						   System.out.println("Token invalid due to day expiration!");
 					    	//throw new Exception("Token invalid due to day expiration!");	
-							 
-
-						}
-						
+						}						
 						else if((expirationDay == currentDay) && (expirationHour - currentHour < 0))
 						{     t_items = null;
 							System.out.println("Token invalid due to hour expiration!");
-						//throw new Exception("Token invalid due to hour expiration!");	
-							
-						}
-						
+						//throw new Exception("Token invalid due to hour expiration!");								
+						}		
 						else if(((expirationDay == currentDay) && (expirationHour == currentHour)) && expirationMinute - currentMinute < 0) {
 							t_items = null;
 							System.out.println("Token invalid due to minute expiration!");
-//							throw new Exception("Token invalid due to minute expiration!");	
-							
-						}
-						
+//							throw new Exception("Token invalid due to minute expiration!");								
+						}				
 						else if((expirationDay == currentDay) && (expirationHour == currentHour) && expirationMinute == currentMinute && expirationSecond - currentSecond < 0) {
 							t_items=null;
 							System.out.println("Token invalid due to seconds expiration!");
-							//throw new Exception("Token invalid due to seconds expiration!");	
-							
-						}
-						
-						
-					}
-					
-					
+							//throw new Exception("Token invalid due to seconds expiration!");								
+						}						
+					}					
 					//String uname = request.getParameter("uname");
 					//PreparedStatement ps = connection.prepareStatement("SELECT SavedTreatmentItemId, SavedTreatmentDetail, Name, TypeT, RepeatT, Duration, RenderingInfo, Created, CreatedBy, Modified, ModifiedBy FROM savedtreatmentitem WHERE savedtreatmentdetail=?");
 				   // ps = connection.prepareStatement("CALL GetPatientsByProvider(?)");
 //					ps.setInt(1,PatientID);
-//					ResultSet rs = ps.executeQuery();
-					
-				
-			       
-			       
-				
-				if (t_items.isEmpty()){
+//					ResultSet rs = ps.executeQuery();				
+				if (t_items==null || t_items.isEmpty()){
 					 throw new WebApplicationException(404);
 				}
 				else
@@ -2436,7 +2481,7 @@ public class Project {
 					System.out.println("Token verification passed!");
 					return t_items;
 				}
-			}
+		 	 }
 				catch(Exception e)
 				{
 					e.printStackTrace();
@@ -2448,15 +2493,16 @@ public class Project {
 				}
 	}	
 	
-
-	
-	public boolean EndTreatment(Connection connection, int ActiveTreatmentId) throws Exception
+	public boolean EndTreatment(Connection connection, int ActiveTreatmentId, String securityToken) throws Exception
 	{	
 		PreparedStatement ps=null;
 		int p_ActiveTreatmentId;
 		boolean flag=false;
 		try
 		{
+		       if(checkSecurityToken(connection, securityToken)==false) {
+			   throw new WebApplicationException(404);			 
+		 		}
 			ps = connection.prepareCall("call EndTreatment(?)");
 			ps.setInt(1,ActiveTreatmentId);
 		   
@@ -2464,8 +2510,7 @@ public class Project {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()){
 				flag=(rs.getBoolean(1));
-			}	
-			
+			}		
 			if (flag==false){
 				 throw new WebApplicationException(404);
 			}
@@ -2483,8 +2528,7 @@ public class Project {
 			connection.close();
 		}
 	}	
-	
-	
+
 	///// tuka api activation
 	 public Providers CheckProviderActivationKey(Connection connection, String deviceId , String phone , int inputCode, String securityToken) throws Exception
 	 {
@@ -2498,28 +2542,21 @@ public class Project {
 	      ps.setString(1,deviceId);
 	      ps.setString(2,phone);
 	      ps.setInt(3, inputCode);
-	       
-	   ResultSet rs = ps.executeQuery();
-	   
-		  PreparedStatement ps1 =connection.prepareStatement("SELECT * FROM providers where providers.DeviceId = '" + deviceId + "'");
-	       
+  	      ResultSet rs = ps.executeQuery();
+		  PreparedStatement ps1 =connection.prepareStatement("SELECT * FROM providers where providers.DeviceId = '" + deviceId + "'"); 
 	      ResultSet rs1 = ps1.executeQuery();
-	     
 	      if(rs.next()&&rs1.next()) {
 	    	   provider_id =rs.getInt(1);
 	      }
-	      
 	      System.out.println("ProviderID: " + provider_id);
-		  
-	   System.out.println("Token entered:" + securityToken);
-	   String checkSecurityTokenSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.Token = '" + securityToken + "' AND verificationtoken.ProviderID = '" + provider_id + "'";
-       PreparedStatement preparedStatement= connection.prepareStatement(checkSecurityTokenSQL);    
-       ResultSet rs2 = preparedStatement.executeQuery();
-      // System.out.println("Found token: "+ rs1.next());
-       
-	  // if (rs.next()&&rs1.next()){
-       if (rs2.next()){
-    	   System.out.println("Found token!");
+		  System.out.println("Token entered:" + securityToken);
+		  String checkSecurityTokenSQL = "SELECT * FROM verificationtoken WHERE verificationtoken.Token = '" + securityToken + "' AND verificationtoken.ProviderID = '" + provider_id + "'";
+	      PreparedStatement preparedStatement= connection.prepareStatement(checkSecurityTokenSQL);    
+	      ResultSet rs2 = preparedStatement.executeQuery();
+	      // System.out.println("Found token: "+ rs1.next());
+		  // if (rs.next()&&rs1.next()){
+          if (rs2.next()){
+     	    System.out.println("Found token!");
 		    result.setProviderId(rs.getInt(1));
 		    result.setFirstName(rs.getString(2));
 		    result.setTypeProvider(rs.getString(3));
@@ -2542,30 +2579,34 @@ public class Project {
 		    result.setProfileImageUrl(rs.getString(20));
 		    result.setRegId(rs.getString(21));
 		    result.setNotificationEnabled(rs.getInt(22));
-	   }
-	  
-       System.out.println("Token verified for provider:" + result.getFirstName());
-	   return result;
-	  }
+		    System.out.println("Token verified for provider:" + result.getFirstName());
+			return result;
+          }//if rs2.next() != null
+          else{
+				throw new WebApplicationException(404);
+			  }
+      }
 	  catch(Exception e)
 	  {
 	   e.printStackTrace();
 	   throw e;
 	  }
-
 	  finally {
 	    ps.close();
 	        connection.close();
 	  }
 	 }
 	
-	public SavedTemplate DeleteSavedTemplate(Connection connection, int savedtreatmentdetail,int savedtreatmenttemplateid) throws Exception
+	public SavedTemplate DeleteSavedTemplate(Connection connection, int savedtreatmentdetail,int savedtreatmenttemplateid, String securityToken) throws Exception
 	{
 		SavedTemplate p_eden = new SavedTemplate();
 		PreparedStatement ps=null;
 		ps = connection.prepareStatement("CALL DeleteSavedTemplate(?,?)");
 		try
 		{
+		       if(checkSecurityToken(connection, securityToken)==false) {
+			   throw new WebApplicationException(404);
+		 		}
 			ps.setInt(1,savedtreatmentdetail);
 			ps.setInt(2,savedtreatmenttemplateid);
 			ResultSet rs = ps.executeQuery();
@@ -2579,10 +2620,8 @@ public class Project {
 									rs.getInt(5),   
 									rs.getDate(6),  
 									rs.getInt(7)    
-									);
-				
-			}
-			
+									);	
+			}		
 			if (p_eden == null){
 				 throw new WebApplicationException(404);
 			}
@@ -2603,7 +2642,7 @@ public class Project {
 	}
 	
 	/// Insert base64 image and save locally
-	 public String InsertBase64Image(Connection connection, TreatmentItem t_item) throws Exception
+	 public String InsertBase64Image(Connection connection, TreatmentItem t_item, String securityToken) throws Exception
 	  { 
 	   System.out.println("Vlezeeee");
 	   PreparedStatement ps=null; 
@@ -2612,18 +2651,16 @@ public class Project {
 	   String image="" ;
 	   JSONObject json;
 	   String Ime_fajl="";
-	   
 	   int randomNumber = (int) Math.floor(Math.random() * 100); 
 	   Timestamp timestamp = new Timestamp(System.currentTimeMillis()); 
-	   Ime_fajl=randomNumber+ (timestamp.toString().replace(":", "").replace("-", "").replace(".", "").replace(" ", "")).substring(1, 12);	
-	   
+	   Ime_fajl=randomNumber+ (timestamp.toString().replace(":", "").replace("-", "").replace(".", "").replace(" ", "")).substring(1, 12);	   
 	   System.out.println("Vlezeeee i ova e random number: "+Ime_fajl);
-	   
 	   Date d = new Date(System.currentTimeMillis()+5*60*1000);
-	   
 	   try 
 	   {
-
+		   if(checkSecurityToken(connection, securityToken)==false) {
+				 throw new WebApplicationException(404);
+	 		}	   
 	      image = t_item.getRenderingInfo(); 
 	      Gson gson = new Gson(); 
 	      json = new JSONObject(t_item.getRenderingInfo()); 
@@ -2634,9 +2671,6 @@ public class Project {
 	      osf.write(imgBytes); 
 	      osf.close(); 
 	      //System.out.println("OVA e slikata vo bajti: "+imgBytes); 
-	           
-	        
-
 	     return Ime_fajl; 
 	   }
 	   catch(Exception e)
@@ -2646,16 +2680,17 @@ public class Project {
 	   }
 	  }	
 	
-	
-	
-	public boolean deleteProviderProvider(Connection connection, int ProviderDetail1, int ProviderDetail2) throws Exception
+	public boolean deleteProviderProvider(Connection connection, int ProviderDetail1, int ProviderDetail2, String securityToken) throws Exception
 	{	
 		PreparedStatement ps=null;
 		int p_ProviderDetail1;
 		int p_ProviderDetail2;
 		boolean flag=false;
-		try
+		try	
 		{
+			if(checkSecurityToken(connection, securityToken)==false) {
+				 throw new WebApplicationException(404);
+	 		}
 			ps = connection.prepareCall("call deleteProviderProvider(?,?)");
 			ps.setInt(1,ProviderDetail1);
 			ps.setInt(2,ProviderDetail2);
@@ -2664,8 +2699,7 @@ public class Project {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()){
 				flag=(rs.getBoolean(1));
-			}	
-			
+			}		
 			if (flag==false){
 				 throw new WebApplicationException(404);
 			}
@@ -2684,25 +2718,24 @@ public class Project {
 		}
 	}
 	
-	
-	public boolean deleteProviderPatient(Connection connection, int ProviderDetail, int PatientDetail) throws Exception
+	public boolean deleteProviderPatient(Connection connection, int ProviderDetail, int PatientDetail, String securityToken) throws Exception
 	{	
 		PreparedStatement ps=null;
 		int p_ProviderDetail;
 		int p_PatientDetail;
-		boolean flag=false;
+		boolean flag=false;		
 		try
 		{
+		if(checkSecurityToken(connection, securityToken)==false) {
+			 throw new WebApplicationException(404);
+ 		   }
 			ps = connection.prepareCall("call deleteProviderPatient(?,?)");
 			ps.setInt(1,ProviderDetail);
 			ps.setInt(2,PatientDetail);
-		   
-
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()){
 				flag=(rs.getBoolean(1));
-			}	
-			
+			}		
 			if (flag==false){
 				 throw new WebApplicationException(404);
 			}
@@ -2754,19 +2787,21 @@ public class Project {
 //	  }  
 //	}	
 	
-	public boolean updateProviderImageUrl(Connection connection, int providerId, String imageUrl, String name, String lastname) throws Exception
-	{	
+	public boolean updateProviderImageUrl(Connection connection, int providerId, String imageUrl, String name, String lastname, String securityToken) throws Exception
+	{		
 		PreparedStatement ps=null;
 		int p_ActiveTreatmentId;
 		boolean flag=false;
 		try
-		{
+		{  
+			if(checkSecurityToken(connection, securityToken)==false) {
+			throw new WebApplicationException(404);
+		    }
 		    ps = connection.prepareStatement("call UpdateProvider(?,?,?,?)",Statement.RETURN_GENERATED_KEYS); 
 		    ps.setInt(1,providerId); 
 		    ps.setString(2,imageUrl); 
 		    ps.setString(3,name);
 		    ps.setString(4,lastname);	   
-
 			ResultSet rs = ps.executeQuery();
 			System.out.println("ova e rezultatot: "+rs);
 			flag = true;
@@ -2782,6 +2817,4 @@ public class Project {
 			return flag;
 		}
 	}	
-	
-	
 }

@@ -32,13 +32,13 @@ import com.mysql.jdbc.Statement;
 
 public class ProjectManager {
 	
-	public List<RoomId> GetActiveContactsByProvider(int providerid) throws Exception {
+	public List<RoomId> GetActiveContactsByProvider(int providerid, String securityToken) throws Exception {
 		List<RoomId> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.GetActiveContactsByProvider(connection,providerid);
+				t_items=project.GetActiveContactsByProvider(connection, providerid, securityToken);
 		
 		} catch (Exception e) {
 			throw e;
@@ -46,13 +46,13 @@ public class ProjectManager {
 		return t_items;
 	}		
 	
-	public Patients getPatientDataRoomId(int patientId, int providerid) throws Exception {
+	public Patients getPatientDataRoomId(int patientId, int providerid, String securityToken) throws Exception {
 		Patients t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getPatientsDataRoomId(connection,patientId,providerid);
+				t_items=project.getPatientsDataRoomId(connection,patientId,providerid, securityToken);
 		
 		} catch (Exception e) {
 			throw e;
@@ -60,13 +60,13 @@ public class ProjectManager {
 		return t_items;
 	}	
 	
-	public Patients getPatientsDataByChatID(int patientId) throws Exception {
+	public Patients getPatientsDataByChatID(int patientId, String securityToken) throws Exception {
 		Patients t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getPatientsDataByChatID(connection,patientId);
+				t_items=project.getPatientsDataByChatID(connection,patientId, securityToken);
 		
 		} catch (Exception e) {
 			throw e;
@@ -74,39 +74,39 @@ public class ProjectManager {
 		return t_items;
 	}
 	
-	public List<ReminderNotification> GetNotificationForReminder() throws Exception {
+	public List<ReminderNotification> GetNotificationForReminder(String securityToken) throws Exception {
 		List<ReminderNotification> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.GetNotificationForReminder(connection);
+				t_items=project.GetNotificationForReminder(connection, securityToken);
 		} catch (Exception e) {
 			throw e;
 		}
 		return t_items;
 	}		
 	
-	public List<TreatmentItemListRegid> getTreatmentItemListLoadPatient(int p_patientid) throws Exception {
+	public List<TreatmentItemListRegid> getTreatmentItemListLoadPatient(int p_patientid, String securityToken) throws Exception {
 		List<TreatmentItemListRegid> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getTreatmentItemListLoadPatient(connection,p_patientid);
+				t_items=project.getTreatmentItemListLoadPatient(connection,p_patientid, securityToken);
 		} catch (Exception e) {
 			throw e;
 		}
 		return t_items;
 	}	
 	
-	public Patients InsertPatient(Patients p_patient)  throws Exception {
+	public Patients InsertPatient(Patients p_patient, String security_token)  throws Exception {
 		Patients t_items= new Patients();
 		try {
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			t_items=project.InsertPatient(connection, p_patient);
+			t_items=project.InsertPatient(connection, p_patient, security_token);
 	
 	} catch (Exception e) {
 		throw e;		
@@ -126,13 +126,13 @@ public class ProjectManager {
 		return flag;
 	}
 	
-	public Providers GetProviderDataByChatId(int p_chatid) throws Exception {
+	public Providers GetProviderDataByChatId(int p_chatid, String security_token) throws Exception {
 		Providers t_items = new Providers();
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.GetProviderDataByChatId(connection, p_chatid);
+				t_items=project.GetProviderDataByChatId(connection, p_chatid, security_token);
 		
 		} catch (Exception e) {
 			throw e;
@@ -154,13 +154,13 @@ public class ProjectManager {
 		return t_items;
 	}	
 	
-	public List<SavedTemplate> getSavedTemplate(int providerDetail) throws Exception {
+	public List<SavedTemplate> getSavedTemplate(int providerDetail, String security_token) throws Exception {
 		List<SavedTemplate> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getSavedTemplate(connection, providerDetail);
+				t_items=project.getSavedTemplate(connection, providerDetail, security_token);
 		
 		} catch (Exception e) {
 			throw e;
@@ -168,13 +168,13 @@ public class ProjectManager {
 		return t_items;
 	}	
 	
-	public List<TreatmentItemListScroll> getTreatmentItemListLoad(int p_activetreatmentid) throws Exception {
+	public List<TreatmentItemListScroll> getTreatmentItemListLoad(int p_activetreatmentid, String security_token) throws Exception {
 		List<TreatmentItemListScroll> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getTreatmentItemListLoad(connection,p_activetreatmentid);
+				t_items=project.getTreatmentItemListLoad(connection,p_activetreatmentid, security_token);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -182,13 +182,13 @@ public class ProjectManager {
 	}	
 
 	public List<TreatmentItemListRegid> getTreatmentItemListScroll(int TreatmentItemListID, 
-			String T_UP_DOWN, int range) throws Exception {
+			String T_UP_DOWN, int range, String securityToken) throws Exception {
 		List<TreatmentItemListRegid> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getTreatmentItemListScroll(connection,TreatmentItemListID,T_UP_DOWN, range);
+				t_items=project.getTreatmentItemListScroll(connection,TreatmentItemListID,T_UP_DOWN, range, securityToken);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -196,27 +196,27 @@ public class ProjectManager {
 	}
 	
 	public List<TreatmentItemListRegid> getTreatmentItemListScrollPatient(int TreatmentItemListID, 
-			String T_UP_DOWN, int range) throws Exception {
+			String T_UP_DOWN, int range, String securityToken) throws Exception {
 		List<TreatmentItemListRegid> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getTreatmentItemListScrollPatient(connection,TreatmentItemListID,T_UP_DOWN, range);
+				t_items=project.getTreatmentItemListScrollPatient(connection,TreatmentItemListID,T_UP_DOWN, range, securityToken);
 		} catch (Exception e) {
 			throw e;
 		}
 		return t_items;
 	}	
 	
-public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtreatmentid) throws Exception
+public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtreatmentid, String security_token) throws Exception
 {		
 		boolean flag;
 		try{
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.UpdateSavedTreatment(connection, t_items, p_savedtreatmentid);
+			flag=project.UpdateSavedTreatment(connection, t_items, p_savedtreatmentid, security_token);
 		} 
 		
 		catch (Exception e) {
@@ -224,14 +224,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		}
 			return flag;
 }	
-	public SubTreatment UpdateActiveSubTreatment(List<TreatmentItem> t_items, int p_subtreatmentid) throws Exception
+	public SubTreatment UpdateActiveSubTreatment(List<TreatmentItem> t_items, int p_subtreatmentid, String securityToken) throws Exception
 {		
 		SubTreatment flag=new SubTreatment();;
 		try{
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.UpdateActiveSubTreatment(connection, t_items,p_subtreatmentid);
+			flag=project.UpdateActiveSubTreatment(connection, t_items,p_subtreatmentid, securityToken);
 		} 
 		
 		catch (Exception e) {
@@ -241,14 +241,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 }	
 	
 	public int CheckNameSavedTreatment(int ProviderID, 
-			String NameTreatment, List<TreatmentItem> t_items) throws Exception
+			String NameTreatment, List<TreatmentItem> t_items, String security_token) throws Exception
 	{
 		int flag;
 		try{
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.CheckNameSavedTreatment(connection, ProviderID, NameTreatment, t_items);
+			flag=project.CheckNameSavedTreatment(connection, ProviderID, NameTreatment, t_items, security_token);
 		}
 		catch (Exception e) {
 			throw e;		
@@ -258,14 +258,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	}	
 	
 	public boolean InsertSavedTreatment(int ProviderID, 
-			String NameTreatment, List<TreatmentItem> t_items) throws Exception
+			String NameTreatment, List<TreatmentItem> t_items, String security_token) throws Exception
 	{
 		boolean flag;
 		try{
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.InsertSavedTreatment(connection, ProviderID, NameTreatment, t_items);
+			flag=project.InsertSavedTreatment(connection, ProviderID, NameTreatment, t_items, security_token);
 		}
 		catch (Exception e) {
 			throw e;		
@@ -276,7 +276,7 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	
 	public SubTreatment InsertActiveSubTreatment(int activeTreatmentID , 
 			int ProviderID, int PatientID, String NameTreatment, String SubNameTreatment, 
-			List<TreatmentItem> t_items) throws Exception
+			List<TreatmentItem> t_items, String security_token) throws Exception
 {		
 		int flag=0;
 		SubTreatment ret_sub_t=new SubTreatment();
@@ -284,7 +284,7 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			ret_sub_t=project.InsertActiveSubTreatment(connection, activeTreatmentID, ProviderID, PatientID, NameTreatment, SubNameTreatment, t_items);
+			ret_sub_t=project.InsertActiveSubTreatment(connection, activeTreatmentID, ProviderID, PatientID, NameTreatment, SubNameTreatment, t_items, security_token);
 		} 
 		
 		catch (Exception e) {
@@ -323,13 +323,13 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		
 	}
 	
-	public PatientsCascade getTreatmentByRoomId(String p_roomid) throws Exception {
+	public PatientsCascade getTreatmentByRoomId(String p_roomid, String securityToken) throws Exception {
 		PatientsCascade t_items= new PatientsCascade();
 		try {
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			t_items=project.getTreatmentByRoomId(connection, p_roomid);// (connection, p_roomid);
+			t_items=project.getTreatmentByRoomId(connection, p_roomid, securityToken);// (connection, p_roomid);
 	
 	} catch (Exception e) {
 		throw e;		
@@ -352,13 +352,13 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	}
 	
 	public boolean AddContactPatient(Integer providerid, String telephoneNumber, String firstName, 
-			String lastName, String ChatId, String RoomId) throws Exception {
+			String lastName, String ChatId, String RoomId, String security_token) throws Exception {
 		boolean flag;
 		try {
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.AddContactPatient(connection, providerid, telephoneNumber, firstName, lastName, ChatId, RoomId);
+			flag=project.AddContactPatient(connection, providerid, telephoneNumber, firstName, lastName, ChatId, RoomId, security_token);
 	
 	} catch (Exception e) {
 		throw e;
@@ -367,13 +367,13 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	}	
 	
 	public boolean AddContactDoctor(Integer providerid, String telephoneNumber, String firstName, 
-			String lastName, String ChatId, String RoomId) throws Exception {
+			String lastName, String ChatId, String RoomId, String security_token) throws Exception {
 		boolean flag;
 		try {
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.AddContactDoctor(connection, providerid, telephoneNumber, firstName, lastName,ChatId, RoomId);
+			flag=project.AddContactDoctor(connection, providerid, telephoneNumber, firstName, lastName,ChatId, RoomId, security_token);
 	
 	} catch (Exception e) {
 		throw e;
@@ -381,13 +381,13 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	return flag;
 	}
 	
-	public List<TreatmentItem> getTreatmentItemsByTreatment(int TreatmentID, String TT) throws Exception {
+	public List<TreatmentItem> getTreatmentItemsByTreatment(int TreatmentID, String TT, String security_token) throws Exception {
 		List<TreatmentItem> t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getTreatmentItemsByTreatment(connection, TreatmentID, TT);
+				t_items=project.getTreatmentItemsByTreatment(connection, TreatmentID, TT, security_token);
 		
 		} catch (Exception e) {
 			throw e;
@@ -395,13 +395,13 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		return t_items;
 	}	
 	
-	public Patients getPatientData(int patientId) throws Exception {
+	public Patients getPatientData(int patientId, String security_token) throws Exception {
 		Patients t_items = null;
 		try {
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				t_items=project.getPatientsData(connection,patientId);
+				t_items=project.getPatientsData(connection,patientId, security_token);
 		
 		} catch (Exception e) {
 			throw e;
@@ -410,14 +410,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	}
 	
 	
-	public TreatmentItemList updatetreatmenitemlist(TreatmentItemList t_items, int TreatmentItemListId) throws Exception
+	public TreatmentItemList updatetreatmenitemlist(TreatmentItemList t_items, int TreatmentItemListId, String security_token) throws Exception
 	{		
 		TreatmentItemList flag;
 			try{
 			    Database database= new Database();
 			    Connection connection = database.Get_Connection();
 				Project project= new Project();
-				flag=project.updatetreatmenitemlist(connection, t_items, TreatmentItemListId);
+				flag=project.updatetreatmenitemlist(connection, t_items, TreatmentItemListId, security_token);
 			} 
 			
 			catch (Exception e) {
@@ -444,14 +444,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	
 	
 
-    public SavedTemplate DeleteSavedTemplate(@PathParam("savedtreatmentdetail")int savedtreatmentdetail,@PathParam("savedtreatmenttemplateid")int savedtreatmenttemplateid)throws Exception 
+    public SavedTemplate DeleteSavedTemplate(@PathParam("savedtreatmentdetail")int savedtreatmentdetail,@PathParam("savedtreatmenttemplateid")int savedtreatmenttemplateid, String security_token)throws Exception 
 	{
     	SavedTemplate t_items= new SavedTemplate();
 		try {
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			t_items=project.DeleteSavedTemplate(connection, savedtreatmentdetail,savedtreatmenttemplateid);
+			t_items=project.DeleteSavedTemplate(connection, savedtreatmentdetail,savedtreatmenttemplateid, security_token);
 	
 	} catch (Exception e) {
 		throw e;		
@@ -461,14 +461,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 
 
 	
-	public boolean EndTreatment(int ActiveTreatmentId) throws Exception
+	public boolean EndTreatment(int ActiveTreatmentId, String security_token) throws Exception
 	{
 		boolean flag;
 		try{
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.EndTreatment(connection, ActiveTreatmentId);
+			flag=project.EndTreatment(connection, ActiveTreatmentId, security_token);
 		}
 		catch (Exception e) {
 			throw e;		
@@ -477,14 +477,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		return flag;
 	}
 	
-	public boolean deleteProviderProvider( int ProviderDetail1, int ProviderDetail2) throws Exception
+	public boolean deleteProviderProvider( int ProviderDetail1, int ProviderDetail2, String security_token) throws Exception
 	{
 		boolean flag;
 		try{
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.deleteProviderProvider(connection, ProviderDetail1, ProviderDetail2);
+			flag=project.deleteProviderProvider(connection, ProviderDetail1, ProviderDetail2, security_token);
 		}
 		catch (Exception e) {
 			throw e;		
@@ -493,14 +493,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		return flag;
 	}
 	
-	public boolean deleteProviderPatient( int ProviderDetail, int PatientDetail) throws Exception
+	public boolean deleteProviderPatient( int ProviderDetail, int PatientDetail, String security_token) throws Exception
 	{
 		boolean flag;
 		try{
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			flag=project.deleteProviderPatient(connection, ProviderDetail, PatientDetail);
+			flag=project.deleteProviderPatient(connection, ProviderDetail, PatientDetail, security_token);
 		}
 		catch (Exception e) {
 			throw e;		
@@ -510,7 +510,7 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 	}
 	
 	
-	public String InsertBase64Image(TreatmentItem t_item) throws Exception
+	public String InsertBase64Image(TreatmentItem t_item, String security_token) throws Exception
 	{	
 		String ret_sub_t;
 		try{
@@ -519,7 +519,7 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		    Database database= new Database();
 		    Connection connection = database.Get_Connection();
 			Project project= new Project();
-			ret_sub_t = project.InsertBase64Image( connection, t_item);
+			ret_sub_t = project.InsertBase64Image( connection, t_item, security_token);
 			return ret_sub_t;
 		} 
 		
@@ -528,14 +528,14 @@ public boolean UpdateSavedTreatment(List<TreatmentItem> t_items, int p_savedtrea
 		}
 	}
 	
-	public boolean updateProviderImageUrl(int providerId, String imageUrl, String name, String lastname ) throws Exception
+	public boolean updateProviderImageUrl(int providerId, String imageUrl, String name, String lastname, String security_token) throws Exception
 	 { 
 		
 	  try{
 	      Database database= new Database();
 	      Connection connection = database.Get_Connection();
 	      Project project= new Project();
-	      return project.updateProviderImageUrl( connection, providerId, imageUrl, name, lastname);
+	      return project.updateProviderImageUrl( connection, providerId, imageUrl, name, lastname, security_token);
 	      
 	  } 
 	  

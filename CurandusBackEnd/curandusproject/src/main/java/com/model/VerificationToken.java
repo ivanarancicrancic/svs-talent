@@ -30,34 +30,25 @@ public class VerificationToken {
 	    // standard constructors, getters and setters
 
 	    public VerificationToken(String token, int provider_id) throws ParseException {
-	    	
 			super();
 			this.token = token;
 			this.provider_id = provider_id;
-			
-			
 			Date now = new Date();
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(now);
 			cal.add(Calendar.HOUR_OF_DAY, 1);
 			//this.expiryTime = cal.get(Calendar.HOUR_OF_DAY);
-		
 			DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-		      Date date = sdf.parse(cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND));
-		      this.time = new Time(date.getTime());
-			
-		      if(cal.get(Calendar.HOUR_OF_DAY)==00) {
-			cal.add(Calendar.DAY_OF_YEAR, 1); // <--
-		      }
-			
+		    Date date = sdf.parse(cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND));
+		    this.time = new Time(date.getTime());
+//		    if(cal.get(Calendar.HOUR_OF_DAY)==00) {
+//			cal.add(Calendar.DAY_OF_YEAR, 1); // <--
+//		      }
 			Date today = cal.getTime();
 		    // add one day to the date/calendar
-		    
-		   
 		    // now get "tomorrow"
 		    this.expiryDate = today;
 		}
-	    
 //		public int getExpiryTime() {
 //			return expiryTime;
 //		}

@@ -58,11 +58,10 @@ public class JSONService {
 //	}
 	
 	   @GET
-	   @Path("/activecontacts/providerId={providerId}")
+	   @Path("/activecontacts/providerId={providerId}&&securityToken={securityToken}")
 	   @Produces("application/json")
-	   public String GetActiveContactsByProvider(@PathParam("providerId") Integer providerId) throws Exception 
+	   public String GetActiveContactsByProvider(@PathParam("providerId") Integer providerId, @PathParam("securityToken") String securityToken) throws Exception 
 		{
-		    
 			 System.out.println("init");
 			List<RoomId> t_items = null;
 			String t_tems_str  = null;
@@ -75,22 +74,18 @@ public class JSONService {
 				    if (verificationToken == null) {
 				        String message = "User must have token!";
 				        return message;
-				    }
-				     
+				    }    
 				    int provider_id = verificationToken.getProvider_id();
 				    Calendar cal = Calendar.getInstance();
 				    if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
 				        String messageValue = "token expired!";
 				        return messageValue;
-				    } 
-				
-				
-				t_items = projectManager.GetActiveContactsByProvider(providerId);
+				    } 	
+				t_items = projectManager.GetActiveContactsByProvider(providerId, securityToken);
 				//StringBuffer sb = new StringBuffer();
 				Gson gson = new Gson();
 				System.out.println(gson.toJson(t_items));
 				t_tems_str = gson.toJson(t_items);
-
 //				if (t_items.isEmpty()){
 //					 throw new WebApplicationException(404);
 //				}
@@ -107,9 +102,9 @@ public class JSONService {
 		}	
 	
 		@GET
-		@Path("/notificationsforreminder")
+		@Path("/notificationsforreminder/securityToken={securityToken}")
 		@Produces("application/json")
-	   public List<ReminderNotification> GetNotificationForReminder() throws Exception 
+	   public List<ReminderNotification> GetNotificationForReminder(@PathParam("securityToken") String securityToken) throws Exception 
 		{
 			//System.out.println("1s");
 			List<ReminderNotification> t_items = null;
@@ -117,7 +112,7 @@ public class JSONService {
 			try 
 			{
 				ProjectManager projectManager = new ProjectManager();
-				t_items = projectManager.GetNotificationForReminder();
+				t_items = projectManager.GetNotificationForReminder(securityToken);
 				//StringBuffer sb = new StringBuffer();
 				Gson gson = new Gson();
 				System.out.println(gson.toJson(t_items));
@@ -134,9 +129,9 @@ public class JSONService {
 		}		   
 	
 	@GET
-	@Path("/treatmentitemlist/patientid={patientid}")
+	@Path("/treatmentitemlist/patientid={patientid}&&securityToken={securityToken}")
 	@Produces("application/json")
-   public List<TreatmentItemListRegid> getTreatmentItemListLoadPatient(@PathParam("patientid")int patientid) throws Exception 
+   public List<TreatmentItemListRegid> getTreatmentItemListLoadPatient(@PathParam("patientid")int patientid, @PathParam("securityToken") String securityToken) throws Exception 
 	{
 		//System.out.println("1s");
 		List<TreatmentItemListRegid> t_items = null;
@@ -144,7 +139,7 @@ public class JSONService {
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getTreatmentItemListLoadPatient(patientid);
+			t_items = projectManager.getTreatmentItemListLoadPatient(patientid, securityToken);
 			//StringBuffer sb = new StringBuffer();
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
@@ -157,15 +152,14 @@ public class JSONService {
 			System.out.println("error");
 			e.printStackTrace();
 			throw e;
-		}
-		
+		}	
 	}	
 	
 	 @POST
 	 @Path("/insertpatient")
 	 @Consumes({MediaType.APPLICATION_JSON })
 	 @Produces("application/json")
-	 public String insertPatient(Patients p_patient) {
+	 public String insertPatient(Patients p_patient,  String securityToken) {
 		 System.out.println("init");
 		 Patients p_pat=new Patients();
 		String t_tems_str = null;
@@ -173,7 +167,7 @@ public class JSONService {
 		{
 			ProjectManager projectManager= new ProjectManager();
 			System.out.println("init");
-			p_pat = projectManager.InsertPatient(p_patient);
+			p_pat = projectManager.InsertPatient(p_patient, securityToken);
 			System.out.println("post init");
 			//System.out.println("flag: "+flag);
 			Gson gson = new Gson();
@@ -189,9 +183,9 @@ public class JSONService {
 	}		
 	
 	@GET
-	@Path("/sendsms/to={phoneto}&body={body}")
+	@Path("/sendsms/to={phoneto}&body={body}&securityToken={securityToken}")
 	@Produces("application/json")
-	public String SendSMS(@PathParam("phoneto") String phoneto,@PathParam("body") String body) throws Exception  {	
+	public String SendSMS(@PathParam("phoneto") String phoneto, @PathParam("body") String body, @PathParam("securityToken") String securityToken) throws Exception  {	
 		ProjectManager projectManager= new ProjectManager();
 		boolean flag = false;
 		String ret_str = null;
@@ -210,16 +204,16 @@ public class JSONService {
 	}	
 	
 	@GET
-	@Path("/getsavedtreatmenttemplatebyprovider/{ProviderDetail}")
+	@Path("/getsavedtreatmenttemplatebyprovider/{ProviderDetail}&&{securityToken}")
 	@Produces("application/json")
-   public String getSavedTemplate(@PathParam("ProviderDetail")int ProviderDetail)
+   public String getSavedTemplate(@PathParam("ProviderDetail")int ProviderDetail, @PathParam("securityToken") String securityToken)
 	{
 		List<SavedTemplate> t_items = null;
 		String t_tems_str  = null;
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getSavedTemplate(ProviderDetail);
+			t_items = projectManager.getSavedTemplate(ProviderDetail, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
 			t_tems_str = gson.toJson(t_items);
@@ -232,9 +226,9 @@ public class JSONService {
 	}	
 	
 	@GET
-	@Path("/treatmentitemlis/activetreatmentid={activetreatmentid}")
+	@Path("/treatmentitemlis/activetreatmentid={activetreatmentid}&&securityToken={securityToken}")
 	@Produces("application/json")
-   public List<TreatmentItemListScroll> getTreatmentItemListLoad(@PathParam("activetreatmentid")int activetreatmentid) throws Exception 
+   public List<TreatmentItemListScroll> getTreatmentItemListLoad(@PathParam("activetreatmentid")int activetreatmentid, @PathParam("securityToken") String securityToken) throws Exception 
 	{
 		//System.out.println("1s");
 		List<TreatmentItemListScroll> t_items = null;
@@ -242,7 +236,7 @@ public class JSONService {
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getTreatmentItemListLoad(activetreatmentid);
+			t_items = projectManager.getTreatmentItemListLoad(activetreatmentid, securityToken);
 			//StringBuffer sb = new StringBuffer();
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
@@ -259,12 +253,11 @@ public class JSONService {
 		
 	}
 	
-	
 	@GET
-	@Path("/treatmentitemlistscrollpatient/treatmentitemlistid={treatmentitemlistid}&updown={updown}&range={range}")
+	@Path("/treatmentitemlistscrollpatient/treatmentitemlistid={treatmentitemlistid}&updown={updown}&range={range}&securityToken={securityToken}")
 	@Produces("application/json")
    public List<TreatmentItemListRegid> getTreatmentItemListScrollPatient(@PathParam("treatmentitemlistid")int treatmentitemlistid, 
-		   @PathParam("updown")String updown, @PathParam("range")int range) throws Exception
+		   @PathParam("updown")String updown, @PathParam("range")int range,  @PathParam("securityToken") String securityToken) throws Exception
 	{
 		//System.out.println("1s");
 		List<TreatmentItemListRegid> t_items = null;
@@ -272,62 +265,55 @@ public class JSONService {
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getTreatmentItemListScrollPatient(treatmentitemlistid, updown, range);
+			t_items = projectManager.getTreatmentItemListScrollPatient(treatmentitemlistid, updown, range, securityToken);
 			//StringBuffer sb = new StringBuffer();
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
 			t_tems_str = gson.toJson(t_items);
-			
 			return t_items;
-
 		} catch (Exception e)
 		{
 			System.out.println("error");
 			e.printStackTrace();
 			throw e;
-		}
-		
+		}	
 	}	
 	
 	@GET
-	@Path("/treatmentitemlistscroll/treatmentitemlistid={treatmentitemlistid}&updown={updown}&range={range}")
+	@Path("/treatmentitemlistscroll/treatmentitemlistid={treatmentitemlistid}&updown={updown}&range={range}&securityToken={securityToken}")
 	@Produces("application/json")
    public List<TreatmentItemListRegid> getTreatmentItemListScroll(@PathParam("treatmentitemlistid")int treatmentitemlistid, 
-		   @PathParam("updown")String updown, @PathParam("range")int range) throws Exception
+		   @PathParam("updown")String updown, @PathParam("range")int range, @PathParam("securityToken") String securityToken) throws Exception
 	{
 		//System.out.println("1s");
 		List<TreatmentItemListRegid> t_items = null;
 		String t_tems_str  = null;
 		try 
 		{
-			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getTreatmentItemListScroll(treatmentitemlistid, updown, range);
-			//StringBuffer sb = new StringBuffer();
-			Gson gson = new Gson();
-			System.out.println(gson.toJson(t_items));
-			t_tems_str = gson.toJson(t_items);
-			
-			return t_items;
-
-		} catch (Exception e)
+		  ProjectManager projectManager= new ProjectManager();
+		  t_items = projectManager.getTreatmentItemListScroll(treatmentitemlistid, updown, range, securityToken);
+		  //StringBuffer sb = new StringBuffer();
+		  Gson gson = new Gson();
+		  System.out.println(gson.toJson(t_items));
+		  t_tems_str = gson.toJson(t_items);
+		  return t_items;
+ 		} catch (Exception e)
 		{
 			System.out.println("error");
 			e.printStackTrace();
 			throw e;
-		}
-		
+		}	
 	}	
 	
 	@POST
 	@Path("/updatesavedtreatment/savedtreatmentid={savedtreatmentid}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String UpdateSavedTreatment(@PathParam("savedtreatmentid")int savedtreatmentid,List<TreatmentItem> t_items) {
-		
+	public String UpdateSavedTreatment(@PathParam("savedtreatmentid")int savedtreatmentid,List<TreatmentItem> t_items, String securityToken) {
 		ProjectManager projectManager= new ProjectManager();
 		boolean flag=false;
 		String t_tems_str = null;
 		try {
-			flag = projectManager.UpdateSavedTreatment(t_items, savedtreatmentid);
+			flag = projectManager.UpdateSavedTreatment(t_items, savedtreatmentid, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
@@ -341,13 +327,13 @@ public class JSONService {
 	@POST
 	@Path("/UpdateActiveSubTreatment/subtreatmentid={p_subtreatmentid}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String InsertActiveSubTreatment(@PathParam("p_subtreatmentid") Integer p_subtreatmentid,List<TreatmentItem> t_items) {
+	public String InsertActiveSubTreatment(@PathParam("p_subtreatmentid") Integer p_subtreatmentid,List<TreatmentItem> t_items, String securityToken) {
 		
 		ProjectManager projectManager= new ProjectManager();
 		SubTreatment flag=new SubTreatment();
 		String t_tems_str = null;
 		try {
-			flag = projectManager.UpdateActiveSubTreatment(t_items,p_subtreatmentid);
+			flag = projectManager.UpdateActiveSubTreatment(t_items,p_subtreatmentid, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
@@ -356,20 +342,19 @@ public class JSONService {
 			e.printStackTrace();
 		}
 		return t_tems_str;
-	}	
-	
+	}		
 //	+ "/providerid={providerid}&"
 //	+ "nametreatment={nametreatment : (.+)?}")
 	@POST
 	@Path("/insertsavedtreatment")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String CheckNameSavedTreatment(@QueryParam("providerid") Integer providerid, @QueryParam("nametreatment") String nametreatment,
-			List<TreatmentItem> t_items) {	
+			List<TreatmentItem> t_items, String securityToken) {	
 		ProjectManager projectManager= new ProjectManager();
 		int flag;
 		String t_tems_str = null;
 		try {
-			flag = projectManager.CheckNameSavedTreatment( providerid, nametreatment, t_items);
+			flag = projectManager.CheckNameSavedTreatment( providerid, nametreatment, t_items, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
@@ -385,12 +370,12 @@ public class JSONService {
 			+ "nametreatment={nametreatment : (.+)?}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String InsertSavedTreatment(@PathParam("providerid") Integer providerid, @PathParam("nametreatment") String nametreatment,
-			List<TreatmentItem> t_items) {	
+			List<TreatmentItem> t_items, String securityToken) {	
 		ProjectManager projectManager= new ProjectManager();
 		boolean flag=false;
 		String t_tems_str = null;
 		try {
-			flag = projectManager.InsertSavedTreatment( providerid, nametreatment, t_items);
+			flag = projectManager.InsertSavedTreatment( providerid, nametreatment, t_items, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
@@ -408,15 +393,14 @@ public class JSONService {
 	public String InsertActiveSubTreatment(@PathParam("activetreatmentid") Integer activetreatmentid,
 			@PathParam("providerid") Integer providerid, @PathParam("patientid") Integer patientid, 
 			@PathParam("nametreatment") String nametreatment, @PathParam("namesubtreatment") String namesubtreatment,
-			List<TreatmentItem> t_items) {
-		
+			List<TreatmentItem> t_items, String securityToken) {		
 		ProjectManager projectManager= new ProjectManager();
 		SubTreatment ret_sub_t=new SubTreatment();
 		int flag=0;
 		String t_tems_str = null;
 		try {
 			ret_sub_t = projectManager.InsertActiveSubTreatment(activetreatmentid, providerid, patientid, 
-					nametreatment, namesubtreatment,t_items);
+					nametreatment, namesubtreatment,t_items, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(ret_sub_t));
 			t_tems_str = gson.toJson(ret_sub_t);
@@ -432,7 +416,6 @@ public class JSONService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Providers createPro(Providers track) {
-
 		Providers p_prov=null;
 		ProjectManager projectManager= new ProjectManager();
 		try {
@@ -473,17 +456,16 @@ public class JSONService {
 	}	
 	 
 	   @GET
-	   @Path("/treatment/roomid={roomid}")
+	   @Path("/treatment/roomid={roomid}&&securityToken={securityToken}")
 	   @Produces("application/json")
-	   public String getTreatmentByRoomId(@PathParam("roomid") String roomid) throws Exception 
+	   public String getTreatmentByRoomId(@PathParam("roomid") String roomid, @PathParam("securityToken") String securityToken) throws Exception 
 		{
 			 System.out.println("init");
 		    PatientsCascade t_items = new PatientsCascade();;
-			String t_tems_str  = null;
-			
+			String t_tems_str  = null;		
 			try{
 				ProjectManager projectManager= new ProjectManager();
-				t_items = projectManager.getTreatmentByRoomId(roomid);
+				t_items = projectManager.getTreatmentByRoomId(roomid, securityToken);
 				//StringBuffer sb = new StringBuffer();
 				Gson gson = new Gson();
 				System.out.println(gson.toJson(t_items));
@@ -504,17 +486,14 @@ public class JSONService {
 			}		
 		}	 
 	 
-	
-	
    @GET
    @Path("/patients/providerId={providerId}&&securityToken={securityToken}")
    @Produces("application/json")
    public String getPatientsAllCascade(@PathParam("providerId") Integer providerId, @PathParam("securityToken") String securityToken) throws Exception 
 	{
-		 System.out.println("init");
+		System.out.println("init");
 		List<PatientsCascade> t_items = null;
-		String t_tems_str  = null;
-		
+		String t_tems_str  = null;	
 		try{
 			ProjectManager projectManager= new ProjectManager();
 			t_items = projectManager.getPatientsByProvider(providerId, securityToken);
@@ -528,7 +507,7 @@ public class JSONService {
 //			}
 //			else
 //			{
-				return t_tems_str;
+			 return t_tems_str;
 			//}
 		}
 		catch(Exception e)
@@ -544,19 +523,18 @@ public class JSONService {
 	@Produces("application/json")
    public String AddContactPatient(@PathParam("providerID")int providerID, @PathParam("phone")String phone,
 			@PathParam("firstName")String firstName, @PathParam("lastName")String lastName,
-			@PathParam("chatid")String chatid, @PathParam("roomid")String roomid)
+			@PathParam("chatid")String chatid, @PathParam("roomid")String roomid, String securityToken)
 	{
 		boolean flag=false;
 		String t_tems_str = null;
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			flag = projectManager.AddContactPatient(providerID, phone, firstName, lastName, chatid, roomid);
+			flag = projectManager.AddContactPatient(providerID, phone, firstName, lastName, chatid, roomid, securityToken);
 			//System.out.println("flag: "+flag);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
-
 		} catch (Exception e)
 		{
 			System.out.println("error");
@@ -571,7 +549,7 @@ public class JSONService {
 	@Produces("application/json")
    public String AddContactDoctor(@PathParam("providerID")int providerID, @PathParam("phone")String phone,
 			@PathParam("firstName")String firstName, @PathParam("lastName")String lastName,
-			@PathParam("chatid")String chatid, @PathParam("roomid")String roomid)
+			@PathParam("chatid")String chatid, @PathParam("roomid")String roomid, String securityToken)
 	{
 		boolean flag=false;
 		List<Providers> t_items = null;
@@ -579,15 +557,14 @@ public class JSONService {
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			flag = projectManager.AddContactDoctor(providerID, phone, firstName, lastName, chatid, roomid);
+			flag = projectManager.AddContactDoctor(providerID, phone, firstName, lastName, chatid, roomid, securityToken);
 			//t_items = projectManager.AddContactDoctor(providerID, phone, firstName, lastName);
 			//StringBuffer sb = new StringBuffer();
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
 
-		} 
-		
+		} 	
 		catch (Exception e)
 		{
 			System.out.println("error");
@@ -596,9 +573,9 @@ public class JSONService {
 	}	
 
 	@GET
-	@Path("/gettreatmentitemssbytreatment/treatmentId={treatmentID}&typetreatment={tt}")
+	@Path("/gettreatmentitemssbytreatment/treatmentId={treatmentID}&typetreatment={tt}&securityToken={securityToken}")
 	@Produces("application/json")
-   public List<TreatmentItem> getTreatmentItemsByTreatment(@PathParam("treatmentID")int treatmentID, @PathParam("tt")String tt)
+   public List<TreatmentItem> getTreatmentItemsByTreatment(@PathParam("treatmentID")int treatmentID, @PathParam("tt")String tt, @PathParam("securityToken")String securityToken)
 	{
 		//System.out.println("1s");
 		List<TreatmentItem> t_items = null;
@@ -606,26 +583,24 @@ public class JSONService {
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getTreatmentItemsByTreatment(treatmentID, tt);
+			t_items = projectManager.getTreatmentItemsByTreatment(treatmentID, tt, securityToken);
 			//StringBuffer sb = new StringBuffer();
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
 			t_tems_str = gson.toJson(t_items);
 			return t_items;
-		} 
-		
+		} 	
 		catch (Exception e)
 		{
 			System.out.println("error");
 			return null;
-		}
-		
+		}		
 	}
 	
 	@GET
-	@Path("/getPatientsDataRoomId/patientId={patientId}&providerid={providerid}")
+	@Path("/getPatientsDataRoomId/patientId={patientId}&providerid={providerid}&securityToken={securityToken}")
 	@Produces("application/json")
-   public Patients getPatientDataRoomId(@PathParam("patientId")int patientId, @PathParam("providerid")int providerid) throws Exception 
+   public Patients getPatientDataRoomId(@PathParam("patientId")int patientId, @PathParam("providerid")int providerid, @PathParam("securityToken")String securityToken) throws Exception 
 	{
 		//System.out.println("1s");
 		Patients t_items = null;
@@ -633,13 +608,12 @@ public class JSONService {
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getPatientDataRoomId(patientId, providerid);
+			t_items = projectManager.getPatientDataRoomId(patientId, providerid, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
 			t_tems_str = gson.toJson(t_items);
 			return t_items;
-		} 
-		
+		} 	
 		catch(Exception e)
 		{
 			e.printStackTrace();
@@ -648,9 +622,9 @@ public class JSONService {
 	}	
 	
 	@GET
-	@Path("/getPatientsDataByChatId/chatid={p_chatid}")
+	@Path("/getPatientsDataByChatId/chatid={p_chatid}&securityToken={securityToken}")
 	@Produces("application/json")
-   public Patients getPatientsDataByChatID(@PathParam("p_chatid")int p_chatid) throws Exception 
+   public Patients getPatientsDataByChatID(@PathParam("p_chatid")int p_chatid, @PathParam("securityToken")String securityToken) throws Exception 
 	{
 		System.out.println("vlezeeeeeeee vo getPatientsDataByChatID");
 		Patients t_items = null;
@@ -658,7 +632,7 @@ public class JSONService {
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getPatientsDataByChatID(p_chatid);
+			t_items = projectManager.getPatientsDataByChatID(p_chatid, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
 			t_tems_str = gson.toJson(t_items);
@@ -672,9 +646,9 @@ public class JSONService {
 	}	
 	
 	@GET
-	@Path("/getPatientsData/patientId={patientId}")
+	@Path("/getPatientsData/patientId={patientId}&securityToken={securityToken}")
 	@Produces("application/json")
-   public Patients getPatientData(@PathParam("patientId")int patientId) throws Exception 
+   public Patients getPatientData(@PathParam("patientId")int patientId, @PathParam("securityToken")String securityToken) throws Exception 
 	{
 		System.out.println("vlezeeeeeeee vo getPatientsData");
 		//System.out.println("1s");
@@ -683,32 +657,30 @@ public class JSONService {
 		try 
 		{
 			ProjectManager projectManager= new ProjectManager();
-			t_items = projectManager.getPatientData(patientId);
+			t_items = projectManager.getPatientData(patientId, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(t_items));
 			t_tems_str = gson.toJson(t_items);
 			return t_items;
-		} 
-		
+		} 		
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			throw e;
 		}		
 	}
-	
-	
+		
 	@POST
 	@Path("/updatetreatmenitemlist/TreatmentItemListId={TreatmentItemListId}")
 	@Produces("application/json")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String updatetreatmenitemlist(@PathParam("TreatmentItemListId")int TreatmentItemListId,TreatmentItemList t_items) {
+	public String updatetreatmenitemlist(@PathParam("TreatmentItemListId")int TreatmentItemListId,TreatmentItemList t_items, String securityToken) {
 		
 		ProjectManager projectManager= new ProjectManager();
 		TreatmentItemList flag;
 		String t_tems_str = null;
 		try {
-			flag = projectManager.updatetreatmenitemlist(t_items, TreatmentItemListId);
+			flag = projectManager.updatetreatmenitemlist(t_items, TreatmentItemListId, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
@@ -719,7 +691,6 @@ public class JSONService {
 		return t_tems_str;
 	}
 	
-
 	@GET
 	@Path("/getprovidersdatabyprovider/ProviderProviderId={ProviderProviderId}&&securityToken={securityToken}")
 	@Produces("application/json")
@@ -742,42 +713,38 @@ public class JSONService {
 		return t_tems_str;
 	}	
 	
-	
-
 	@POST
 	@Path("/EndTreatment/ActiveTreatmentId={ActiveTreatmentId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public String EndTreatment(@PathParam("ActiveTreatmentId") Integer ActiveTreatmentId) throws Exception  {	
+	public String EndTreatment(@PathParam("ActiveTreatmentId") Integer ActiveTreatmentId, String securityToken) throws Exception  {	
 		ProjectManager projectManager= new ProjectManager();
 		boolean flag = false;
 		String t_tems_str = null;
 		try {
-			flag = projectManager.EndTreatment( ActiveTreatmentId);
+			flag = projectManager.EndTreatment( ActiveTreatmentId, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
 			return t_tems_str;
-		} 
-		
+		} 	
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			throw e;
-		}	
-		
+		}			
 	}	
 
 	@GET
-	@Path("/GetProviderDataByChatId/chatid={p_chat_id}") 
+	@Path("/GetProviderDataByChatId/chatid={p_chat_id}&securityToken={securityToken}") 
     @Produces("application/json") 
-    public Providers GetProviderDataByChatId(@PathParam("p_chat_id")int p_chat_id) throws Exception 
+    public Providers GetProviderDataByChatId(@PathParam("p_chat_id")int p_chat_id, @PathParam("securityToken")String securityToken) throws Exception 
 	{
 		ProjectManager projectManager= new ProjectManager();
 		Providers provider = new Providers();
 		String t_tems_str = null;
 		try {
-			provider = projectManager.GetProviderDataByChatId(p_chat_id);
+			provider = projectManager.GetProviderDataByChatId(p_chat_id, securityToken);
 //			Gson gson = new Gson();
 //			System.out.println(gson.toJson(t_items));
 //			t_tems_str = gson.toJson(t_items);
@@ -813,16 +780,15 @@ public class JSONService {
 	}
 	
 	@GET
-	@Path("/DeleteSavedTemplate/{savedtreatmentdetail}&&{savedtreatmenttemplateid}") 
+	@Path("/DeleteSavedTemplate/{savedtreatmentdetail}&&{savedtreatmenttemplateid}&&{securityToken}") 
     @Produces("application/json") 
-    public SavedTemplate DeleteSavedTemplate(@PathParam("savedtreatmentdetail")int savedtreatmentdetail,@PathParam("savedtreatmenttemplateid")int savedtreatmenttemplateid)throws Exception 
+    public SavedTemplate DeleteSavedTemplate(@PathParam("savedtreatmentdetail")int savedtreatmentdetail,@PathParam("savedtreatmenttemplateid")int savedtreatmenttemplateid, @PathParam("securityToken")String securityToken)throws Exception 
 	{
 		ProjectManager projectManager= new ProjectManager();
 		SavedTemplate provider = new SavedTemplate();
 		String t_tems_str = null;
 		try {
-			provider = projectManager.DeleteSavedTemplate(savedtreatmentdetail, savedtreatmenttemplateid);
-
+			provider = projectManager.DeleteSavedTemplate(savedtreatmentdetail, savedtreatmenttemplateid, securityToken);
 			return provider;
 		}
 			catch(Exception e)
@@ -831,18 +797,17 @@ public class JSONService {
 				throw e;
 			}
 	}
-	
-	
+		
 	@POST
 	@Path("/inserttreatmentitemimage") 
 	@Consumes(MediaType.APPLICATION_JSON) //byte[] imageCode, TreatmentItem t_item
 	@Produces("application/json") 
-	public String InsertBase64Image(	TreatmentItem tmp){ 
+	public String InsertBase64Image(	TreatmentItem tmp, String securityToken){ 
 	ProjectManager projectManager= new ProjectManager(); 
 	String t_item =""; 
 		//System.out.println("OVA KREIRAN"); 
 		try { 
-			t_item = projectManager.InsertBase64Image(tmp); 
+			t_item = projectManager.InsertBase64Image(tmp, securityToken); 
 			Gson gson = new Gson(); 
 			//System.out.println("OVA KREIRAN OBJEKT:" + gson.toJson(t_item)); 
 		} catch (Exception e){ 
@@ -853,81 +818,68 @@ public class JSONService {
 	}
 	
 	@GET
-	@Path("/deleteProviderProvider/{ProviderDetail1}&&{ProviderDetail2}")
+	@Path("/deleteProviderProvider/{ProviderDetail1}&&{ProviderDetail2}&&securityToken={securityToken}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public String deleteProviderProvider(@PathParam("ProviderDetail1") Integer ProviderDetail1,@PathParam("ProviderDetail2") Integer ProviderDetail2) throws Exception  {	
+	public String deleteProviderProvider(@PathParam("ProviderDetail1") Integer ProviderDetail1,@PathParam("ProviderDetail2") Integer ProviderDetail2, @PathParam("securityToken")String securityToken) throws Exception  {	
 		ProjectManager projectManager= new ProjectManager();
-	
 		boolean flag = false;
 		String t_tems_str = null;
 		try {
-			flag = projectManager.deleteProviderProvider( ProviderDetail1, ProviderDetail2);
+			flag = projectManager.deleteProviderProvider( ProviderDetail1, ProviderDetail2, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
 			return t_tems_str;
-		} 
-		
+		} 	
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			throw e;
-		}	
-		
+		}			
 	}
-	
-	
+		
 	@GET
-	@Path("/deleteProviderPatient/{ProviderDetail}&&{PatientDetail}")
+	@Path("/deleteProviderPatient/{ProviderDetail}&&{PatientDetail}&&securityToken={securityToken}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String deleteProviderPatient(@PathParam("ProviderDetail") Integer ProviderDetail,@PathParam("PatientDetail") Integer PatientDetail) throws Exception  {	
+	public String deleteProviderPatient(@PathParam("ProviderDetail") Integer ProviderDetail,@PathParam("PatientDetail") Integer PatientDetail, @PathParam("securityToken")String securityToken) throws Exception  {	
 		ProjectManager projectManager= new ProjectManager();
 		System.out.println("jkadfahskjdhasjkdnas");
 		boolean flag = false;
 		String t_tems_str = null;
 		try {
-			flag = projectManager.deleteProviderPatient( ProviderDetail, PatientDetail);
+			flag = projectManager.deleteProviderPatient( ProviderDetail, PatientDetail, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);
 			return t_tems_str;
-		} 
-		
+		} 	
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			System.out.println(e);
 			throw e;
-		}	
-		
+		}			
 	}
-	
 	
 	 @POST
 	 @Path("/updateProviderImageUrl/{providerId}&&{imageUrl}&&{name}&&{lastname}")
 	 @Consumes(MediaType.APPLICATION_JSON)
-	 public String updateProviderImageUrl(@PathParam("providerId") Integer providerId,@PathParam("imageUrl") String imageUrl, @PathParam("name") String name, @PathParam("lastname") String lastname ) throws Exception { 
+	 public String updateProviderImageUrl(@PathParam("providerId") Integer providerId,@PathParam("imageUrl") String imageUrl, @PathParam("name") String name, @PathParam("lastname") String lastname, String securityToken) throws Exception { 
 	  ProjectManager projectManager= new ProjectManager();
 	  boolean flag=false;
-	  String t_tems_str = null;
-	  
-		try {
-			
-			flag = projectManager.updateProviderImageUrl( providerId, imageUrl, name, lastname);
+	  String t_tems_str = null;	  
+		try {		
+			flag = projectManager.updateProviderImageUrl( providerId, imageUrl, name, lastname, securityToken);
 			Gson gson = new Gson();
 			System.out.println(gson.toJson(flag));
 			t_tems_str = gson.toJson(flag);	
 			return t_tems_str;
-		} 
-		
+		} 	
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			throw e;
-		}	
-			
-	    
-	   
+		}	   
 	 }	
 }
