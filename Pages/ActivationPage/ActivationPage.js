@@ -78,7 +78,7 @@ function checkData() {
                 "Content-type": "application/json"
             },
             dataType: 'json'
-}).then(function(response) {
+        }).then(function(response) {
             status = response.status; // Get the HTTP status code
             response_ok = response.ok; // Is response.status in the 200-range?
             return response.json(); // This returns a promise
@@ -89,6 +89,8 @@ function checkData() {
                 userInfo.value = responseObject;
                 visibility1.value = "Visible";
                 Storage.write("userInfo", JSON.stringify(userInfo.value));
+                console.log("Security token: " + securityToken.value);
+                Storage.write("securityToken", securityToken.value);
                 goToMain();
             }
             console.log("Success");

@@ -8,7 +8,7 @@ var Camera = require("FuseJS/Camera");
 var ImageTools = require("FuseJS/ImageTools");
 var SendMessage = require('Scripts/SendMessage.js');
 var SendNotification = require('Scripts/SendNotification.js');
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 var patientname = Observable();
 var namenovo1 = Observable();
 var roomid = Observable();
@@ -324,7 +324,7 @@ this.onParameterChanged(function(param) {
     console.log("Prametar " + p_patient_id + " P_SubTreatmentID " + P_SubTreatmentID + " Name " + stname.value);
     //   stname.value="";
 
-    var url = activeUrl.URL + "/curandusproject/webapi/api/getPatientsDataRoomId/patientId=" + p_patient_id + "&providerid=" + providerId + "&securityToken=" + securityToken.value;
+    var url = activeUrl.URL + "/curandusproject/webapi/api/getPatientsDataRoomId/patientId=" + p_patient_id + "&providerid=" + providerId + "&securityToken=" + securityToken;
     console.log("getPatientsDataRoomId " + url);
     fetch(url, {
         method: 'GET',
@@ -491,7 +491,7 @@ function selectImage(sender) {
                                     "Content-type": "application/json"
                                 },
                                 dataType: 'json',
-                                body: JSON.stringify(tmp, securityToken.value)
+                                body: JSON.stringify(tmp, securityToken)
                             }).then(function(response) {
                                 status = response.status; // Get the HTTP status code
                                 response_ok = response.ok; // Is response.status in the 200-range?
@@ -557,7 +557,7 @@ function takePicture(sender) {
                             };
                             console.log("The tmp is " + tmp);
 
-                fetch(activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage", {
+                            fetch(activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage", {
                                 method: 'POST',
                                 headers: {
                                     "Content-type": "application/json"
@@ -608,7 +608,7 @@ function goToSavedTreatments() {
     lista_send = [];
 
     console.log("Redirekting");
-    var url = activeUrl.URL + "/curandusproject/webapi/api/getsavedtreatmenttemplatebyprovider/" + providerId + "&&" + securityToken.value;
+    var url = activeUrl.URL + "/curandusproject/webapi/api/getsavedtreatmenttemplatebyprovider/" + providerId + "&&" + securityToken;
     console.log(url);
     fetch(url, {
         method: 'GET',
@@ -929,7 +929,7 @@ function Insert_Treatment() {
                 "Content-type": "application/json"
             },
             dataType: 'json',
-            body: JSON.stringify(lista_post, securityToken.value)
+            body: JSON.stringify(lista_post, securityToken)
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
             console.log('status', status);
@@ -1126,7 +1126,7 @@ function Insert_Saved_Treatment() {
                 "Content-type": "application/json"
             },
             dataType: 'json',
-            body: JSON.stringify(lista_post, securityToken.value)
+            body: JSON.stringify(lista_post, securityToken)
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
             console.log('status', status);
@@ -1161,7 +1161,7 @@ function Insert_Saved_Treatment() {
                                     "Content-type": "application/json"
                                 },
                                 dataType: 'json',
-                                body: JSON.stringify(lista_post, securityToken.value)
+                                body: JSON.stringify(lista_post, securityToken)
                             }).then(function(response) {
                                 status = response.status; // Get the HTTP status code
                                 console.log('status', status);

@@ -3,7 +3,7 @@ var activeUrl = require("Constants/SERVICE_URL.js");
 var Storage = require("FuseJS/Storage");
 var Modal = require("Modal");
 var myToast = require("myToast");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 
 var imagePath = Observable();
 var visibility = Observable("Collapsed");
@@ -91,8 +91,8 @@ function fetchDataDoctors() {
     visibility.value = "Visible"; //OVDE VISIBILITY E COLLAPSED
 
     var urlProvider = activeUrl.URL + "/curandusproject/webapi/api/getprovidersdatabyprovider/ProviderProviderId=" + UserInfo.providerId + "&&securityToken="
-    securityToken.value
-        //console.log(urlProvider);
+    securityToken
+    //console.log(urlProvider);
     fetch(urlProvider, {
         method: 'GET',
         headers: {
@@ -259,12 +259,13 @@ function deleteContact(e) {
             "Are you sure you want to delete " + e.data.fullName + "?", ["Yes", "No"],
             function(s) {
                 if (s == "Yes") {
-                    fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderPatient/" + UserInfo.providerId + "&&" + patientId + "&&securityToken=" securityToken.value, {
-                        method: 'GET',
-                        headers: {
-                            "Content-type": "application/json"
-                        }
-                    }).then(function(response) {
+                    fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderPatient/" + UserInfo.providerId + "&&" + patientId + "&&securityToken="
+                        securityToken, {
+                            method: 'GET',
+                            headers: {
+                                "Content-type": "application/json"
+                            }
+                        }).then(function(response) {
                         return response.json(); // This returns a promise
                     }).then(function(responseObject) {
                         console.log("Success Delete Contact");
@@ -285,7 +286,7 @@ function deleteDoctor(e) {
         "Are you sure you want to delete " + e.data.fullName + "?", ["Yes", "No"],
         function(s) {
             if (s == "Yes") {
-                fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderProvider/" + UserInfo.providerId + "&&" + providerContactId + "&&securityToken=" + securityToken.value, {
+                fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderProvider/" + UserInfo.providerId + "&&" + providerContactId + "&&securityToken=" + securityToken, {
                     method: 'GET',
                     headers: {
                         "Content-type": "application/json"

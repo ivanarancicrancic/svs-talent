@@ -1,6 +1,6 @@
    var Observable = require("FuseJS/Observable")
    var Storage = require("FuseJS/Storage");
-   var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+   var securityToken = Storage.readSync("securityToken");
    var UserInfo = JSON.parse(Storage.readSync("userInfo"));
 
    exports.values = Observable();
@@ -25,7 +25,7 @@
 
    //***************  GET SAVED TREATMENT ITEMS BY SAVED TREATMENT ITEM ID ********
    function fetchDataBySavedTreatment(id) {
-       var url = activeUrl.URL + "/curandusproject/webapi/api/gettreatmentitemssbytreatment/treatmentId=" + id + "&typetreatment=S&securityToken=" + securityToken.value
+       var url = activeUrl.URL + "/curandusproject/webapi/api/gettreatmentitemssbytreatment/treatmentId=" + id + "&typetreatment=S&securityToken=" + securityToken
        console.log(url);
        fetch(url, {
            method: 'GET',

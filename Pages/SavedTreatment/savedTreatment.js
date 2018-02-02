@@ -1,7 +1,7 @@
 var Observable = require("FuseJS/Observable")
 
 var activeUrl = require("Constants/SERVICE_URL.js");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 var selektirani = Observable("");
 var Storage = require("FuseJS/Storage");
 var Modal = require("Modal");
@@ -37,7 +37,7 @@ function RemoveItem(sender) {
         function(s) {
             if (s == "Yes") {
                 console.log("REMOVE TREATMENT TEMPLATE: " + sender.data.savedTreatmentTemplateId);
-                var url = activeUrl.URL + "/curandusproject/webapi/api/DeleteSavedTemplate/" + sender.data.savedTreatmentTemplateId + "&&" + sender.data.savedTreatmentTemplateId + "&&" + securityToken.value
+                var url = activeUrl.URL + "/curandusproject/webapi/api/DeleteSavedTemplate/" + sender.data.savedTreatmentTemplateId + "&&" + sender.data.savedTreatmentTemplateId + "&&" + securityToken
                 fetch(url, {
                     method: 'GET',
                     headers: {
@@ -81,7 +81,7 @@ function Remove(sender) {
 function fetchDataBySavedTreatment(id, templateName) {
 
     lista = [];
-    var url = activeUrl.URL + "/curandusproject/webapi/api/gettreatmentitemssbytreatment/treatmentId=" + id + "&typetreatment=S&securityToken=" + securityToken.value
+    var url = activeUrl.URL + "/curandusproject/webapi/api/gettreatmentitemssbytreatment/treatmentId=" + id + "&typetreatment=S&securityToken=" + securityToken
     console.log(url);
     fetch(url, {
         method: 'GET',

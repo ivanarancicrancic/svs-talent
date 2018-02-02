@@ -4,7 +4,7 @@
  		var Storage = require("FuseJS/Storage");
  		var SendMessage = require('Scripts/SendMessage.js');
  		var SendNotification = require('Scripts/SendNotification.js');
- 		var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+ 		var securityToken = Storage.readSync("securityToken");
  		var user = Observable();
  		var status = Observable();
  		var patientInfo = Observable();
@@ -146,7 +146,7 @@
  		    console.log("*********************This is ActiveTreatmentId: " + activetreatmentid);
 
  		    initload();
- 		    var url = activeUrl.URL + "/curandusproject/webapi/api/getPatientsDataRoomId/patientId=" + patientId + "&providerid=" + providerId + "&securityToken=" + securityToken.value;
+ 		    var url = activeUrl.URL + "/curandusproject/webapi/api/getPatientsDataRoomId/patientId=" + patientId + "&providerid=" + providerId + "&securityToken=" + securityToken;
  		    fetch(url, {
  		        method: 'GET',
  		        headers: {
@@ -245,7 +245,7 @@
  		function loadMore() {
 
  		    console.log("loadMore loadMore");
- 		    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscroll/treatmentitemlistid=" + lastID + "&updown=D&range=10&securityToken=" + securityToken.value, {
+ 		    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscroll/treatmentitemlistid=" + lastID + "&updown=D&range=10&securityToken=" + securityToken, {
  		        method: 'GET',
  		        headers: {
  		            "Content-type": "application/json"
@@ -355,7 +355,7 @@
 
  		    console.log("loadMore1 loadMore1");
  		    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscroll/treatmentitemlistid=" + firstID + "&updown=U&range=10&securityToken="
- 		        securityToken.value, {
+ 		        securityToken, {
  		            method: 'GET',
  		            headers: {
  		                "Content-type": "application/json"
@@ -474,7 +474,7 @@
  		    console.log("LOAD");
  		    visibility.value = "Visible";
  		    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlis/activetreatmentid=" + activetreatmentid + "&&securityToken="
- 		        securityToken.value, {
+ 		        securityToken, {
  		            method: 'GET',
  		            headers: {
  		                "Content-type": "application/json"
@@ -634,7 +634,7 @@
  		                            "Content-type": "application/json"
  		                        },
  		                        dataType: 'json',
- 		                        body: JSON.stringify(data, securityToken.value)
+ 		                        body: JSON.stringify(data, securityToken)
  		                    }).then(function(response) {
  		                        response_ok = response.ok; // Is response.status in the 200-range?
  		                        return response.json(); // This returns a promise
@@ -707,7 +707,7 @@
  		    } else {
 
  		        console.log("This is subtreatmentid: " + subtrementID);
- 		        fetch(activeUrl.URL + "/curandusproject/webapi/api/gettreatmentitemssbytreatment/treatmentId=" + subtrementID + "&typetreatment=R&securityToken=" + securityToken.value, {
+ 		        fetch(activeUrl.URL + "/curandusproject/webapi/api/gettreatmentitemssbytreatment/treatmentId=" + subtrementID + "&typetreatment=R&securityToken=" + securityToken, {
  		            method: 'GET',
  		            headers: {
  		                "Content-type": "application/json"
@@ -784,7 +784,7 @@
  		                        headers: {
  		                            "Content-type": "application/json"
  		                        }
-                                 body: JSON.stringify(securityToken.value)
+ 		                        body: JSON.stringify(securityToken)
  		                    }).then(function(response) {
  		                        status = response.status; // Get the HTTP status code
  		                        response_ok = response.ok; // Is response.status in the 200-range?

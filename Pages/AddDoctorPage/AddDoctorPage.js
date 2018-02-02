@@ -4,7 +4,7 @@ var Storage = require("FuseJS/Storage");
 var myToast = require("myToast");
 var QConfig = require('Scripts/quickbloxConfig.js');
 var SendMessage = require('Scripts/SendMessage.js');
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 
 var load = Observable("Adding contact...");
 var phoneNumber = Observable("");
@@ -243,7 +243,7 @@ function addChatContact() {
                                             "Content-type": "application/json"
                                         },
                                         dataType: 'json'
-                                        body: JSON.stringify(securityToken.value)
+                                        body: JSON.stringify(securityToken)
                                     }).then(function(response) {
                                         status = response.status; // Get the HTTP status code
                                         response_ok = response.ok; // Is response.status in the 200-range?

@@ -4,7 +4,7 @@ var QConfig = require('Scripts/quickbloxConfig.js');
 var SendMessage = require('Scripts/SendMessage.js');
 var Storage = require("FuseJS/Storage");
 var phone = require("FuseJS/Phone");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 
 var load = Observable("Loading...");
 var User = JSON.parse(Storage.readSync("userInfo"));
@@ -218,7 +218,7 @@ this.onParameterChanged(function(param) {
 
     if (panelVisibility.value == "Visible") {
         //console.log("vleze vo getpatientifno");
-        var url = activeUrl.URL + "/curandusproject/webapi/api/getPatientsDataByChatId/chatid=" + patientchatid.value + "&securityToken=" + securityToken.value;
+        var url = activeUrl.URL + "/curandusproject/webapi/api/getPatientsDataByChatId/chatid=" + patientchatid.value + "&securityToken=" + securityToken;
         fetch(url, {
             method: 'GET',
             headers: {
@@ -242,7 +242,7 @@ this.onParameterChanged(function(param) {
         });
     } else {
         //console.log("vleze vo getproviderinfo");
-        var url = activeUrl.URL + "/curandusproject/webapi/api/GetProviderDataByChatId/chatid=" + patientchatid.value + "&securityToken=" + securityToken.value;
+        var url = activeUrl.URL + "/curandusproject/webapi/api/GetProviderDataByChatId/chatid=" + patientchatid.value + "&securityToken=" + securityToken;
         fetch(url, {
             method: 'GET',
             headers: {
@@ -635,7 +635,7 @@ function signIn() {
                 'QuickBlox-REST-API-Version': "0.1.0",
                 'QB-Token': sessionObj.token
             },
-        body: JSON.stringify(data)
+            body: JSON.stringify(data)
         })
         .then(function(resp) {
             return resp.json();

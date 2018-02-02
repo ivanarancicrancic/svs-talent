@@ -4,7 +4,7 @@ var CameraRoll = require("FuseJS/CameraRoll");
 var Camera = require("FuseJS/Camera");
 var ImageTools = require("FuseJS/ImageTools");
 var Storage = require("FuseJS/Storage");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 
 
 var imagePath = Observable();
@@ -164,7 +164,7 @@ function updateProfile(brojSlika) {
             "Content-type": "application/json"
         },
         dataType: 'json'
-        body: JSON.stringify(securityToken.value)
+        body: JSON.stringify(securityToken)
     }).then(function(response) {
         status = response.status; // Get the HTTP status code 
         response_ok = response.ok; // Is response.status in the 200-range? 
@@ -213,7 +213,7 @@ save = function() {
                 "Content-type": "application/json"
             },
             dataType: 'json',
-            body: JSON.stringify(tmp, securityToken.value)
+            body: JSON.stringify(tmp, securityToken)
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
             console.log('status', status);
