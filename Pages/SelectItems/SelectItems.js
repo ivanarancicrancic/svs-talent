@@ -485,13 +485,13 @@ function selectImage(sender) {
                             };
                             console.log("The tmp is " + tmp);
 
-                            fetch(activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage", {
+                            fetch(activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage/securityToken=" + securityToken, {
                                 method: 'POST',
                                 headers: {
                                     "Content-type": "application/json"
                                 },
                                 dataType: 'json',
-                                body: JSON.stringify(tmp, securityToken)
+                                body: JSON.stringify(tmp)
                             }).then(function(response) {
                                 status = response.status; // Get the HTTP status code
                                 response_ok = response.ok; // Is response.status in the 200-range?
@@ -557,13 +557,13 @@ function takePicture(sender) {
                             };
                             console.log("The tmp is " + tmp);
 
-                            fetch(activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage", {
+                            fetch(activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage/securityToken=" + securityToken, {
                                 method: 'POST',
                                 headers: {
                                     "Content-type": "application/json"
                                 },
                                 dataType: 'json',
-                                body: JSON.stringify(tmp, securityToken)
+                                body: JSON.stringify(tmp)
                             }).then(function(response) {
                                 status = response.status; // Get the HTTP status code
                                 response_ok = response.ok; // Is response.status in the 200-range?
@@ -911,10 +911,10 @@ function Insert_Treatment() {
 
         console.log("lista_post  " + JSON.stringify(lista_post));
         if (P_SubTreatmentID == 0 || prazno_ime != "") {
-            api_call = activeUrl.URL + "/curandusproject/webapi/api/InsertActiveSubTreatment/activetreatmentid=0&providerid=" + providerId + "&patientid=" + p_patient_id + "&nametreatment=Prv&namesubtreatment=PrvS";
+            api_call = activeUrl.URL + "/curandusproject/webapi/api/InsertActiveSubTreatment/activetreatmentid=0&providerid=" + providerId + "&patientid=" + p_patient_id + "&nametreatment=Prv&namesubtreatment=PrvS&securityToken=" + securityToken;
             show_string = "Treatment assigned to patient";
         } else {
-            api_call = activeUrl.URL + "/curandusproject/webapi/api/UpdateActiveSubTreatment/subtreatmentid=" + P_SubTreatmentID;
+            api_call = activeUrl.URL + "/curandusproject/webapi/api/UpdateActiveSubTreatment/subtreatmentid=" + P_SubTreatmentID + "&securityToken=" + securityToken;
             show_string = "Treatmetnt updated";
         }
 
@@ -929,7 +929,7 @@ function Insert_Treatment() {
                 "Content-type": "application/json"
             },
             dataType: 'json',
-            body: JSON.stringify(lista_post, securityToken)
+            body: JSON.stringify(lista_post)
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
             console.log('status', status);
@@ -1109,7 +1109,8 @@ function Insert_Saved_Treatment() {
         // }
         var userInfo = Storage.readSync("userInfo");
 
-        var call_api = activeUrl.URL + "/curandusproject/webapi/api/insertsavedtreatment?providerid=" + providerId + "&nametreatment=" + encodeURIComponent(stname.value);
+        var call_api = activeUrl.URL + "/curandusproject/webapi/api/insertsavedtreatment?providerid=" + providerId + "&nametreatment=" + encodeURIComponent(stname.value) + "&securityToken="
+        securityToken;
 
         // console.log("nametreatment " + stname.value);
 
@@ -1126,7 +1127,7 @@ function Insert_Saved_Treatment() {
                 "Content-type": "application/json"
             },
             dataType: 'json',
-            body: JSON.stringify(lista_post, securityToken)
+            body: JSON.stringify(lista_post)
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
             console.log('status', status);
@@ -1155,14 +1156,15 @@ function Insert_Saved_Treatment() {
                         //debug_log("Got callback with " + s);
                         if (s == "Yes") {
                             visibility.value = "Visible";
-                            fetch(activeUrl.URL + "/curandusproject/webapi/api/updatesavedtreatment/savedtreatmentid=" + responseObject, {
-                                method: 'POST',
-                                headers: {
-                                    "Content-type": "application/json"
-                                },
-                                dataType: 'json',
-                                body: JSON.stringify(lista_post, securityToken)
-                            }).then(function(response) {
+                            fetch(activeUrl.URL + "/curandusproject/webapi/api/updatesavedtreatment/savedtreatmentid=" + responseObject + "&securityToken=" +
+                                securityToken, {
+                                    method: 'POST',
+                                    headers: {
+                                        "Content-type": "application/json"
+                                    },
+                                    dataType: 'json',
+                                    body: JSON.stringify(lista_post)
+                                }).then(function(response) {
                                 status = response.status; // Get the HTTP status code
                                 console.log('status', status);
                                 response_ok = response.ok; // Is response.status in the 200-range?
@@ -1234,5 +1236,5 @@ module.exports = {
     setFlag: setFlag,
     load: load,
     patientname: patientname
-    securityToken: securityToken
+
 };

@@ -628,13 +628,13 @@
  		                //debug_log("Got callback with " + s);
 
  		                if (s == "Yes") {
- 		                    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + treatmentItemListId, {
+ 		                    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + treatmentItemListId + "&securityToken=" + securityToken, {
  		                        method: 'POST',
  		                        headers: {
  		                            "Content-type": "application/json"
  		                        },
  		                        dataType: 'json',
- 		                        body: JSON.stringify(data, securityToken)
+ 		                        body: JSON.stringify(data)
  		                    }).then(function(response) {
  		                        response_ok = response.ok; // Is response.status in the 200-range?
  		                        return response.json(); // This returns a promise
@@ -779,12 +779,12 @@
  		                    console.log("patient_roomid.value posle yes  " + patient_roomid.value);
  		                    visibility.value = "Visible";
 
- 		                    fetch(activeUrl.URL + "/curandusproject/webapi/api/EndTreatment/ActiveTreatmentId=" + activetreatmentid, {
+ 		                    fetch(activeUrl.URL + "/curandusproject/webapi/api/EndTreatment/ActiveTreatmentId=" + activetreatmentid + "&securityToken=" + securityToken, {
  		                        method: 'POST',
  		                        headers: {
  		                            "Content-type": "application/json"
  		                        }
- 		                        body: JSON.stringify(securityToken)
+
  		                    }).then(function(response) {
  		                        status = response.status; // Get the HTTP status code
  		                        response_ok = response.ok; // Is response.status in the 200-range?

@@ -156,7 +156,7 @@ function updateProfile(brojSlika) {
     console.log("User.providerId " + User.providerId);
     console.log("brojSlika " + brojSlika);
 
-    var url = activeUrl.URL + "/curandusproject/webapi/api/updateProviderImageUrl/" + User.providerId + "&&" + brojSlika + "&&" + User.firstName + "&&" + User.lastName
+    var url = activeUrl.URL + "/curandusproject/webapi/api/updateProviderImageUrl/" + User.providerId + "&&" + brojSlika + "&&" + User.firstName + "&&" + User.lastName + "&&" + securityToken
     console.log("updateProvider se povika so broj slika: " + brojSlika + " i userid:" + User.providerId);
     fetch(url, {
         method: 'POST',
@@ -164,7 +164,7 @@ function updateProfile(brojSlika) {
             "Content-type": "application/json"
         },
         dataType: 'json'
-        body: JSON.stringify(securityToken)
+
     }).then(function(response) {
         status = response.status; // Get the HTTP status code 
         response_ok = response.ok; // Is response.status in the 200-range? 
@@ -206,14 +206,14 @@ save = function() {
         };
         visibility1.value = "Visible";
         // console.log("The tmp is created " + tmp);
-        var url1 = activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage";
+        var url1 = activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage/securityToken=" + securityToken;
         fetch(url1, {
             method: 'POST',
             headers: {
                 "Content-type": "application/json"
             },
             dataType: 'json',
-            body: JSON.stringify(tmp, securityToken)
+            body: JSON.stringify(tmp)
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
             console.log('status', status);

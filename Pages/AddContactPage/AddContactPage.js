@@ -258,14 +258,13 @@ function addChatContact() {
                                     console.log("dialogObj + namenovo " + JSON.stringify(dialogObj));
                                     // addContact(chatUserId, dialogObj._id);
 
-                                    fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId + "&roomid=" + dialogObj._id, {
+                                    fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId + "&roomid=" + dialogObj._id + "&securityToken=" + securityToken, {
                                         method: 'POST',
                                         headers: {
                                             "Content-type": "application/json"
 
                                         },
                                         dataType: 'json'
-                                        body: JSON.stringify(securityToken)
                                     }).then(function(response) {
                                         status = response.status; // Get the HTTP status code
                                         response_ok = response.ok; // Is response.status in the 200-range?
