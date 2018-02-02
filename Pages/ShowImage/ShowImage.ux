@@ -3,25 +3,25 @@
  <JavaScript File="ShowImage.js" />
  
    <DockPanel>
- <Toolbar Color="primary" HasBackButton="True" router="router">
+ <ToolbarReload Color="primary" HasBackButton="True" router="router">
    <DropShadow />
-  </Toolbar>
-  		<Match Value="{visibility}">
-                <Case String="Visible">
-					<LoadingPage> </LoadingPage>
-                </Case>
-                <Case String="Collapsed">
-	   				<Rectangle Margin="8, 0, 8, 0" >
-	   				<InteractiveTransform ux:Name="transform" />
-    				<ZoomGesture Target="transform" />
-					<!-- <Image /> -->
-					<Image Url="{imageUrl}">
-						<WhileLoading>
-							<LoadingPage> </LoadingPage>
-						</WhileLoading>
-					</Image>
-				 </Rectangle>
-				</Case>
-		</Match>		 
+  </ToolbarReload>
+  <Match Value="{visibility}">
+        <Case String="Visible">
+            <LoadingPage> </LoadingPage>                
+        </Case>
+        <Case String="Collapsed">
+			<Rectangle Margin="8, 0, 8, 0" >
+	   			<InteractiveTransform ux:Name="transform" />
+				<ZoomGesture Target="transform" />
+		<!-- <Image /> -->
+				<Image Url="{imageUrl}" >
+					<WhileLoading>
+						<LoadingPage/>
+					</WhileLoading>
+				</Image>
+			</Rectangle>
+		</Case>
+	</Match>
 	</DockPanel>
 </DefaultPage>

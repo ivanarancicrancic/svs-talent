@@ -1,0 +1,36 @@
+<DefaultPage ux:Class="HeartRate">
+<Router ux:Dependency="router" />
+
+<JavaScript File="HeartRatePage.js" />
+
+	<DockPanel >         
+		<ToolbarReload Color="primary" HasBackButton="True" router="router">
+	    	<DropShadow />
+	    </ToolbarReload>
+
+		<!-- AFSDFSDF -->
+		<Match Value="{visibility}">
+				    <Case String="Visible">
+						<LoadingPage Value="{load}"/>
+				    </Case>
+				    <Case String="Collapsed">
+				    	<!-- TUKA VMETNI STAKOT -->
+					    <StackPanel >
+							<Text  TextWrapping="Wrap" TextAlignment="Center" Color="primary" Font="regular" FontSize="30" Margin="0,50,0,10">Hearssst rate</Text>
+				   			<!-- <Image File="{imagePath}" Width="128" Height="128" Margin="0, 16, 0, 0"/> -->
+			     			<Panel Alignment="Center">
+					
+									<Text FontSize="40" Value="{buttontext}" TextColor="{color}"/>
+
+							</Panel>
+							
+	    					<Slider Value="{response}" ValueChanged="{changed}" Minimum="0" Maximum="200" Width="350" Alignment="Center" UserStep="1"/>
+							
+
+							<RaisedButton BtnText="SAVE" BtnColor="primary" BtnTextColor="icons" Clicked="{save}" Alignment="Center" Margin="0,32,0,0"/>
+						</StackPanel>
+				 	</Case>
+		</Match>
+	</DockPanel>
+
+</DefaultPage>

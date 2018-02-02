@@ -1,14 +1,18 @@
 var Observable = require("FuseJS/Observable");
 var activeUrl = require("Constants/SERVICE_URL.js");
-var Storage = require("FuseJS/Storage");
 var myToast = require("myToast");
-var inputCodeParam = "";
+var Storage = require("FuseJS/Storage");
+var QConfig = require('Scripts/quickbloxConfig.js');
+var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+
+var aCode = "";
 var load = Observable("Please wait...");
 var register = Observable();
-var securityToken = Observable();
+var push = require("FuseJS/Push");
 
 var inputCode = Observable();
 
+var inputCodeParam = "";
 var visibility1 = Observable("Collapsed");
 var visibility = Observable("Visible");
 
@@ -16,20 +20,129 @@ this.onParameterChanged(function(param) {
     console.log("We should now display user with id: " + JSON.stringify(param.register));
     register.value = param.register;
     inputCodeParam = register.value.activationCode;
-
+    createSession();
 });
 
-function goToMain() {
-    var tmp = {
-        "num": Math.random()
-    };
-    router.goto("main", {
-        odwelcome: tmp
-    });
+function createSession() {
+    var data = {
+        'application_id': QConfig.appId,
+        'auth_key': QConfig.authKey,
+        'nonce': Math.floor(Math.random() * 1000),
+        'timestamp': new Date().getTime() / 1000
+    }
+
+    var signData = QConfig.getSignedData(data);
+
+    console.log(JSON.stringify(signData));
+
+    fetch('https://api.quickblox.com/session.json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'QuickBlox-REST-API-Version': "0.1.0"
+            },
+            body: JSON.stringify(signData)
+        })
+        .then(function(resp) {
+            console.log("Session Created");
+            return resp.json();
+        })
+        .then(function(json) {
+            sessionObj = json.session;
+
+        })
+        .catch(function(err) {
+            console.log('Error');
+            console.log(JSON.stringify(err));
+        });
 }
 
-function goBack() {
-    router.goBack();
+function signUp() {
+
+    if (inputCode.value == inputCodeParam) {
+        var rnd = Math.floor(Math.random() * 1000);
+
+        var data = {
+            "user": {
+                "login": register.value.phone + "0",
+                "password": QConfig.password,
+                "email": register.value.phone + "0" + "@curandus.com",
+                "full_name": register.value.firstName + " " + register.value.lastName,
+                "phone": register.value.phone,
+            }
+        }
+
+        fetch('https://api.quickblox.com/users.json', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': "application/json,",
+                    'QuickBlox-REST-API-Version': "0.1.0",
+                    'QB-Token': sessionObj.token
+                },
+                body: JSON.stringify(data)
+            })
+            .then(function(resp) {
+                console.log("User Created");
+                return resp.json();
+            })
+            .then(function(json) {
+                visibility1.value = "Visible";
+                console.log(JSON.stringify(json));
+
+
+                if (json.user) {
+                    chatUserId = json.user.id;
+                    checkData();
+
+                } else if (json.errors.email[0] == "has already been taken." || json.errors.login[0] == "has already been taken.") {
+                    console.log("has already been taken " + register.value.Phone);
+
+
+                    fetch('https://api.quickblox.com/users/by_login.json?login=' + register.value.phone + "0", {
+                            method: 'GET',
+                            headers: {
+                                'QuickBlox-REST-API-Version': "0.1.0",
+                                'QB-Token': sessionObj.token
+                            }
+                        })
+                        .then(function(resp) {
+                            console.log("User Found!");
+                            console.log(JSON.stringify(resp));
+                            return resp.json();
+                        })
+                        .then(function(json) {
+                            console.log('JSON POSTOI:' + JSON.stringify(json));
+                            visibility1.value = "Visible";
+                            chatUserId = json.user.id;
+                            checkData();
+
+
+                        })
+                        .catch(function(err) {
+                            console.log('Errorwwww');
+                            console.log(JSON.stringify(err));
+                            visibility1.value = "Collapsed";
+                        });
+                }
+            })
+            .catch(function(err) {
+                console.log('Errorrrrr');
+                console.log(JSON.stringify(err));
+                visibility1.value = "Collapsed";
+            });
+    } else {
+        myToast.toastIt("Invalid code");
+    }
+}
+
+
+
+function goToMain() {
+    var obj = {
+        //  "responseInfo": responseInfo.response,
+        "num": Math.random()
+    }
+    router.push("main", obj);
 }
 
 function resendCode() {
@@ -44,13 +157,14 @@ function resendCode() {
 }
 
 function sendSms(phone, text) {
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + text, {
-        method: 'GET',
-        headers: {
-            "Content-type": "application/json"
-        },
-        dataType: 'json'
-    }).then(function(response) {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + text + "&securityToken="
+        securityToken.value, {
+            method: 'GET',
+            headers: {
+                "Content-type": "application/json"
+            },
+            dataType: 'json'
+        }).then(function(response) {
         return response.json(); // This returns a promise
     }).then(function(responseObject) {
         console.log("Success");
@@ -61,59 +175,80 @@ function sendSms(phone, text) {
 }
 
 function checkData() {
-
-    if (inputCodeParam == inputCode.value) {
-        console.log("Token: " + securityToken.value);
-        console.log("Deviceid: " + register.value.deviceId);
-        console.log("Phone: " + register.value.phone);
-        console.log("Activation code: " + register.value.activationCode);
-        var url = activeUrl.URL + "/curandusproject/webapi/api/CheckProviderActivationKey/" + register.value.deviceId + "&&" + register.value.phone + "&&" + register.value.activationCode + "&&" + securityToken.value;
+    console.log("povikaj ja checkData");
+    console.log("input poleto= " + inputCode.value);
+    console.log("aktivaciskiot kod= " + register.value.activationCode);
 
 
-        console.log("url " + url);
-        visibility1.value = "Visible";
-        fetch(url, {
-            method: 'GET',
+    if (inputCode.value == register.value.activationCode) {
+        console.log("body " + JSON.stringify(register));
+        //console.log("body " + JSON.stringify(register.value));
+
+        // push.on("registrationSucceeded", function(regID) {
+        //     console.log("Reg Succeeded: vo activation page" + regID);
+        //     p_reg_id.value = regID;
+        // });
+
+        register.value.chatId = chatUserId;
+
+        fetch(activeUrl.URL + "/curandusproject/webapi/api/insertpatient", {
+            method: 'POST',
             headers: {
                 "Content-type": "application/json"
             },
-            dataType: 'json'
+            dataType: 'json',
+            body: JSON.stringify(register.value, securityToken.value)
+
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
-            response_ok = response.ok; // Is response.status in the 200-range?
+            console.log('status', status);
             return response.json(); // This returns a promise
+
         }).then(function(responseObject) {
-            visibility1.value = "Visible";
-            if (responseObject.providerId) {
-                var userInfo = Observable();
-                userInfo.value = responseObject;
-                visibility1.value = "Visible";
-                Storage.write("userInfo", JSON.stringify(userInfo.value));
-                console.log("Security token: " + securityToken.value);
-                Storage.write("securityToken", securityToken.value);
-                goToMain();
-            }
             console.log("Success");
+            visibility1.value = "Visible";
+            //   var text = "The Activation code is: " + aCode;
+            // sendSms(phone.value, text);
+            console.log("responseObject vo activation page" + JSON.stringify(responseObject));
+            //  console.log("PatientId vo activation page" + JSON.stringify(responseObject.PatientId));
+
+            // Storage.write("patientInfo", JSON.stringify(responseObject.PatientId));
+            Storage.write("patientInfo", JSON.stringify(responseObject));
+
+
+
+            /*  Storage.read("patientInfo").then(function(content) {
+                console.log("povlekuvanje na informaciite od storage patientInfo: " + content);
+            }, function(error) {
+                console.log("nema nishto vo storage!");
+            });
+*/
+
+            //goToMain(); //zakomentirano 25.05
+
+            var tmp = Math.random();
+            router.goto("main", {
+                new: tmp
+            });
 
         }).catch(function(err) {
-            console.log("lol Error");
-            console.log(err.message);
+            console.log("Error", err.message);
             visibility1.value = "Collapsed";
         });
     } else {
-        myToast.toastIt("Invalid code");
+        console.log("Invalid activation code!");
     }
-}
 
+}
 module.exports = {
     checkData: checkData,
     goToMain: goToMain,
-    resendCode: resendCode,
     sendSms: sendSms,
-    goBack: goBack,
+    signUp: signUp,
+    resendCode: resendCode,
+    createSession: createSession,
     inputCode: inputCode,
     visibility1: visibility1,
     visibility: visibility,
-    load: load,
-    securityToken: securityToken
+    load: load
 };
