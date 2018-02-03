@@ -2,68 +2,62 @@
 <Router ux:Dependency="router" />
 
 <JavaScript File="LoginPage.js" />
-	<Panel Visibility="{visibility1}">	
-		<LoadingPage Value="{load}"/>
-	</Panel>	
-		<DockPanel Visibility="{visibility}">        
-		    <FloatingButton Alignment="Right" Dock="Bottom" BtnColor="primary" BtnIcon="&#xE315;" BtnTextColor="icons" Clicked="{validateForm}" />
-		    <ScrollView ClipToBounds="true">
-		   	<StackPanel ux:Name="loginArea" >
-			<Text  TextWrapping="Wrap" TextAlignment="Center" Color="primary" Font="regular" FontSize="30" Margin="0,50,0,10">REGISTER</Text>
-		   			
-		    			<!-- <Image File="{imagePath}" Width="128" Height="128" Margin="0, 16, 0, 0"/> -->
-		     			
-						<!-- <FloatingLabel  Value="{phone}" PlaceholderText="Phone number" InputHint="Phone" Margin="32, 16, 32, 0" /> -->
+<Panel Visibility="{visibility1}">
+    <LoadingPage Value="{load}"/>
+</Panel>
+        <DockPanel Visibility="{visibility}">          
+		    <FloatingButton Alignment="Right" Dock="Bottom" BtnColor="primary" Clicked="{signUp}" BtnIcon="&#xE315;" BtnTextColor="icons" />
 
-						<!-- Code for phone number **** -->
+		   	<StackPanel ux:Name="loginArea">
+
+		    			<Image File="../../Assets/CurandusLogo.png" Alignment="Center" Height="130" Width="130" Margin="0,100,0,0" />
+		     			<Text  TextWrapping="Wrap" TextAlignment="Center" Color="primary" Font="regular" FontSize="30" Margin="0,50,0,10">REGISTER</Text>
+						<!-- <FloatingLabel Value="{phone}" PlaceholderText="Phone number" InputHint="Phone" Margin="32, 16, 32, 0" /> -->
+						<!-- Code for phone number ** -->
 
                 <Text FontSize="20" Margin="32, 16, 32, 0"  Color="{PhoneNumberColor}">Phone number</Text> 
                 
-				<StackPanel Clicked="{changeColor}" Orientation="Horizontal" Margin="32, 0, 32, 0">
+                <StackPanel Clicked="{changeColor}" Orientation="Horizontal" Margin="32, 0, 32, 0">
 
-					<Text Color="{PhoneNumberColor}" FontSize="22" Alignment="BottomCenter" >(</Text>						
-				
-					<TextInput Margin="2,0,0,0" FontSize="22"  ux:Name="prv" Value="{phoneNumber1}" PlaceholderText="xxx" PlaceholderColor="{PhoneNumberColor}" ValueChanged= "{ValidatePassKey}" InputHint="Number" MaxLength="3" Width="40">
-					 	<WhileTrue Value="{editMode1}">
-                			<GiveFocus Target="vtor" />
-                		</WhileTrue>  				        
-					<Rectangle Margin="0,0,2,0"  Width="40" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>
-					</TextInput>
-
-
-					<Text Color="{PhoneNumberColor}" Alignment="BottomCenter" FontSize="22" >)</Text>
-
-					<TextInput Margin="5,0,-2,0" FontSize="22"  ux:Name="vtor" Value="{phoneNumber2}" PlaceholderText="xxx" PlaceholderColor="{PhoneNumberColor}" ValueChanged= "{ValidatePassKey}" InputHint="Number"  MaxLength="3" Width="40" Alignment="Center"> 
-						<WhileTrue Value="{editMode2}">
-                			<GiveFocus Target="tret" />
-                		</WhileTrue>
-                		<Rectangle Margin="-3,0,0,0"  Width="40" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>  
-					</TextInput>
-
-					<Text  Margin="2,0,0,0" Color="{PhoneNumberColor}" Alignment="BottomCenter" FontSize="22">-</Text>
-
-					<TextInput Margin="3,0,0,0" FontSize="22"  ux:Name="tret" Value="{phoneNumber3}" PlaceholderText="xxxx" PlaceholderColor="{PhoneNumberColor}" ValueChanged= "{ValidatePassKey}" InputHint="Number" MaxLength="4" Width="50" Alignment="Center">
-						<Rectangle  Width="50" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>
-					</TextInput>
+                    <Text Color="{PhoneNumberColor}" FontSize="22" Alignment="BottomCenter" >(</Text>                       
+                
+                    <TextInput Margin="2,0,0,0" FontSize="22"  ux:Name="prv" Value="{phoneNumber1}" PlaceholderText="xxx" PlaceholderColor="{PhoneNumberColor}" ValueChanged= "{ValidatePassKey}" InputHint="Number" MaxLength="3" Width="40">
+                        <WhileTrue Value="{editMode1}">
+                            <GiveFocus Target="vtor" />
+                        </WhileTrue>                        
+                    <Rectangle Margin="0,0,2,0"  Width="40" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>
+                    </TextInput>
 
 
-				</StackPanel>              
-				<!-- ************ -->
-						<FloatingLabel Value="{firstName}" PlaceholderText="First Name" Margin="32, 16, 32, 0" />
+                    <Text Color="{PhoneNumberColor}" Alignment="BottomCenter" FontSize="22" >)</Text>
+
+                    <TextInput Margin="5,0,-2,0" FontSize="22"  ux:Name="vtor" Value="{phoneNumber2}" PlaceholderText="xxx" PlaceholderColor="{PhoneNumberColor}"
+                        ValueChanged= "{ValidatePassKey}" InputHint="Number"  MaxLength="3" Width="40" Alignment="Center"> 
+                        <WhileTrue Value="{editMode2}">
+                            <GiveFocus Target="tret" />
+                        </WhileTrue>
+                        <Rectangle Margin="-3,0,0,0"  Width="40" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>  
+                    </TextInput>
+
+                    <Text  Margin="2,0,0,0" Color="{PhoneNumberColor}" Alignment="BottomCenter" FontSize="22" >-</Text>
+
+                    <TextInput Margin="3,0,0,0" FontSize="22"  ux:Name="tret" Value="{phoneNumber3}" ValueChanged= "{ValidatePassKey}" InputHint="Number" PlaceholderText="xxxx" PlaceholderColor="{PhoneNumberColor}" MaxLength="4" Width="50" Alignment="Center">
+                        <Rectangle  Width="50" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>
+                    </TextInput>
+
+
+                </StackPanel>              
+                <!-- ********** -->
+
+						<FloatingLabel Value="{firstName}" PlaceholderText="Name" Margin="32, 16, 32, 0" />
 						<FloatingLabel  Value="{lastName}" PlaceholderText="Last Name" Margin="32, 16, 32, 0" />
-						<FloatingLabelArea Value="{chronicDiseases}" PlaceholderText="Past Medical History" Margin="32, 8, 32, 0" />
-						<FloatingLabelArea Value="{allergies}" PlaceholderText="Alergies" Margin="32, 8, 32, 0" />
-						<FloatingLabelArea Value="{medicationsThatRecieves}" PlaceholderText="Prescribed Medications" Margin="32, 8, 32, 0" />
-						<FloatingLabelArea Value="{additionalInnfo}" PlaceholderText="Additional info" Margin="32, 8, 32, 0" />
 
-						
 			</StackPanel>
-		</ScrollView>
 
 		</DockPanel>
 
 			<WhileKeyboardVisible>
-				<Move Target="loginArea"  Duration=".6" Easing="ExponentialInOut"/>
+				<Move Target="loginArea" Y="-200" Duration=".6" Easing="ExponentialInOut"/>
 			</WhileKeyboardVisible>
 
 </DefaultPage>
