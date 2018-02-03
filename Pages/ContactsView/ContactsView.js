@@ -90,7 +90,7 @@ function fetchDataDoctors() {
     // ТРЕБА ДА СЕ СМЕНИ
     visibility.value = "Visible"; //OVDE VISIBILITY E COLLAPSED
 
-    var urlProvider = activeUrl.URL + "/curandusproject/webapi/api/getprovidersdatabyprovider/ProviderProviderId=" + UserInfo.providerId + "&&securityToken="
+    var urlProvider = activeUrl.URL + "/curandusproject/webapi/api/getprovidersdatabyprovider/ProviderProviderId=" + UserInfo.providerId + "&securityToken=" + 
     securityToken
     //console.log(urlProvider);
     fetch(urlProvider, {
@@ -176,7 +176,7 @@ function fetchData() {
     visibility.value = "Visible";
 
     console.log("pred api");
-    var urlPatient = activeUrl.URL + "/curandusproject/webapi/api/patients/providerId=" + UserInfo.providerId;
+    var urlPatient = activeUrl.URL + "/curandusproject/webapi/api/patients/providerId=" + UserInfo.providerId + "&securityToken=" + securityToken;
     console.log(urlPatient);
     fetch(urlPatient, {
         method: 'GET',
@@ -259,7 +259,7 @@ function deleteContact(e) {
             "Are you sure you want to delete " + e.data.fullName + "?", ["Yes", "No"],
             function(s) {
                 if (s == "Yes") {
-                    fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderPatient/" + UserInfo.providerId + "&&" + patientId + "&&securityToken="
+                    fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderPatient/" + UserInfo.providerId + "&&" + patientId + "&&" +
                         securityToken, {
                             method: 'GET',
                             headers: {
@@ -286,7 +286,7 @@ function deleteDoctor(e) {
         "Are you sure you want to delete " + e.data.fullName + "?", ["Yes", "No"],
         function(s) {
             if (s == "Yes") {
-                fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderProvider/" + UserInfo.providerId + "&&" + providerContactId + "&&securityToken=" + securityToken, {
+                fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderProvider/" + UserInfo.providerId + "&&" + providerContactId + "&&" + securityToken, {
                     method: 'GET',
                     headers: {
                         "Content-type": "application/json"
