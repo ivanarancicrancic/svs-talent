@@ -5,7 +5,7 @@ var QConfig = require('Scripts/quickbloxConfig.js');
 var Storage = require("FuseJS/Storage");
 var Device = require('Device');
 var myToast = require("myToast");
-
+var securityToken = Storage.readSync("securityToken");
 var User = JSON.parse(Storage.readSync("patientInfo"));
 var contacts = Observable();
 var dialogs = Observable();
