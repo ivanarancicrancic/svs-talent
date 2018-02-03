@@ -35,7 +35,6 @@ var name = Observable("");
 var surname = Observable("");
 var visibility1 = Observable("Collapsed");
 var visibility = Observable("Visible");
-
 /*phoneNumber.value = "001";
 console.log("phone format " + phoneNumber);*/
 
