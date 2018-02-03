@@ -65,8 +65,7 @@ function checkData() {
     if (inputCodeParam == inputCode.value) {
         console.log("Token: " + securityToken.value);
         var url = activeUrl.URL + "/curandusproject/webapi/api/CheckProviderActivationKey/" + register.value.deviceId + "&&" + register.value.phone + "&&" + register.value.activationCode + "&&" + securityToken.value;
-
-
+        
         console.log("url " + url);
         visibility1.value = "Visible";
         fetch(url, {
@@ -86,6 +85,7 @@ function checkData() {
                 userInfo.value = responseObject;
                 visibility1.value = "Visible";
                 Storage.write("userInfo", JSON.stringify(userInfo.value));
+                Storage.write("securityToken", securityToken.value));
                 goToMain();
             }
             console.log("Success");
@@ -109,6 +109,5 @@ module.exports = {
     inputCode: inputCode,
     visibility1: visibility1,
     visibility: visibility,
-    load: load,
-    securityToken: securityToken
+    load: load
 };
