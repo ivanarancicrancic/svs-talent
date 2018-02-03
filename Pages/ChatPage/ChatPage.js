@@ -3,8 +3,7 @@ var activeUrl = require("Constants/SERVICE_URL.js");
 var QConfig = require('Scripts/quickbloxConfig.js');
 var SendMessage = require('Scripts/SendMessage.js');
 var Storage = require("FuseJS/Storage");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
-
+var securityToken = Storage.readSync("securityToken");
 var currentPage = Observable();
 var myToast = require("myToast");
 var SendNotification = require('Scripts/SendNotification.js');
@@ -127,7 +126,7 @@ this.onParameterChanged(function(param) {
     Storage.write("notification", "chat");
 
     console.log("providerchatid.value " + providerchatid.value);
-    var url = activeUrl.URL + "/curandusproject/webapi/api/GetProviderDataByChatId/chatid=" + providerchatid.value + "&securityToken=" + securityToken.value;
+    var url = activeUrl.URL + "/curandusproject/webapi/api/GetProviderDataByChatId/chatid=" + providerchatid.value + "&securityToken=" + securityToken;
     fetch(url, {
         method: 'GET',
         headers: {
