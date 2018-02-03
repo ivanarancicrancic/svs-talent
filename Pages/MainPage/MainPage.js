@@ -4,7 +4,7 @@ var myToast = require("myToast");
 
 var activeUrl = require("Constants/SERVICE_URL.js");
 var Storage = require("FuseJS/Storage");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 
 var errorMessage = Observable();
 var providername = Observable("your doctor ");
@@ -268,8 +268,8 @@ function initload() {
 
         Panel1Visibility.value = "Collapsed";
 
-        fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlist/patientid=" + patientid + "&&securityToken="
-            securityToken.value, {
+        fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlist/patientid=" + patientid + "&securityToken=" +
+            securityToken, {
                 method: 'GET',
                 headers: {
                     "Content-type": "application/json"
