@@ -1,4 +1,4 @@
- 		var Observable = require("FuseJS/Observable");
+var Observable = require("FuseJS/Observable");
  		var activeUrl = require("Constants/SERVICE_URL.js");
  		var Modal = require('Modal');
  		var Storage = require("FuseJS/Storage");
@@ -354,7 +354,7 @@
  		function loadMore1() {
 
  		    console.log("loadMore1 loadMore1");
- 		    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscroll/treatmentitemlistid=" + firstID + "&updown=U&range=10&securityToken="
+ 		    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscroll/treatmentitemlistid=" + firstID + "&updown=U&range=10&securityToken=" +
  		        securityToken, {
  		            method: 'GET',
  		            headers: {
@@ -473,7 +473,7 @@
 
  		    console.log("LOAD");
  		    visibility.value = "Visible";
- 		    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlis/activetreatmentid=" + activetreatmentid + "&&securityToken="
+ 		    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlis/activetreatmentid=" + activetreatmentid + "&securityToken=" +
  		        securityToken, {
  		            method: 'GET',
  		            headers: {
