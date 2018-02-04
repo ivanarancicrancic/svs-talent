@@ -5,8 +5,8 @@ var myToast = require("myToast");
 var inputCodeParam = "";
 var load = Observable("Please wait...");
 var register = Observable();
-var securityToken = Observable();
-
+//var securityToken = Observable();
+var securityToken = Storage.readSync("securityToken");
 var inputCode = Observable();
 
 var visibility1 = Observable("Collapsed");
@@ -63,8 +63,8 @@ function sendSms(phone, text) {
 function checkData() {
 
     if (inputCodeParam == inputCode.value) {
-        console.log("Token: " + securityToken.value);
-        var url = activeUrl.URL + "/curandusproject/webapi/api/CheckProviderActivationKey/" + register.value.deviceId + "&&" + register.value.phone + "&&" + register.value.activationCode + "&&" + securityToken.value;
+       // console.log("Token: " + securityToken.value);
+        var url = activeUrl.URL + "/curandusproject/webapi/api/CheckProviderActivationKey/" + register.value.deviceId + "&&" + register.value.phone + "&&" + register.value.activationCode + "&&" + securityToken;
         
         console.log("url " + url);
         visibility1.value = "Visible";
