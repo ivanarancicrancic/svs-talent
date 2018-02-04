@@ -2,6 +2,8 @@ var Observable = require("FuseJS/Observable");
 var activeUrl = require("Constants/SERVICE_URL.js");
 var myToast = require("myToast");
 var Modal = require('Modal');
+var Storage = require("FuseJS/Storage");
+var securityToken = Storage.readSync("securityToken");
 var response = Observable(97.0);
 var item = Observable();
 var RoomId = Observable();
@@ -89,7 +91,7 @@ function saveFunc() {
 
     visibility.value = "Visible";
 
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId + "&securityToken=" + securityToken, {
         method: 'POST',
         headers: {
             "Content-type": "application/json"
