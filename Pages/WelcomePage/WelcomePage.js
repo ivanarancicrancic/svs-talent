@@ -412,7 +412,8 @@ function Continue() {
                                         status = response.status; // Get the HTTP status code
                                         response_ok = response.ok; // Is response.status in the 200-range?
                                         //return response.json(); // This returns a promise
-                                         Storage.write("securityToken", response.json()));                            
+                                        // Storage.write("securityToken", response.json());
+                                          Storage.write("securityToken", JSON.stringify(resp));                                  
                                            router.goto("login", {
                                            "regid": p_reg_id.value
                                           });
