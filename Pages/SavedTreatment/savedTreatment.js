@@ -1,5 +1,5 @@
 var Observable = require("FuseJS/Observable")
-
+var Storage = require("FuseJS/Storage");
 var activeUrl = require("Constants/SERVICE_URL.js");
 var securityToken = Storage.readSync("securityToken");
 var selektirani = Observable("");
