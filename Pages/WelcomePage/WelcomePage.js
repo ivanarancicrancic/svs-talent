@@ -401,9 +401,26 @@ function Continue() {
         //             "regid": p_reg_id.value
         //         });
         //     }
-        router.goto("login", {
-            "regid": p_reg_id.value
-        });
+        
+         fetch(activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken", {
+                                        method: 'POST',
+                                        headers: {
+                                            "Content-type": "application/json"
+                                        },
+                                        dataType: 'json'
+                                    }).then(function(response) {
+                                        status = response.status; // Get the HTTP status code
+                                        response_ok = response.ok; // Is response.status in the 200-range?
+                                        //return response.json(); // This returns a promise
+                                         Storage.write("securityToken", response.json()));                            
+                                           router.goto("login", {
+                                           "regid": p_reg_id.value
+                                          });
+                                        }).catch(function(err) {
+                                        console.log("Error genSecToken?", err.message);
+                                    });
+        
+       
     } else
     if (isAgree.value == false) {
         myToast.toastIt("You must agree with the Terms and Conditions")
