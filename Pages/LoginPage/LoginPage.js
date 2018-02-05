@@ -273,7 +273,7 @@ function registerFunc() {
 }
 
 function sendSms(phone, text) {
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + text, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + text + "&securityToken=" + securityToken, {
         method: 'GET',
         headers: {
             "Content-type": "application/json"
