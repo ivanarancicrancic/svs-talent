@@ -1,6 +1,7 @@
 		var Observable = require("FuseJS/Observable");
 		var url = require("Constants/SERVICE_URL.js");
 		var Storage = require("FuseJS/Storage");
+		var securityToken = Storage.readSync("securityToken");
 		var myToast = require("myToast");
 		var activeUrl = require("Constants/SERVICE_URL.js");
 		var onoff = Observable(false);
@@ -87,7 +88,7 @@
 		        "notificationEnabled": p_notificationenabled.value
 		    }
 		    console.log("This is the object on update patient: " + JSON.stringify(notify));
-		    var url = activeUrl.URL + "/curandusproject/webapi/api/insertprovider";
+		    var url = activeUrl.URL + "/curandusproject/webapi/api/insertprovider/securityToken=" + securityToken;
 
 		    console.log("Update na tabelata: " + onoff.value);
 		    fetch(url, {
