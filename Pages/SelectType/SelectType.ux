@@ -33,6 +33,7 @@
     var name2="";
     var fullname2 = Observable();
     var fullname3 = Observable();
+    var securityToken = Storage.readSync("securityToken");
     // var name = "MOKI"; 
     //var patientName = {name:"MOKIIII"}; 
     var name = Observable();
@@ -246,7 +247,7 @@ console.log("---------------------------------- SELECT TYPE --------------------
     function goToSavedTreatments(e) {  
         lista=[]; 
        
-        var url = activeUrl.URL + "/curandusproject/webapi/api/getsavedtreatmenttemplatebyprovider/"+providerId 
+        var url = activeUrl.URL + "/curandusproject/webapi/api/getsavedtreatmenttemplatebyprovider/"+providerId + "&&" + securityToken; 
         console.log(url); 
         fetch(url, { 
             method: 'GET', 

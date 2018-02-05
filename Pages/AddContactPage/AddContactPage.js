@@ -412,7 +412,7 @@ function addChatContact() {
                                                         console.log("dialogObj + namenovo " + JSON.stringify(dialogObj));
                                                         // addContact(chatUserId, dialogObj._id);
                                                         SendMessage.createSession(dialogObj._id, User.firstName + " " + User.lastName + " please asign treatment to your patient " + name.value + " " + surname.value);
-                                                        fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId + "&roomid=" + dialogObj._id + "&securityToken=" + securityToken, {
+                                                        fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId + "&roomid=" + dialogObj._id, {
                                                             method: 'POST',
                                                             headers: {
                                                                 "Content-type": "application/json"
@@ -447,7 +447,7 @@ function addChatContact() {
                                                         console.log('Error ovde? 7');
                                                         console.log(JSON.stringify(err));
                                                     });
-                                                // fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId + "&roomid=" + json.items[0]._id + "&securityToken=" + securityToken, {
+                                                // fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId + "&roomid=" + json.items[0]._id, {
                                             } else {
                                                 console.log(" Vleze vo else " + 'https://api.quickblox.com/chat/Dialog/' + json.items[0]._id + '.json');
                                                 console.log(" data " + data);
@@ -473,7 +473,7 @@ function addChatContact() {
                                                         console.log("dialogObj + namenovo " + JSON.stringify(dialogObj));
                                                         // addContact(chatUserId, dialogObj._id);
                                                         SendMessage.createSession(dialogObj._id, User.firstName + " " + User.lastName + " please asign treatment to your patient " + name.value + " " + surname.value);
-                                                        fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId + "&roomid=" + dialogObj._id + "&securityToken=" + securityToken, {
+                                                        fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId + "&roomid=" + dialogObj._id, {
                                                             method: 'POST',
                                                             headers: {
                                                                 "Content-type": "application/json"
@@ -587,7 +587,7 @@ function createDialog(myUserId, contactId) {
             dialogObj = json;
             console.log("DIALOG!" + dialogObj._id + contactId);
             // addContact(contactId, dialogObj._id);
-            fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + contactId + "&roomid=" + dialogObj._id + "&securityToken=" + securityToken, {
+            fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + contactId + "&roomid=" + dialogObj._id, {
                 method: 'POST',
                 headers: {
                     "Content-type": "application/json"
@@ -632,7 +632,7 @@ function addContact() {
         surname.value = encodeURIComponent(surname.value);
         visibility1.value = "Visible";
         // load.value="Adding Contact";
-        fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + UserInfo.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=321321&roomid=321312312&securityToken=" + securityToken, {
+        fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + UserInfo.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=321321&roomid=321312312", {
             method: 'POST',
             headers: {
                 "Content-type": "application/json"

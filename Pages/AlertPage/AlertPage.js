@@ -1,4 +1,4 @@
-var Observable = require("FuseJS/Observable");
+ 		var Observable = require("FuseJS/Observable");
  		var activeUrl = require("Constants/SERVICE_URL.js");
  		var Modal = require('Modal');
  		var Storage = require("FuseJS/Storage");

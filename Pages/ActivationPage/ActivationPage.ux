@@ -1,4 +1,4 @@
-///<DefaultPage ux:Class="ActivationPage"> 
+<DefaultPage ux:Class="ActivationPage"> 
 	<Router ux:Dependency="router" />
 	<JavaScript File="ActivationPage.js" />
 	<Panel Visibility="{visibility1}">
@@ -12,8 +12,8 @@
 				<Text TextWrapping="Wrap" Margin="32,30,32,0" TextAlignment="Left" FontSize="14">An activation code was sent to your mobile device, enter the code below: </Text>
 				<FloatingLabel PlaceholderText="Activation Code" Value="{inputCode}" InputHint="Integer" Margin="32, 0, 32, 0" />
 <!-- 				<Text TextWrapping="Wrap" Margin="32,30,32,0" TextAlignment="Left" FontSize="14">A security token was sent to your mobile device, enter the code below: </Text>
-				<FloatingLabel Value="{securityToken}" PlaceholderText="Security Token" Margin="32, 16, 32, 0" /> -->
-				<StackPanel Dock="Bottom" Margin="0,16,0,0" Orientation="Horizontal" Alignment="TopCenter">
+				<FloatingLabel Value="{securityToken}" PlaceholderText="Security Token" Margin="32, 16, 32, 0" />
+ -->				<StackPanel Dock="Bottom" Margin="0,16,0,0" Orientation="Horizontal" Alignment="TopCenter">
 									<Text>Don't have code? </Text>
 					<Text Margin="10,0,0,0" TextColor="primary" Clicked="{resendCode}">Resend.</Text>
 				</StackPanel>

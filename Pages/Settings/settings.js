@@ -3,10 +3,8 @@
 		var Storage = require("FuseJS/Storage");
 		var myToast = require("myToast");
 		var activeUrl = require("Constants/SERVICE_URL.js");
-		var Storage = require("FuseJS/Storage");
-        var securityToken = Storage.readSync("securityToken");
-		var onoff = Observable();
-		var Notifications = Observable(true);
+		var onoff = Observable(false);
+		var Notifications = Observable();
 		var onoff1 = Observable();
 		var Device = require('Device');
 		var p_notificationenabled = Observable();
@@ -17,24 +15,28 @@
 		var phoneNumber = Observable("");
 		var chatUserId = "";
 		//var notificationEnabled = Observable();
-		var User = JSON.parse(Storage.readSync("patientInfo"));
+		var User = JSON.parse(Storage.readSync("userInfo"));
 		///
 		this.onParameterChanged(function(param) {
 
+		    User = JSON.parse(Storage.readSync("userInfo"));
+
 		    console.log("vleze ");
+		    console.log("User.notificationEnabled " + User.notificationEnabled);
+
+		    console.log("User.NotificationEnabled " + User.NotificationEnabled);
 
 
-		    User = JSON.parse(Storage.readSync("patientInfo"));
-
-
-		    console.log("User.notificationEnabled " + User.NotificationEnabled);
 
 		    console.log("User " + JSON.stringify(User));
 
-		    if (User.NotificationEnabled == 1) {
+		    if (User.notificationEnabled == 1) {
 		        onoff1.value = true;
 		        onoff.value = true;
 
+		    } else if (User.NotificationEnabled == 1) {
+		        onoff1.value = true;
+		        onoff.value = true;
 		    } else {
 		        onoff1.value = false;
 		        onoff.value = false;
@@ -45,10 +47,13 @@
 
 		});
 
+
+
+
 		//onoff = onoff1; // DA GO MESTI SWITCH-OT NA POZICIJA KOJA E INICIJALIZIRANA
 
 		function clicked() {
-
+		    console.log("Vleze vo clicked ");
 		    onoff.value = !onoff.value;
 		    console.log("Vleze vo clicked ");
 		    if (onoff.value == true) {
@@ -61,28 +66,28 @@
 		        myToast.toastIt("Notifications are OFF");
 		    }
 
+		    var p_reg_id;
+
 		    if (User.regId == null) {
 		        p_reg_id = User.RegId
 		    } else {
 		        p_reg_id = User.regId;
 		    }
+		    console.log("p_reg_id " + p_reg_id);
+
 
 		    var notify = {
-		        "firstName": User.FirstName,
-		        "lastName": User.LastName,
-		        "phone": User.Phone,
-		        "allergies": User.Allergies,
-		        "chronicDiseases": User.ChronicDiseases,
-		        "medicationsThatRecieves": User.MedicationsThatRecieves,
-		        "additionalInnfo": User.AdditionalInnfo,
-		        "chatId": User.ChatId,
-		        "deviceId": User.DeviceId,
+		        "firstName": User.firstName,
+		        "lastName": User.lastName,
+		        "phone": User.phone,
+		        "deviceId": User.deviceId,
+		        "chatId": User.chatId,
 		        "regId": p_reg_id,
+		        "activationCode": User.activationCode,
 		        "notificationEnabled": p_notificationenabled.value
 		    }
-
 		    console.log("This is the object on update patient: " + JSON.stringify(notify));
-		    var url = activeUrl.URL + "/curandusproject/webapi/api/insertpatient/securityToken=" + securityToken;
+		    var url = activeUrl.URL + "/curandusproject/webapi/api/insertprovider";
 
 		    console.log("Update na tabelata: " + onoff.value);
 		    fetch(url, {
@@ -98,16 +103,10 @@
 		        response_ok = response.ok; // Is response.status in the 200-range? 
 		        return response.json(); // This returns a promise 
 		    }).then(function(responseObject) {
-		        console.log("responseObject " + responseObject);
+		        console.log("responseObject " + JSON.stringify(responseObject));
 		        var userInfo = Observable();
 		        userInfo.value = responseObject;
-		        Storage.write("patientInfo", JSON.stringify(userInfo.value));
-
-		        if (p_notificationenabled.value == 0) {
-		            myToast.toastIt("Notifications are OFF");
-		        } else {
-		            myToast.toastIt("Notifications are ON");
-		        }
+		        Storage.write("userInfo", JSON.stringify(userInfo.value));
 		        // Storage.write("userInfo", responseObject);
 		    }).catch(function(err) {
 		        console.log("------Vleze vo ERROR");

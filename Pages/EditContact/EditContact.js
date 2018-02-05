@@ -287,7 +287,7 @@ function EditContactDoctorPom() {
         //visibility1.value = "Visible";
         // load.value="Adding Contact";
 
-        var api_url = activeUrl.URL + "/curandusproject/webapi/api/addcontactdoctor/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId.value + "&roomid=" + RoomId.value + "&securityToken=" + securityToken;
+        var api_url = activeUrl.URL + "/curandusproject/webapi/api/addcontactdoctor/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId.value + "&roomid=" + RoomId.value;
         console.log("api_url " + api_url);
         fetch(api_url, {
             method: 'POST',
@@ -326,7 +326,7 @@ function addContact() {
         surname.value = encodeURIComponent(surname.value);
         //visibility1.value = "Visible";
         // load.value="Adding Contact";
-        var api_url = activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId.value + "&roomid=" + RoomId.value + "&securityToken=" + securityToken;
+        var api_url = activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId.value + "&roomid=" + RoomId.value;
         console.log("api_url " + api_url);
         fetch(api_url, {
             method: 'POST',
@@ -334,6 +334,7 @@ function addContact() {
                 "Content-type": "application/json"
             },
             dataType: 'json'
+            body: JSON.stringify(securityToken)
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
             response_ok = response.ok; // Is response.status in the 200-range?
@@ -408,7 +409,7 @@ module.exports = {
 }
 
 
-//     fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId.value + "&roomid=" + RoomId.value + "&securityToken=" + securityToken, {
+//     fetch(activeUrl.URL + "/curandusproject/webapi/api/addcontactpatient/providerId=" + User.providerId + "&phone=" + phoneNumber.value + "&firstName=" + name.value + "&lastName=" + surname.value + "&chatid=" + chatUserId.value + "&roomid=" + RoomId.value, {
 //         method: 'POST',
 //         headers: {
 //             "Content-type": "application/json"

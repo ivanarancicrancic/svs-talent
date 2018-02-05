@@ -4,8 +4,8 @@ var Device = require('Device');
 var QConfig = require('Scripts/quickbloxConfig.js');
 var myToast = require("myToast");
 var Storage = require("FuseJS/Storage");
-var securityToken = Storage.readSync("securityToken");
 
+var securityToken = Storage.readSync("securityToken");
 var register = Observable();
 var firstName = Observable("");
 var lastName = Observable("");
@@ -242,7 +242,7 @@ function registerFunc() {
 
     }
     visibility1.value = "Visible";
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/insertprovider/&securityToken=" + securityToken, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/insertprovider/securityToken=" + securityToken, {
         method: 'POST',
         headers: {
             "Content-type": "application/json"

@@ -5,32 +5,29 @@ var Camera = require("FuseJS/Camera");
 var ImageTools = require("FuseJS/ImageTools");
 var Storage = require("FuseJS/Storage");
 var securityToken = Storage.readSync("securityToken");
-var load = Observable("Saving...");
+
+
 var imagePath = Observable();
 var imageName = Observable();
 var imageSize = Observable();
 var name = Observable();
 var surname = Observable();
-var chronicDiseases = Observable();
-var allergies = Observable();
-var medicationsThatRecieves = Observable();
-var additionalInnfo = Observable();
+var load = Observable("Loading...");
 var User;
 var base64Code = {};
 var flag = Observable("no_picture");
-var visibility = Observable("Visible");
 var visibility1 = Observable("Collapsed");
+var visibility = Observable("Visible");
+//Storage.write("userInfoBrojslika", activeUrl.URL + "\/curandusImages" + "\/" + "Assets" + "\/" + "placeholder.jpg");
 
 this.onParameterChanged(function(param) {
-
-    Storage.read("patientInfo").then(function(content) {
+    console.log("VOOOOO ediiiiiiiiiiiiiiiiiit PARAMETTER" + JSON.stringify(param));
+    Storage.read("userInfo").then(function(content) {
+        //debug_log(content);
         User = JSON.parse(content);
-        name.value = User.FirstName;
-        surname.value = User.LastName;
-        chronicDiseases.value = User.ChronicDiseases;
-        allergies.value = User.Allergies;
-        medicationsThatRecieves.value = User.MedicationsThatRecieves;
-        additionalInnfo.value = User.AdditionalInnfo;
+        name.value = User.firstName;
+        surname.value = User.lastName;
+        console.log("VOOOOO ediiiiiiiiiiiiiiiiiit PARAMETTER" + JSON.stringify(User));
     }, function(error) {
 
     });
@@ -40,14 +37,15 @@ this.onParameterChanged(function(param) {
         console.log("On onParameterChanged vo Edit Profile page: " + content);
         imagePath.value = content;
     }, function(error) {
-        console.log("nema slika vo storage!");
+        Storage.write("userInfoBrojslika", activeUrl.URL + "\/curandusImages" + "\/" + "Assets" + "\/" + "placeholder.jpg");
+        imagePath.value = activeUrl.URL + "\/curandusImages" + "\/" + "Assets" + "\/" + "placeholder.jpg";
+        console.log("nema slika vo storage! " + imagePath.value);
     });
 
 });
 
 
-
-imagePath.value = "../../Assets/placeholder.png";
+//imagePath.value = "Assets/placeholder.png";
 
 var displayImage = function(image) {
     imagePath.value = image.path;
@@ -140,11 +138,11 @@ function selectImageShow() {
 
 
 removePicture = function() {
-    Storage.write("userInfoBrojslika", "../../Assets/placeholder.jpg");
-
+    //Storage.write("userInfoBrojslika", "../../Assets/placeholder.jpg");
+    Storage.write("userInfoBrojslika", activeUrl.URL + "\/curandusImages" + "\/" + "Assets" + "\/" + "placeholder.jpg");
     flag.value = "no_picture";
     var tmp = {
-        path: "../../Assets/placeholder.jpg"
+        path: "Assets/placeholder.jpg"
     };
 
 
@@ -153,37 +151,20 @@ removePicture = function() {
 
 
 function updateProfile(brojSlika) {
-    console.log("povikana update so broj na slika:" + brojSlika);
+
+
+    console.log("User.providerId " + User.providerId);
     console.log("brojSlika " + brojSlika);
 
-    User.FirstName = name.value;
-    User.LastName = surname.value;
-    User.ChronicDiseases = chronicDiseases.value;
-    User.Allergies = allergies.value;
-    User.MedicationsThatRecieves = medicationsThatRecieves.value;
-    User.AdditionalInnfo = additionalInnfo.value;
-
-    var ob = {
-        "firstName": User.FirstName,
-        "lastName": User.LastName,
-        "phone": User.Phone,
-        "allergies": User.Allergies,
-        "profileImageUrl": brojSlika,
-        "chronicDiseases": User.ChronicDiseases,
-        "medicationsThatRecieves": User.MedicationsThatRecieves,
-        "additionalInnfo": User.AdditionalInnfo,
-        "chatId": User.ChatId
-
-    }
-    console.log("This is the object on update patient: " + JSON.stringify(ob));
-    var url = activeUrl.URL + "/curandusproject/webapi/api/insertpatient/securityToken=" + securityToken;
+    var url = activeUrl.URL + "/curandusproject/webapi/api/updateProviderImageUrl/" + User.providerId + "&&" + brojSlika + "&&" + User.firstName + "&&" + User.lastName + "&&" + securityToken
+    console.log("updateProvider se povika so broj slika: " + brojSlika + " i userid:" + User.providerId);
     fetch(url, {
         method: 'POST',
         headers: {
             "Content-type": "application/json"
         },
-        dataType: 'json',
-        body: JSON.stringify(ob)
+        dataType: 'json'
+
     }).then(function(response) {
         status = response.status; // Get the HTTP status code 
         response_ok = response.ok; // Is response.status in the 200-range? 
@@ -198,20 +179,15 @@ function updateProfile(brojSlika) {
 }
 
 save = function() {
-    User.FirstName = name.value;
-    User.LastName = surname.value;
-    User.ChronicDiseases = chronicDiseases.value;
-    User.Allergies = allergies.value;
-    User.MedicationsThatRecieves = medicationsThatRecieves.value;
-    User.AdditionalInnfo = additionalInnfo.value;
-
-    console.log("ova e userot pri save: " + JSON.stringify(User));
-
+    User.firstName = name.value;
+    User.lastName = surname.value;
+    Storage.write("userInfo", JSON.stringify(User));
     if (flag.value == "no_picture") {
         Storage.write("userInfoBrojslika", activeUrl.URL + "\/curandusImages" + "\/" + "Assets" + "\/" + "placeholder.jpg");
         updateProfile("");
 
     } else {
+
 
         console.log("THIS IS THE USER: " + JSON.stringify(User));
         // console.log("ova e base64 na slikata: "+base64Code.base64.substr(1,100));
@@ -228,10 +204,9 @@ save = function() {
             "repeatT": "5",
             "subtreatmentid": 18
         };
+        visibility1.value = "Visible";
         // console.log("The tmp is created " + tmp);
         var url1 = activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage/securityToken=" + securityToken;
-        visibility1.value = "Visible";
-        //var url1 = "http://192.168.0.111:8080/curandusproject/webapi/api/insertpatient";
         fetch(url1, {
             method: 'POST',
             headers: {
@@ -243,21 +218,22 @@ save = function() {
             status = response.status; // Get the HTTP status code
             console.log('status', status);
             response_ok = response.ok; // Is response.status in the 200-range?
-            return response.json(); // This returns a promise
+            return response.json(); // This returns a promise 
 
         }).then(function(responseObject) {
             visibility1.value = "Visible";
             flag.value = "storage";
             console.log("broj na slika: " + responseObject);
-
+            visibility1.value = "Visible";
             // zapishuvanje vo local storage broj na slika 
             if (responseObject != 0) {
-                visibility1.value = "Visible";
+
                 imagePath.value = activeUrl.URL + "\/curandusImages" + "\/" + responseObject + ".jpg";
                 Storage.write("userInfoBrojslika", imagePath.value);
                 console.log("napraveno save i imagepath.value= " + imagePath.value);
 
                 Storage.read("userInfoBrojslika").then(function(content) {
+
                     console.log("pri save i povlekuvanje od storage imagevalue: " + content);
                 }, function(error) {
                     console.log("nema slika vo storage!");
@@ -268,20 +244,21 @@ save = function() {
             }
             visibility1.value = "Collapsed";
         }).catch(function(err) {
-            console.log("ova vo error", err.message);
             visibility1.value = "Collapsed";
+            console.log("ova vo error", err.message);
         });
 
     } //end else
     //
-    Storage.write("patientInfo", JSON.stringify(User));
+
+    Storage.write("userInfo", JSON.stringify(User));
     router.goBack();
 
 }
 
 
 function deleteStorage() {
-    var success = Storage.deleteSync("patientInfo");
+    var success = Storage.deleteSync("userInfo");
     if (success) {
         console.log("Deleted file");
     } else {
@@ -301,11 +278,7 @@ module.exports = {
     surname: surname,
     save: save,
     flag: flag,
-    deleteStorage: deleteStorage,
-    chronicDiseases: chronicDiseases,
-    allergies: allergies,
-    medicationsThatRecieves: medicationsThatRecieves,
-    additionalInnfo: additionalInnfo,
+    deleteStorage,
     visibility1: visibility1,
     visibility: visibility,
     load: load

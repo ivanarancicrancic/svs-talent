@@ -1,8 +1,16 @@
 <DefaultPage ux:Class="AboutPage">
+<JavaScript File="../../Constants/SERVICE_URL.js" />
 	<Router ux:Dependency="router" />
 	<DockPanel >
 		<Toolbar Color="primary" Title="About" HasBackButton="True" router="router">
-			<DropShadow />
+				<DropShadow />
 		</Toolbar>
+		<Panel Alignment="BottomCenter">
+			<StackPanel Alignment="BottomCenter" Width="50%">
+				<Image File="../../Assets/CurandusLogo.png" Alignment="BottomCenter" Height="20%" Width="20%" Opacity="0.5">
+				</Image>
+				<Text Color="primary" Alignment="BottomCenter" Margin="0,0,0,20" Value="{appVersion}"/>
+			</StackPanel>
+		</Panel>
 	</DockPanel>
 </DefaultPage>

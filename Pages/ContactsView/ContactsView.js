@@ -90,9 +90,9 @@ function fetchDataDoctors() {
     // ТРЕБА ДА СЕ СМЕНИ
     visibility.value = "Visible"; //OVDE VISIBILITY E COLLAPSED
 
-    var urlProvider = activeUrl.URL + "/curandusproject/webapi/api/getprovidersdatabyprovider/ProviderProviderId=" + UserInfo.providerId + "&securityToken=" + 
-    securityToken
-    //console.log(urlProvider);
+    var urlProvider = activeUrl.URL + "/curandusproject/webapi/api/getprovidersdatabyprovider/ProviderProviderId=" + UserInfo.providerId + "&&securityToken=" +
+        securityToken
+        //console.log(urlProvider);
     fetch(urlProvider, {
         method: 'GET',
         headers: {
@@ -259,7 +259,7 @@ function deleteContact(e) {
             "Are you sure you want to delete " + e.data.fullName + "?", ["Yes", "No"],
             function(s) {
                 if (s == "Yes") {
-                    fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderPatient/" + UserInfo.providerId + "&&" + patientId + "&&" +
+                    fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderPatient/" + UserInfo.providerId + "&&" + patientId + "&&securityToken="
                         securityToken, {
                             method: 'GET',
                             headers: {
@@ -286,7 +286,7 @@ function deleteDoctor(e) {
         "Are you sure you want to delete " + e.data.fullName + "?", ["Yes", "No"],
         function(s) {
             if (s == "Yes") {
-                fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderProvider/" + UserInfo.providerId + "&&" + providerContactId + "&&" + securityToken, {
+                fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderProvider/" + UserInfo.providerId + "&&" + providerContactId + "&&securityToken=" + securityToken, {
                     method: 'GET',
                     headers: {
                         "Content-type": "application/json"

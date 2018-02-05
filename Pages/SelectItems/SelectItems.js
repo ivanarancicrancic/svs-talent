@@ -1102,15 +1102,15 @@ function Insert_Saved_Treatment() {
             lista_post.push(pom);
         }
         // if (P_SubTreatmentID==0){
-        //  api_call="http://192.168.1.110:8080/curobjectandusproject/webapi/api/InsertActiveSubTreatment/activetreatmentid=0&providerid=2&patientid=1&nametreatment=Prv&namesubtreatment=PrvS&securityToken=" + securityToken;
+        //  api_call="http://192.168.1.110:8080/curobjectandusproject/webapi/api/InsertActiveSubTreatment/activetreatmentid=0&providerid=2&patientid=1&nametreatment=Prv&namesubtreatment=PrvS";
         // }
         // else{
         //  api_call="http://192.168.1.110:8080/curandusproject/webapi/api/UpdateActiveSubTreatment";
         // }
         var userInfo = Storage.readSync("userInfo");
 
-        var call_api = activeUrl.URL + "/curandusproject/webapi/api/insertsavedtreatment?providerid=" + providerId + "&nametreatment=" + encodeURIComponent(stname.value) + "&securityToken=" +
-        securityToken;
+        var call_api = activeUrl.URL + "/curandusproject/webapi/api/insertsavedtreatment/providerid=" + providerId + "&nametreatment=" + encodeURIComponent(stname.value) + "&securityToken=" +
+            securityToken;
 
         // console.log("nametreatment " + stname.value);
 

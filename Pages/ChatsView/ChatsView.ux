@@ -2,6 +2,7 @@
 	<JavaScript File="ChatsView.js" />
 	<Router ux:Dependency="router" />
         <Button Clicked="{signIn}" Text="signIn"></Button>
+        
 <ScrollView ClipToBounds="true">
     <StackPanel Orientation="Vertical">
         <Each Items="{contacts}" >
@@ -10,7 +11,7 @@
                     <Change alertitem.Color="divider" />
                 </WhileHovering>
                 <Circle Height="60" Width="60" Dock="Left" Margin="12,12,0,12" Alignment="TopLeft">
-                    <ImageFill File="../../Assets/placeholder.png" />
+                    <ImageFill File="../../Assets/placeholder.jpg" />
                 </Circle>
 
                 <StackPanel Margin="12,12,7,7">
