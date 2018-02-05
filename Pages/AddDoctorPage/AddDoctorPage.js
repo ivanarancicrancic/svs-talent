@@ -565,7 +565,7 @@ function addContact(chatID, roomID) {
 function sendSms(phone, text) {
 
 
-    var api_call = activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + encodeURIComponent(text);
+    var api_call = activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + encodeURIComponent(text) + "&securityToken=" + securityToken;
 
     console.log("Vleze vo send sms " + api_call);
     fetch(api_call, {
