@@ -665,7 +665,7 @@ function addContact() {
 }
 
 function sendSms(phone, text) {
-    var api_url = activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + encodeURIComponent(text);
+    var api_url = activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + encodeURIComponent(text) + "&securityToken=" + securityToken;
 
     //    console.log("api_url " + api_url);
     fetch(api_url, {
