@@ -1,0 +1,79 @@
+<DefaultPage ux:Class="AddDoctorPage">
+    <JavaScript File="AddDoctorPage.js" />
+    <Router ux:Dependency="router" />
+    <!-- **************** Tabs1   **************** -->
+    <Panel Visibility="{visibility1}">
+        <LoadingPage Value="{load}"/>
+        </Panel>
+    <Rectangle ux:Class="TabName2" Color="primary_dark" Width="100%" >
+        <string ux:Property="Label"/>
+        <float4 ux:Property="TextColor"/>
+        <Selectable Value="{ReadProperty this.Label}"/>
+        <DockPanel>
+            <Icon FontSize="24" Color="{ReadProperty this.TextColor}" Dock="Right" Alignment="Center" Margin="8,0,8,0">&#xE853;</Icon>
+            <Text Alignment="CenterRight" Color="{ReadProperty this.TextColor}"  Dock="Right"   Font="regular"  Value="{ReadProperty this.Label}" />
+            <WhilePressed>
+                <Scale Factor="1.1" Duration="0.2"/>
+            </WhilePressed>
+        </DockPanel>
+    </Rectangle>
+    <DockPanel>
+        <Toolbar Color="primary" Title="Add doctor" HasBackButton="True" router="router">
+            <DropShadow />
+        </Toolbar>
+        <Rectangle Alignment="Top" Height="45" Width="100%">
+            <Grid Columns="1*,1*" >
+                <Selection Value=""/>
+                <TabName Label="" ></TabName>
+                <TabName2 Label="IMPORT" TextColor="White" Clicked="{goToLocal}"></TabName2>
+            </Grid>
+            <DropShadow/>
+        </Rectangle>
+        <Rectangle Color="background_color" Layer="Background" />
+        <StackPanel Margin="0,60,0,0" Visibility="{visibility}">
+            <!-- <FloatingLabel Value="{phoneNumber}" InputHint="Phone" PlaceholderText="Phone number" Margin="32, 16, 32, 0" /> -->
+            <!-- Code for phone number **** -->
+
+                <Text FontSize="20" Margin="32, 16, 32, 0"  Color="{PhoneNumberColor}">Phone number</Text> 
+                
+                <StackPanel Clicked="{changeColor}" Orientation="Horizontal" Margin="32, 0, 32, 0">
+
+                    <Text Color="{PhoneNumberColor}" FontSize="22" Alignment="BottomCenter" >(</Text>                       
+                
+                    <TextInput Margin="2,0,0,0" FontSize="22"  ux:Name="prv" Value="{phoneNumber1}" PlaceholderText="xxx" PlaceholderColor="{PhoneNumberColor}" ValueChanged= "{ValidatePassKey}" InputHint="Number" MaxLength="3" Width="40">
+                        <WhileTrue Value="{editMode1}">
+                            <GiveFocus Target="vtor" />
+                        </WhileTrue>                        
+                    <Rectangle Margin="0,0,2,0"  Width="40" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>
+                    </TextInput>
+
+
+                    <Text Color="{PhoneNumberColor}" Alignment="BottomCenter" FontSize="22" >)</Text>
+
+                    <TextInput Margin="5,0,-2,0" FontSize="22"  ux:Name="vtor" Value="{phoneNumber2}" PlaceholderText="xxx" PlaceholderColor="{PhoneNumberColor}" ValueChanged= "{ValidatePassKey}" InputHint="Number"  MaxLength="3" Width="40" Alignment="Center"> 
+                        <WhileTrue Value="{editMode2}">
+                            <GiveFocus Target="tret" />
+                        </WhileTrue>
+                        <Rectangle Margin="-3,0,0,0"  Width="40" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>  
+                    </TextInput>
+
+                    <Text  Margin="2,0,0,0" Color="{PhoneNumberColor}" Alignment="BottomCenter" FontSize="22" >-</Text>
+
+                    <TextInput Margin="3,0,0,0" FontSize="22"  ux:Name="tret" Value="{phoneNumber3}" PlaceholderText="xxxx" PlaceholderColor="{PhoneNumberColor}" ValueChanged= "{ValidatePassKey}" InputHint="Number"  MaxLength="4" Width="50" Alignment="Center">
+                        <Rectangle  Width="50" Fill="{PhoneNumberColor}" Height="2" Alignment="Bottom" Layer="Background"/>
+                    </TextInput>
+
+
+                </StackPanel>              
+                <!-- ************ -->
+            <FloatingLabel Value="{name}" PlaceholderText="First Name" Margin="32, 0, 32, 0" />
+            <FloatingLabel Value="{surname}" PlaceholderText="Last Name" Margin="32, 10, 32, 0" />
+            <RaisedButton ux:Name="txt1" BtnText="SAVE" BtnColor="primary" BtnTextColor="icons" Clicked="{addChatContact}" Alignment="Center" Margin="0,10,0,0">
+                <Clicked>
+                    <GiveFocus Target="txt1" />
+                </Clicked>
+            </RaisedButton>
+        </StackPanel>
+    </DockPanel>
+</DefaultPage>
+
