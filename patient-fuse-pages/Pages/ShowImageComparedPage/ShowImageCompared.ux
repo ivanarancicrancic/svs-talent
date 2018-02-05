@@ -1,0 +1,38 @@
+<DefaultPage ux:Class="ShowImageCompared">
+<Router ux:Dependency="router" />
+ <JavaScript File="ShowImageCompared.js" />
+ 	<StackPanel>
+ 		<ToolbarReload Color="primary" HasBackButton="True" router="router" Title="Compare with this picture:">
+		   	<DropShadow />
+		</ToolbarReload>
+ 	</StackPanel>
+ 		
+ 		<Match Value="{visibility}">
+		    <Case String="Visible">		    	
+		    		<LoadingPage> </LoadingPage>	        		        
+		    </Case>
+		    <Case String="Collapsed">
+		    	<StackPanel> 	
+			 		<DockPanel>
+					 	<Rectangle Margin="8, 0, 8, 0" >
+						   	<InteractiveTransform ux:Name="transform" />
+					    	<ZoomGesture Target="transform" />
+							<!-- <Image /> -->
+							<Image Url="{imageUrl}" />
+					   	</Rectangle>
+					</DockPanel>
+					
+					<DockPanel Alignment="Center">
+						<Text Value="{question}" TextWrapping="Wrap" Height="20" TextAlignment="Center" Color="#BDBDBD" Font="regular"  FontSize="17" ></Text>
+						<RaisedButton BtnText="Yes" Clicked="{updatePatientAnswerYes}" BtnColor="primary" BtnTextColor="icons"  Alignment="BottomCenter" Margin="0,82,60,0"/>
+						<RaisedButton BtnText="No" Clicked="{updatePatientAnswerNo}" BtnColor="primary" BtnTextColor="icons"  Alignment="BottomCenter" Margin="60,82,0,0"/>
+					</DockPanel>
+				</StackPanel>
+			</Case>
+		</Match>
+
+ 	
+   	
+
+
+</DefaultPage>
