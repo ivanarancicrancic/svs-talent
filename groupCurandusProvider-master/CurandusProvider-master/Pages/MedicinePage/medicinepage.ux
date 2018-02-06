@@ -1,0 +1,147 @@
+
+<DefaultPage ux:Class="medicinepage">
+	<!-- <JavaScript File="Constants/Drugs.js" ux:Global="MyJson" /> -->
+	<Router ux:Dependency="router" />
+	<DockPanel >
+		<Toolbar Color="primary" Title="About" HasBackButton="True" router="router">
+			<DropShadow />
+		</Toolbar>	
+
+		<JavaScript>	
+		////// medicine item code with auto complete ****
+			var Observable = require('FuseJS/Observable');
+			var matchData = Observable();
+			var medicinename = Observable();
+			var list = []; 
+			var counter = 0;
+			var flag = Observable(2);
+
+			// find a match in the database 
+			function machFound(){ 
+				var Data = require("Constants/Drugs.js");				
+				console.log("povikana: "+JSON.stringify(Data.DrugsData[1]));
+				console.log("counter on enter-pressed: "+counter);
+				if(counter > 2){
+					matchData.clear();
+
+					var temp = 0;// for only 10 suggestions
+					for (var i = Data.DrugsData.length - 1; i >= 0; i--) {		
+						if(Data.DrugsData[i].term.toLowerCase().trim().indexOf(medicinename.value.toLowerCase().trim()) != -1 ){
+							//console.log("Ok this is the term: "+Data.DrugsData[i].term);
+							matchData.add({"term":Data.DrugsData[i].term});
+						}
+					}
+					
+					console.log("Ok this is the matchData: "+JSON.stringify(matchData));
+				}
+				else{
+					matchData.clear();
+				}
+			}
+			
+			// on value changed meansure the length of an input and call matchData()
+			function autoComplete(){
+				if(flag.value == 2){
+					counter = medicinename.value.length;
+					console.log("counter on value entered: "+counter);
+					if(counter > 2){
+						machFound();
+					}
+					else if(counter < 2){
+						matchData.clear();
+					}
+				}
+				else{
+					flag.value = 2;
+				}			
+			}
+
+			// when option is selected
+			function optionSelected(param){
+				var temp="";
+				flag.value = 1;
+				console.log("this is selected option: "+JSON.stringify(param.data));
+				if(param.data.term.length > 30){
+					medicinename.value = param.data.term.substring(0,30)+" ...";
+					// console.log("this is the temp: "+param.data.term.substring(0,22));
+				}
+				else{
+					medicinename.value = param.data.term;
+				}
+				
+				matchData.clear();
+			}
+
+			module.exports = {
+				autoComplete:autoComplete,
+				machFound:machFound,
+				mmedicinename:medicinename,
+				matchData:matchData,
+				optionSelected:optionSelected
+			};
+		// medicine item code with auto complete ****
+		</JavaScript>
+
+		<Rectangle Color="White">
+			<!-- medicine item code with auto complete **** --> 
+			<StackPanel>
+				<DockPanel Width="90%">
+					<Brush ux:Property="Background"/>	
+					<Panel Dock="Top">
+						<!--Rectangle Fill="#FFFFFF" Height="20"/-->
+						<Text ux:Name="labeltop1" Value="Text" Color="primary" Visibility="Hidden" FontSize="18"/>
+					</Panel>
+					<Panel Dock="Bottom">
+				
+						<TextInput Value="{medicinename}" ValueChanged="{autoComplete}" ActionTriggered="{machFound}" ux:Name="input" Width="100%" FontSize="22" >
+
+							<Text ux:Name="label" Value="Text" Color="#BDBDBD" FontSize="20" />
+							<Rectangle ux:Name="bottomLine" Fill="#9E9E9E" Height="2" Alignment="Bottom" Layer="Background"/> 
+
+							<WhileContainsText>
+								<Change labeltop1.Visibility="Visible" />
+								<Move X="0" Y="-1" Target="labeltop1" />
+								<Change label.Visibility = "Hidden" />
+							</WhileContainsText>
+
+							<WhileFocused>
+								<Change bottomLine.Fill="#00BCD4" />
+								<Change label.Color="#00BCD4" />
+								<Change label.FontSize="18" />
+								<Move X="0" Y="-1" Target="label" Duration="001" />	
+							</WhileFocused>
+						</TextInput>
+						
+					</Panel>
+				</DockPanel>
+
+				<DockPanel>
+					<StackPanel Color="White">
+					 		<Each Items="{matchData}">				 			
+			 				    <Text Color="Gray" MinHeight="29" ux:Name="medicine" Margin="30,0,0,0" TextColor="primary" Value="{term}" FontSize="18" Clicked="{optionSelected}">
+	                         	    <Clicked>
+	                         		    <Move X="0" Y="-10" Target="medicine" Duration="0.1" />
+	                         		    <Change medicine.Color="Black"/>
+	                         	    </Clicked>
+	                            </Text>			 		                                           	
+		                    </Each>
+	                </StackPanel>    
+				</DockPanel>
+
+
+				<!-- <FloatingLabel Value="{Property this.Interval}" PlaceholderText="Interval on hours" InputHint="Number" Margin="32, 8, 32, 0" />
+				<FloatingLabel Value="{Property this.Repeat}" PlaceholderText="Repeat on days" InputHint="Number" Margin="32, 8, 32, 0" />
+				<FloatingLabelArea Value="{Property this.Comment}" PlaceholderText="Additional comment" Margin="32, 8, 32, 0" /> -->
+			
+			</StackPanel>
+
+
+			
+		
+		</Rectangle>	
+
+	</DockPanel>
+	
+</DefaultPage>
+
+	
