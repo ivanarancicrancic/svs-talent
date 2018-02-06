@@ -28,6 +28,40 @@ var hasNotification = Observable(false);
 
 Storage.write("notification", "welcome");
 
+var url1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken";
+
+console.log("BEFORE CALL generateSecurityToken for PATIENT!");
+fetch(url1, {
+    method: 'GET',
+    headers: {
+        "Content-type": "application/json"
+    },
+    dataType: 'json'
+}).then(function(response) {
+    console.log("Vleze vo console log");
+    status = response.status; // Get the HTTP status code
+    response_ok = response.ok; // Is response.status in the 200-range?
+    return response.json(); // This returns a promise
+}).then(function(data) {
+    console.log("SECURITY TOKEN GENERATED FOR PATIENT AND SAVED!");
+    console.log("responseObject data: " + data);
+    var tokenInfo = Observable();
+    tokenInfo.value = data;
+    Storage.write("securityToken", JSON.stringify(tokenInfo.value));
+
+
+
+    // Storage.write("securityToken", securityToken));
+}).catch(function(err) {
+    console.log("Fetch data error");
+    console.log(err.message);
+});
+
+
+
+
+
+
 Lifecycle.on("enteringForeground", function() {
     console.log("on enteringForeground");
     //stateApp.value = "background";
