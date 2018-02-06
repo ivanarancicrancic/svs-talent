@@ -156,7 +156,7 @@ function updateProfile(brojSlika) {
     console.log("User.providerId " + User.providerId);
     console.log("brojSlika " + brojSlika);
 
-    var url = activeUrl.URL + "/curandusproject/webapi/api/updateProviderImageUrl/" + User.providerId + "&&" + brojSlika + "&&" + User.firstName + "&&" + User.lastName + "&&" + securityToken
+    var url = activeUrl.URL + "/curandusproject/webapi/api/updateProviderImageUrl/" + User.providerId + "&&" + brojSlika + "&&" + User.firstName + "&&" + User.lastName + "&&" + securityToken;
     console.log("updateProvider se povika so broj slika: " + brojSlika + " i userid:" + User.providerId);
     fetch(url, {
         method: 'POST',
