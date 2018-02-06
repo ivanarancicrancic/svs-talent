@@ -546,7 +546,7 @@ function addContact(chatID, roomID) {
 }
 
 //     function sendSms(phone, text) {
-//         fetch(activeUrl.URL + "/curandusproject/webapi/api/sendsms/sendsms/to=" + phone + "&body=" + text, {
+//         fetch(activeUrl.URL + "/curandusproject/webapi/api/sendsms/sendsms/to=" + phone + "&body=" + text + "&securityToken=" + securityToken, {
 //             method: 'POST',
 //             headers: {
 //                 "Content-type": "application/json"
