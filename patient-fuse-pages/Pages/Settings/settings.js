@@ -3,7 +3,7 @@
 		var Storage = require("FuseJS/Storage");
 		var myToast = require("myToast");
 		var activeUrl = require("Constants/SERVICE_URL.js");
-		var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+		var securityToken = Storage.readSync("securityToken");
 		var onoff = Observable();
 		var Notifications = Observable(true);
 		var onoff1 = Observable();
@@ -81,7 +81,7 @@
 		    }
 
 		    console.log("This is the object on update patient: " + JSON.stringify(notify));
-		    var url = activeUrl.URL + "/curandusproject/webapi/api/insertpatient";
+		    var url = activeUrl.URL + "/curandusproject/webapi/api/insertpatient/securityToken=" + securityToken;
 
 		    console.log("Update na tabelata: " + onoff.value);
 		    fetch(url, {
@@ -90,7 +90,7 @@
 		            "Content-type": "application/json"
 		        },
 		        dataType: 'json',
-		        body: JSON.stringify(notify, securityToken.value)
+		        body: JSON.stringify(notify)
 
 		    }).then(function(response) {
 		        status = response.status; // Get the HTTP status code 
