@@ -4,7 +4,7 @@ var myToast = require("myToast");
 
 var activeUrl = require("Constants/SERVICE_URL.js");
 var Storage = require("FuseJS/Storage");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 
 var errorMessage = Observable();
 var providername = Observable("your doctor ");
@@ -268,8 +268,8 @@ function initload() {
 
         Panel1Visibility.value = "Collapsed";
 
-        fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlist/patientid=" + patientid + "&&securityToken="
-            securityToken.value, {
+        fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlist/patientid=" + patientid + "&securityToken=" +
+            securityToken, {
                 method: 'GET',
                 headers: {
                     "Content-type": "application/json"
@@ -390,7 +390,7 @@ function initload() {
 function loadMore() {
 
     console.log("LOAD");
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscrollpatient/treatmentitemlistid=" + lastID + "&updown=D&range=10&securityToken=" + securityToken.value, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscrollpatient/treatmentitemlistid=" + lastID + "&updown=D&range=10&securityToken=" + securityToken, {
         method: 'GET',
         headers: {
             "Content-type": "application/json"
@@ -495,7 +495,7 @@ function loadMore() {
 function loadMore1() {
 
     //console.log("LOAD111111");
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscrollpatient/treatmentitemlistid=" + firstID + "&updown=U&range=10&securityToken=" + securityToken.value, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscrollpatient/treatmentitemlistid=" + firstID + "&updown=U&range=10&securityToken=" + securityToken, {
         method: 'GET',
         headers: {
             "Content-type": "application/json"
@@ -757,13 +757,13 @@ function skip(arg) {
                 //fetch
                 Panel1Visibility.value = "Visible";
 
-                fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + arg.data.treatmentItemListId, {
+                fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + arg.data.treatmentItemListId + "&securityToken=" + securityToken, {
                     method: 'POST',
                     headers: {
                         "Content-type": "application/json"
                     },
                     dataType: 'json',
-                    body: JSON.stringify(data, securityToken.value)
+                    body: JSON.stringify(data)
                 }).then(function(response) {
                     status = response.status; // Get the HTTP status code
                     console.log('status', status);
@@ -821,13 +821,13 @@ function skip(arg) {
                 //fetch
                 Panel1Visibility.value = "Visible";
 
-                fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + arg.data.treatmentItemListId, {
+                fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + arg.data.treatmentItemListId + "&securityToken=" + securityToken, {
                     method: 'POST',
                     headers: {
                         "Content-type": "application/json"
                     },
                     dataType: 'json',
-                    body: JSON.stringify(data, securityToken.value)
+                    body: JSON.stringify(data)
                 }).then(function(response) {
                     status = response.status; // Get the HTTP status code
                     //console.log('status', status);
