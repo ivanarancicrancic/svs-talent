@@ -5,7 +5,7 @@ var QConfig = require('Scripts/quickbloxConfig.js');
 var Storage = require("FuseJS/Storage");
 var Device = require('Device');
 var myToast = require("myToast");
-
+var securityToken = Storage.readSync("securityToken");
 var User = JSON.parse(Storage.readSync("patientInfo"));
 var contacts = Observable();
 var dialogs = Observable();
@@ -317,7 +317,7 @@ function goToDoctorChat(e) {
     // console.log(JSON.stringify(e.data.name).provider1);
     // console.log(JSON.parse(e.data.name).provider1);
 
-    // var url = activeUrl.URL + "/curandusproject/webapi/api/GetProviderDataByChatId/chatid=" + JSON.parse(e.data.name).provider1;
+    // var url = activeUrl.URL + "/curandusproject/webapi/api/GetProviderDataByChatId/chatid=" + JSON.parse(e.data.name).provider1 + "&securityToken=" + securityToken;
     // fetch(url, {
     //     method: 'GET',
     //     headers: {
