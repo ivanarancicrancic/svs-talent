@@ -1,0 +1,10 @@
+{
+  "Name": "HomeScreen",
+  "RootNamespace":"",
+  "Packages": [
+    "Fuse"
+  ],
+  "Includes": [
+    "*"
+  ]
+}

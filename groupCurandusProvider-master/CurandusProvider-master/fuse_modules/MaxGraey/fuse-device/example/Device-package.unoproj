@@ -1,0 +1,19 @@
+{
+  "Title": "Device Package",
+  "Name": "devicepackage",
+  "Version": "0.0.1",
+  "RootNamespace": "",
+  "Copyright": "Copyright © 2016 $(Publisher)",
+  "Publisher": "Maxim Shaydo",
+  "Packages": [
+    "Fuse",
+    "FuseJS"
+  ],
+  "Includes": [
+    "*",
+    "../Device.uno"
+  ],
+  "Mobile": {
+    "Orientations": "PortraitUpsideDown"
+  }
+}

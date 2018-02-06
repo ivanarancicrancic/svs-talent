@@ -1,0 +1,11 @@
+{
+  "Name": "ModalExample",
+  "RootNamespace":"",
+  "Packages": [
+    "Fuse",
+    "FuseJS"
+  ],
+  "Includes": [
+    "*"
+  ]
+}
