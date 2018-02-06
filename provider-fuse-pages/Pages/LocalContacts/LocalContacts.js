@@ -1,6 +1,7 @@
 var Observable = require('FuseJS/Observable');
 var contacts = require('Contacts');
-
+var Storage = require("FuseJS/Storage");
+var securityToken = Storage.readSync("securityToken");
 var searchString2 = Observable("");
 
 var lista = Observable();
