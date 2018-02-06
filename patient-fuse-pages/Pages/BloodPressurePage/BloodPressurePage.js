@@ -3,7 +3,7 @@ var activeUrl = require("Constants/SERVICE_URL.js");
 var SendMessage = require('Scripts/SendMessage.js');
 var Storage = require("FuseJS/Storage");
 var myToast = require("myToast");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 var errorMessage = Observable();
 var isLoading = Observable(false);
 var SystolicNumber = Observable();
@@ -95,13 +95,13 @@ function saveFunc() {
 
     visibility.value = "Visible";
 
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId + "&securityToken=" + securityToken, {
         method: 'POST',
         headers: {
             "Content-type": "application/json"
         },
         dataType: 'json',
-        body: JSON.stringify(data, securityToken.value)
+        body: JSON.stringify(data)
     }).then(function(response) {
 
         status = response.status;
