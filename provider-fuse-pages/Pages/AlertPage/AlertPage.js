@@ -268,7 +268,6 @@
  		                if (label == "Comparison With Picture" || label == "X Percription" || label == "Diet" || label == "Activity" || label == "Hygiene" || label == "Other Instructions") {
 
  		                    if (responseObject[i].responseInfo != null) {
-
  		                        responseObject[i].response1 = JSON.parse(responseObject[i].responseInfo).response;
  		                        //  response1.value = JSON.parse(responseObject[i].responseInfo).response;
  		                        // response1.value = JSON.parse(responseObject[i].responseInfo).response;
