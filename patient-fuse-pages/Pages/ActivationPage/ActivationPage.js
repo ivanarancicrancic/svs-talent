@@ -3,8 +3,7 @@ var activeUrl = require("Constants/SERVICE_URL.js");
 var myToast = require("myToast");
 var Storage = require("FuseJS/Storage");
 var QConfig = require('Scripts/quickbloxConfig.js');
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
-
+var securityToken = Storage.readSync("securityToken");
 var aCode = "";
 var load = Observable("Please wait...");
 var register = Observable();
@@ -157,8 +156,7 @@ function resendCode() {
 }
 
 function sendSms(phone, text) {
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + text + "&securityToken="
-        securityToken.value, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/sendsms/to=+1" + phone + "&body=" + text + "&securityToken=" + securityToken, {
             method: 'GET',
             headers: {
                 "Content-type": "application/json"
@@ -191,13 +189,13 @@ function checkData() {
 
         register.value.chatId = chatUserId;
 
-        fetch(activeUrl.URL + "/curandusproject/webapi/api/insertpatient", {
+        fetch(activeUrl.URL + "/curandusproject/webapi/api/insertpatient/securityToken=" + securityToken, {
             method: 'POST',
             headers: {
                 "Content-type": "application/json"
             },
             dataType: 'json',
-            body: JSON.stringify(register.value, securityToken.value)
+            body: JSON.stringify(register.value)
 
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
