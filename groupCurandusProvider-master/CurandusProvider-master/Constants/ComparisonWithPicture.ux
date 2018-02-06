@@ -1,0 +1,270 @@
+
+
+<Panel ux:Class="ComparisonWithPicture" Margin="0,0,0,16">
+  <!-- <string ux:Property="AditionalComment" /> -->
+  <string ux:Property="EnterQuestion" />
+  <string ux:Property="IntervalOn" />
+  <string ux:Property="RepeatOn" />
+    <string ux:Property="Selected" />
+    <bool ux:Property="isAgree" />
+    <string ux:Property="SelectedStart" /> 
+<StackPanel>
+
+<JavaScript>
+  
+    var Observable = require('FuseJS/Observable');
+    var CameraRoll = require("FuseJS/CameraRoll");
+    var Camera = require("FuseJS/Camera");
+    var ImageTools = require("FuseJS/ImageTools");
+    var Storage = require("FuseJS/Storage");
+    var imagePath = Observable();
+    var imageName = Observable();
+    var imageSize = Observable();
+    var name = Observable();
+    var surname = Observable();
+    var ImageURL = Observable();
+    var flag = Observable();
+    var Observable = require('FuseJS/Observable');
+    var itemsTwo = Observable(
+        {
+            name: "B.I.D."
+        }, {
+            name: "T.I.D."
+        }, {
+            name: "Q.I.D."
+        }, {
+            name: "Once a day"
+        }, {
+            name: "Every 2 days"
+        }, {
+            name: "Every 3 days"
+        }, {
+            name: "Every 4 days"
+        }, {
+            name: "Every 5 days"
+        }, {
+            name: "Every 6 days"
+        }, {
+            name: "Every 7 days"
+        }, {
+            name: "Every 14 days"
+        }, {
+            name: "Every 30 days"
+        }); 
+
+    var whenStart = Observable(
+        {
+            name: "Today",
+            ID:"0"
+        }, {
+            name: "Tommorow",
+            ID:"1"
+        }, {
+            name: "In 2 days",
+            ID:"2"
+        }, {
+            name: "In 3 days",
+            ID:"3"
+        }, {
+            name: "In 5 days",
+            ID:"4"
+        }, {
+            name: "In 7 days",
+            ID:"5"
+        }, {
+            name: "In 10 days",
+            ID:"6"
+        }, {
+            name: "In 15 days",
+            ID:"7"
+        }, {
+            name: "In 30 days",
+            ID:"8"
+        }); 
+
+
+    var isAgreeTmp = this.isAgree.inner();
+
+
+    flag.value="nemaslika";
+
+
+    
+    // var slikaUrl = Observable(this.comparisionurl.value);
+    // ImageURL.value = "http://192.168.1.110:8080/curandusImages/im1.jpg";
+    var User;
+    var lastImage = Observable(); 
+   // this.comparisionurl.value=Observable(ImageURL.value);
+    console.log("setiranje");
+
+
+    Storage.read("userInfo").then(function(content) {
+        //debug_log(content);
+        User = JSON.parse(content);
+        name.value = User.firstName;
+        surname.value = User.lastName;
+    }, function(error) {
+
+    });
+
+    // var displayImage = function(image) { 
+    //     ImageURL.value = image.path;
+    //     imageName.value = image.name;
+    //     imageSize.value = image.width + "x" + image.height;
+    // } 
+
+    // takePicture = function() {
+    //   flag.value="kamera";
+    //     Camera.takePicture().then(
+    //         function(image) {
+    //             console.log("Vleze vo takepicture: "+image);
+    //             var args = {
+    //                 desiredWidth: 480,
+    //                 desiredHeight: 480,
+    //                 mode: ImageTools.SCALE_AND_CROP,
+    //                 performInPlace: true
+    //             };
+    //             ImageTools.resize(image, args).then(
+    //                 function(image) {
+    //                     CameraRoll.publishImage(image);
+    //                     displayImage(image);
+    //                 }
+    //             ).catch(
+    //                 function(reason) {
+    //                     console.log("Couldn't resize image: " + reason);
+    //                 }
+    //             );
+    //         }
+    //     ).catch(
+    //         function(reason) {
+    //             console.log("Couldn't take picture: " + reason);
+    //         }
+    //     );
+    // };
+    
+
+    // function selectImage() {
+    //   flag.value="load";
+    //   console.log("Vleguva vo selectimage: ");
+    //   //console.log("ova e patekata na slikata:"+ImageURL.value);     
+    //     CameraRoll.getImage().then(
+    //         function(image) {
+    //             var args = {
+    //                 desiredWidth: 480,
+    //                 desiredHeight: 480,
+    //                 mode: ImageTools.SCALE_AND_CROP,
+    //                 performInPlace: true
+    //             };
+    //             ImageTools.resize(image, args).then(
+    //                 function(image) {
+    //                     //console.log("Vleguva vo image tukaa: "+lastImage);
+    //                     console.log("Vleguva vo image tukaa ova e patekata: "+imagePath);
+    //                     ImageTools.getBase64FromImage(image)
+    //               .then(function(image) { 
+                    
+    //                 lastImage = image;
+
+    //                 var rendering = {"base64": image};
+    //                 //console.log("The base64 encoded image is "+rendering);
+    //                 var tmp = {
+    //                    "name":"ComparisonWithPicture",
+    //                    "duration":"3",
+    //                    "status":"1",
+    //                    "createdBy":0,
+    //                    "modifiedBy":0,
+    //                    "created":null,
+    //                    "modified":null,
+    //                    "typeT":"ACK",
+    //                     "renderingInfo": JSON.stringify(rendering),
+    //                    "repeatT":"5",
+    //                    "subtreatmentid":18
+    //                   };
+    //               console.log("The tmp is " +tmp);    
+
+    //                 fetch("http://192.168.1.110:8080/curandusproject/webapi/api/inserttreatmentitemimage", {
+    //                         method: 'POST',
+    //                         headers: {
+    //                             "Content-type": "application/json"
+    //                         },
+    //                           dataType: 'json',
+    //                           body: JSON.stringify(tmp)
+    //                     }).then(function(response) {
+    //                         status = response.status; // Get the HTTP status code
+    //                         response_ok = response.ok; // Is response.status in the 200-range?
+    //                         return response.json(); // This returns a promise
+    //                     }).then(function(responseObject) {
+    //                         console.log("Success");
+    //                         console.log("broj na slika: "+responseObject);
+    //                         ImageURL.value = "http://192.168.1.110:8080/curandusImages/"+responseObject+".jpg";
+                     
+    //                     }).catch(function(err) {
+    //                         console.log("Error", err.message);
+    //                     });
+    //               });
+                    
+    //                   // displayImage(image);
+    //                 }
+    //             ).catch(
+    //                 function(reason) {
+    //                     console.log("Couldn't resize image: " + reason);
+    //                 }
+    //             );
+    //         }
+    //     ).catch(
+    //         function(reason) {
+    //             console.log("Couldn't get image: " + reason);
+    //         }
+    //     );
+    // };
+
+    // removePicture = function() {
+    //     var tmp = {
+    //         path: "Assets/placeholder.png"
+    //     };
+    //     ImageURL.value="";
+    //     flag.value="nemaslika";
+    //     displayImage(tmp);
+
+    // }
+
+
+    module.exports = {
+        imagePath: imagePath,
+        imageName: imageName,
+        imageSize: imageSize,
+        name: name,
+        surname: surname,
+        lastImage:lastImage,
+        ImageURL:ImageURL,
+        itemsTwo: itemsTwo,
+        isAgreeTmp: isAgreeTmp,
+        whenStart: whenStart,       
+        flag:flag
+    };
+
+</JavaScript>
+
+
+  <Rectangle >
+    <StackPanel>
+        
+        <!-- <FlatButton BtnText="Load Picture" Alignment="BottomCenter" BtnTextColor="accent" Clicked="{selectImage}"/>
+        <FlatButton BtnText="Take Picture" Alignment="BottomCenter" BtnTextColor="accent" Clicked="{takePicture}" /> --><!-- 
+        <FlatButton BtnText="Remove Picture" Alignment="Center" BtnTextColor="accent" Clicked="{removePicture}" Margin="-16"/>    -->     
+            
+          
+      <!-- <FloatingLabelArea Value="{Property this.AditionalComment}" PlaceholderText="Aditional comment:" Margin="32, 8, 32, 0" /> -->
+      <FloatingLabelArea Value="{Property this.EnterQuestion}" PlaceholderText="Comment:" Margin="32, 8, 32, 0" />
+            <WhileTrue Value="{Property isAgree}">      
+                <FloatingLabel Value="{Property this.IntervalOn}" PlaceholderText="Interval/hours" InputHint="Number" Margin="32, 8, 32, 0" />
+            </WhileTrue>
+
+          <WhileFalse Value="{Property isAgree}">
+              <Dropdown  Alignment="Left" ux:Name="dropTwo" ListItems="{itemsTwo}" BackgroundColor="#FDFDFD" Selected="{Property this.Selected}" BorderColor="#BFBFBF" Margin="32, 8, 0, 0" LabelText="Interwal (daytime)" />       
+          </WhileFalse>
+      <FloatingLabel Value="{Property this.RepeatOn}" PlaceholderText="Repeat/days" InputHint="Number" Margin="32, 8, 32, 0" />
+      <Dropdown  Alignment="Left" ux:Name="drop3" ListItems="{whenStart}" BackgroundColor="#FDFDFD" Selected="{Property this.SelectedStart}" BorderColor="#BFBFBF" Margin="32, 8, 0, 0"  LabelText="Start" />       
+    </StackPanel> 
+  </Rectangle> 
+</StackPanel> 
+</Panel> 

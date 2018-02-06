@@ -1,0 +1,24 @@
+<Panel ux:Class="LoadingPage" Background="#00BCD4">
+<string ux:Property="Value" />
+<string ux:Property="Visibility" />
+        <Panel>
+           <Circle ux:Name="rotatingStroke" Height="80" StartAngleDegrees="-45" EndAngleDegrees="180" >
+                <Stroke Width="2" Color="Blue" >
+                    <LinearGradient>
+                        <GradientStop Offset="0" Color="White" />
+                        <GradientStop Offset="1" Color="White" />
+                    </LinearGradient>
+                </Stroke>
+            </Circle>
+            <WhileFalse>
+                <Spin Target="rotatingStroke" Frequency="1" />
+            </WhileFalse>
+
+
+            <Text Color="White" Alignment="Bottom" TextAlignment="Center" Margin="0,40" FontSize="25"  Value="{Property Value}"/>
+
+
+        </Panel>
+</Panel>
+
+<!-- #fff6 -->

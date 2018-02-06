@@ -1,0 +1,95 @@
+<Panel ux:Class="TemperatureCheck" Margin="0,0,0,16">
+	<string ux:Property="Interval" />
+	<string ux:Property="Repeat" />
+	<string ux:Property="Selected" />
+	<bool ux:Property="isAgree" />
+	<string ux:Property="SelectedStart" />
+	<!-- <string ux:Property="Description" /> -->
+
+<JavaScript>
+	var Observable = require('FuseJS/Observable');
+	var itemsTwo = Observable(
+	    {
+		    name: "B.I.D."
+		}, {
+		    name: "T.I.D."
+		}, {
+		    name: "Q.I.D."
+		}, {
+		    name: "Once a day"
+		}, {
+		    name: "Every 2 days"
+		}, {
+		    name: "Every 3 days"
+		}, {
+		    name: "Every 4 days"
+		}, {
+		    name: "Every 5 days"
+		}, {
+		    name: "Every 6 days"
+		}, {
+		    name: "Every 7 days"
+		}, {
+		    name: "Every 14 days"
+		}, {
+		    name: "Every 30 days"
+		});	
+
+	var whenStart = Observable(
+	    {
+		    name: "Today",
+		    ID:"0"
+		}, {
+		    name: "Tommorow",
+		    ID:"1"
+		}, {
+		    name: "In 2 days",
+		    ID:"2"
+		}, {
+		    name: "In 3 days",
+		    ID:"3"
+		}, {
+		    name: "In 5 days",
+		    ID:"4"
+		}, {
+		    name: "In 7 days",
+		    ID:"5"
+		}, {
+		    name: "In 10 days",
+		    ID:"6"
+		}, {
+		    name: "In 15 days",
+		    ID:"7"
+		}, {
+		    name: "In 30 days",
+		    ID:"8"
+		});	
+
+
+	var isAgreeTmp = this.isAgree.inner();
+
+	module.exports = {
+		itemsTwo: itemsTwo,
+		isAgreeTmp: isAgreeTmp,
+		whenStart: whenStart
+	}
+</JavaScript>
+
+<StackPanel>
+	<Rectangle Color="White">
+		<StackPanel>
+<!-- 		<Match Value="{isAgreeTmp}">	
+		  <Case String="no"> -->
+		  	<WhileTrue Value="{Property isAgree}">		
+				<FloatingLabel Value="{Property this.Interval}" PlaceholderText="Interval/hours" InputHint="Number" Margin="32, 8, 32, 0" />
+			</WhileTrue>
+
+		  <WhileFalse Value="{Property isAgree}">
+              <Dropdown  Alignment="Left" ux:Name="dropTwo" ListItems="{itemsTwo}" BackgroundColor="#FDFDFD" Selected="{Property this.Selected}" BorderColor="#BFBFBF" Margin="32, 8, 0, 0" LabelText="Interwal (daytime)" />		
+          </WhileFalse>
+			<FloatingLabel Value="{Property this.Repeat}" PlaceholderText="Repeat/days" InputHint="Number" Margin="32, 8, 32, 0" />
+              <Dropdown  Alignment="Left" ux:Name="drop3" ListItems="{whenStart}" BackgroundColor="#FDFDFD" Selected="{Property this.SelectedStart}" BorderColor="#BFBFBF" Margin="32, 8, 0, 0"  LabelText="Start" />			
+		</StackPanel>
+	</Rectangle>
+</StackPanel>
+</Panel>
