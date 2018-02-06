@@ -4,7 +4,7 @@ var CameraRoll = require("FuseJS/CameraRoll");
 var Camera = require("FuseJS/Camera");
 var ImageTools = require("FuseJS/ImageTools");
 var Storage = require("FuseJS/Storage");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
+var securityToken = Storage.readSync("securityToken");
 var load = Observable("Saving...");
 var imagePath = Observable();
 var imageName = Observable();
@@ -176,14 +176,14 @@ function updateProfile(brojSlika) {
 
     }
     console.log("This is the object on update patient: " + JSON.stringify(ob));
-    var url = activeUrl.URL + "/curandusproject/webapi/api/insertpatient";
+    var url = activeUrl.URL + "/curandusproject/webapi/api/insertpatient/securityToken=" + securityToken;
     fetch(url, {
         method: 'POST',
         headers: {
             "Content-type": "application/json"
         },
         dataType: 'json',
-        body: JSON.stringify(ob, securityToken.value)
+        body: JSON.stringify(ob)
     }).then(function(response) {
         status = response.status; // Get the HTTP status code 
         response_ok = response.ok; // Is response.status in the 200-range? 
@@ -229,16 +229,16 @@ save = function() {
             "subtreatmentid": 18
         };
         // console.log("The tmp is created " + tmp);
-        var url1 = activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage";
+        var url1 = activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage/securityToken=" + securityToken;
         visibility1.value = "Visible";
-        //var url1 = "http://192.168.0.111:8080/curandusproject/webapi/api/insertpatient";
+        //var url1 = "http://192.168.0.111:8080/curandusproject/webapi/api/insertpatient/securityToken=" + securityToken;
         fetch(url1, {
             method: 'POST',
             headers: {
                 "Content-type": "application/json"
             },
             dataType: 'json',
-            body: JSON.stringify(tmp, securityToken.value)
+            body: JSON.stringify(tmp)
         }).then(function(response) {
             status = response.status; // Get the HTTP status code
             console.log('status', status);
