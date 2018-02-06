@@ -12,6 +12,7 @@ var color = Observable("#00BCD4");
 var SendNotification = require('Scripts/SendNotification.js');
 var RegId = Observable();
 var Storage = require("FuseJS/Storage");
+var securityToken = Storage.readSync("securityToken");
 var User = {};
 
 this.onParameterChanged(function(param) {
@@ -89,7 +90,7 @@ function saveFunc() {
 
     visibility.value = "Visible";
 
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId + "&securityToken=" + securityToken, {
         method: 'POST',
         headers: {
             "Content-type": "application/json"
