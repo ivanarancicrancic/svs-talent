@@ -1,0 +1,70 @@
+<DefaultPage ux:Class="savedTreatment">
+
+<Router ux:Dependency="router" />
+
+<!-- **************** Saved item  CLASS **************** -->
+<Rectangle ux:Class="SavedItem" Color="#ff853f" CornerRadius="7" Width="65%"  Alignment="Center" Height="40" Margin="0,10,0,0" Clicked="{getItemsForTemplate}" >  
+    <string ux:Property="Label"/>
+    <string ux:Property="Value"/>
+    
+    <WhilePressed>
+        <Scale Factor="1.3" Duration="0.2"/>
+    </WhilePressed>
+    <Text ux:Name="text" Color="White" Font="regular" FontSize="16" Value="{ReadProperty this.Label}" Alignment="Center"/>  
+</Rectangle>  
+
+
+<!-- **************** TabFullSize CLASS  **************** -->
+<Rectangle ux:Class="TabFullSize" Color="primary_dark" Width="100%" > 
+    <string ux:Property="Label"/>
+    <Selectable Value="{ReadProperty this.Label}"/>
+    <Stroke Color="divider"  Width="0.2"  ></Stroke>
+    <Text Alignment="Center" Font="regular" Color="White" Value="{ReadProperty this.Label}" />
+    
+</Rectangle>
+
+<!-- **************** REMOVE ICON ***************** -->
+<Rectangle  ux:Class="RemoveIcon" Color="#ff852f"  CornerRadius="7" Width="10%"  Alignment="Right" Height="40" Margin="0,10,60,0" Clicked="{RemoveItem}">
+            <Icon Alignment="Center" Color="icons" FontSize="22"  Dock="Right" Margin="0,0,0,0" >&#xE92B;</Icon>
+            <WhilePressed>
+                 <Scale Factor="1.3" Duration="0.2"/>
+             </WhilePressed>
+ </Rectangle>
+
+
+<!-- **************** SCREEN VIEW  **************** -->
+<JavaScript File="savedTreatment.js" />
+    <DockPanel>
+        <Toolbar Color="primary" Title="{name}" HasBackButton="True" router="router">
+        </Toolbar>
+        <Rectangle Dock="Top" Height="45" Width="100%">
+            <Grid>
+                <Selection Value="Select Types"/>
+                <TabFullSize Label="Saved Treatment Templates"></TabFullSize>
+            </Grid>
+            <DropShadow/> 
+        </Rectangle> 
+        <Rectangle  Dock="Top" Color="divider"  CornerRadius="7" Width="90%"  Alignment="Center" Height="40" Margin="0,10,0,0" >
+            <Stroke Width="1" Color="primary_light"/>
+        <DockPanel >
+                 <TextInput  Value="{searchString2}" PlaceholderText="Search" PlaceholderColor="primary" />
+                 <Icon FontSize="24" Color="primary" Dock="Left" Alignment="Center">&#xE8B6;</Icon>
+        </DockPanel>
+        </Rectangle>
+        <Rectangle Color="background_color"> 
+     
+            <ScrollView Margin="0,60,0,0">
+               
+                <StackPanel>
+                    <Each Items="{filteredItems}"> 
+                            <DockPanel> 
+                                <RemoveIcon></RemoveIcon> 
+                                <SavedItem Label="{nameTreatment}" Value="sku-04" /> 
+                            </DockPanel> 
+                    </Each>
+                </StackPanel>
+            </ScrollView>
+        </Rectangle>
+    </DockPanel>
+
+</DefaultPage>

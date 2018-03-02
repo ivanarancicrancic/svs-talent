@@ -1,0 +1,510 @@
+<DefaultPage ux:Class="SelectItems">
+    <JavaScript File="SelectItems.js" />
+    <Router ux:Dependency="router" />
+    <DockPanel>
+        
+        <DockPanel Padding="10" Dock="Top">
+            <Toolbar Color="primary" Title="Select Treatment Item" HasBackButton="True" router="router" Width="100%"></Toolbar>
+            <!-- <Rectangle Color="background_color" Layer="Background"/>-->
+            <Panel Dock="Left">
+                <Circle Height="50" Width="50" Alignment="Center">
+                    <ImageFill File="../../Assets/placeholder.jpg" />
+                </Circle>
+            </Panel>
+            <StackPanel Margin="10" Alignment="Left" Clicked="{ShowAlergies}">
+
+                <Text Font="medium" Value="{patientname}" FontSize="18" TextColor="primary" />
+
+                <Rectangle Width="100%" Height="1" Color="divider"/>
+                <StackPanel Orientation="Horizontal" Alignment="Left">
+                    <!-- <Icon Alignment="Center" FontSize="12" Color="offline">&#xE001;</Icon> -->
+                    <Text Font="medium" Value="{WarningInfo}" FontSize="12" TextColor="offline" />
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+        <Match Value="{visibility}">
+                <Case String="Visible">
+
+                    <LoadingPage Value="{load}"> </LoadingPage>
+                    
+                </Case>
+                <Case String="Collapsed">
+                    <DockPanel Dock="Top">
+            <FloatingLabel PlaceholderText="Treatment" Value="{stname}" Alignment="CenterLeft"></FloatingLabel>
+            <RaisedButton ux:Name="sendsave" Dock="Right" BtnText="Send" BtnTextColor="icons" BtnColor="primary" Margin="0,0,-6,0" Clicked="{Insert_Treatment}"></RaisedButton>
+            <RaisedButton Dock="Right" BtnText="Save" BtnTextColor="icons" BtnColor="primary" Clicked="{Insert_Saved_Treatment}" Margin="0,0,-10,0"> </RaisedButton>
+        </DockPanel>
+        <ScrollView ClipToBounds="true">
+            <StackPanel>
+                <Each Items="{lista}">
+                    <Match Value="{name}">
+                        <Case String="4">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{AddNewItem}">&#xE145;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                <StackPanel>
+                                <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>                                 
+                                <PainLevelItem Interval="{interval}" Repeat="{duration}" painLevelOf="{painlevelof}" Selected="{Selected}" isAgree="false" SelectedStart="{SelectedStart}"/>
+                                 </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <PainLevelItem Interval="{interval}" Repeat="{duration}" painLevelOf="{painlevelof}" Selected="{Selected}" isAgree="true" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse>
+                            </StackPanel>
+<!--                                 <PainLevelItem Interval="{interval}" Repeat="{duration}" painLevelOf="{painlevelof}"></PainLevelItem> -->
+                                <AddingAnimation>
+                                    <Move RelativeTo="Size" X="8" Duration="0.6" Easing="CircularIn" />
+                                </AddingAnimation>
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                        <Case String="1">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                <StackPanel>
+                                <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>                                 
+                                <TemperatureCheck Interval="{interval}" Repeat="{duration}" Selected="{Selected}" isAgree="false" SelectedStart="{SelectedStart}"/>
+                                 </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <TemperatureCheck Interval="{interval}" Repeat="{duration}" Selected="{Selected}" isAgree="true" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse>
+                            </StackPanel>
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                        <Case String="2">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+<!--                                 <BloodPresure Interval="{interval}" Repeat="{duration}"/> -->
+                                <StackPanel>
+                                <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>                                 
+                                <BloodPresure Interval="{interval}" Repeat="{duration}" Selected="{Selected}" isAgree="false" SelectedStart="{SelectedStart}"/>
+                                 </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <BloodPresure Interval="{interval}" Repeat="{duration}" Selected="{Selected}" isAgree="true" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse>
+                            </StackPanel>                                
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                        <Case String="3">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                <!-- <PulseCheck Interval="{interval}" Repeat="{duration}"/> -->
+                                  <StackPanel>
+                                <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>                                 
+                                <PulseCheck Interval="{interval}" Repeat="{duration}" Selected="{Selected}" isAgree="false" SelectedStart="{SelectedStart}"/>
+                                 </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <PulseCheck Interval="{interval}" Repeat="{duration}" Selected="{Selected}" isAgree="true" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse>
+                            </StackPanel> 
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                        <Case String="6">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{AddNewItem}">&#xE145;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                   <StackPanel>
+                                <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>                                 
+                                <SendImage Interval="{interval}" Repeat="{duration}" ImageFromYour="{sendimageof}" Selected="{Selected}" isAgree="false" SelectedStart="{SelectedStart}"/>
+                                 </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <SendImage Interval="{interval}" Repeat="{duration}" ImageFromYour="{sendimageof}" Selected="{Selected}" isAgree="true" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse>
+                            </StackPanel>                                
+                                <!-- <SendImage Interval="{interval}" Repeat="{duration}" ImageFromYour="{sendimageof}" /> -->
+                                <AddingAnimation>
+                                    <Move RelativeTo="Size" X="8" Duration="0.6" Easing="CircularIn" />
+                                </AddingAnimation>
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                        <Case String="8">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                <StackPanel>
+<!--                                 <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>   -->                               
+                                <Diet Advice="{diet}" Repeat="{duration}" SelectedStart="{SelectedStart}"/>
+<!--                                  </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <Diet Advice="{diet}" Repeat="{duration}" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse> -->
+                            </StackPanel>                                 
+                                
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                        <Case String="10">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                <StackPanel>
+<!--                                 <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>   -->                               
+                                <Hygiene Question="{hygiene}" Repeat="{duration}" SelectedStart="{SelectedStart}"/>
+<!--                                  </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <Hygiene Question="{hygiene}" Repeat="{duration}" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse> -->
+                            </StackPanel>                                  
+                                
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                        <Case String="11">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                <StackPanel>
+<!--                                 <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>   -->                               
+                                <OtherInstruction Instruction="{otherinstruction}" SelectedStart="{SelectedStart}"/>
+<!--                                  </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <OtherInstruction Instruction="{otherinstruction}" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse> -->
+                            </StackPanel>       
+
+                                
+                                    <!-- Repeat="{duration}" -->
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                        <Case String="9">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                <StackPanel>
+ <!--                                <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>    -->                              
+                                <Activity AdviceForActivity="{activity}" Repeat="{duration}" SelectedStart="{SelectedStart}"/>
+<!--                                  </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <Activity AdviceForActivity="{activity}" Repeat="{duration}" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse> -->
+                            </StackPanel>                               
+                                
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+
+                        <Case String="7">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{AddNewItem}">&#xE145;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                
+                                 <StackPanel Margin="0,20,0,0">
+                                    <Text Width="100" TextWrapping="Wrap" FontSize="17" Color="primary"  Alignment="Left"  Margin="30,0,0,0" ></Text>
+                                <DockPanel>
+ 
+                                    <Rectangle  ux:Name="btnSendImage" Clicked="{selectImageShow}" Width="170" Height="170" Dock="Left" Margin="30,0,0,0">
+                                    
+                                  <Match Value="{comparisionflag}">
+                                        <Case Bool="false">
+                                            <Image Url="{comparisionurl}" Width="170" Height="170" /> 
+                                        </Case>
+
+                                          <Case Bool="true">
+                                             <Image File="{comparisionimagefile}" Width="170" Height="170" /> 
+                                          </Case>
+                                        </Match> 
+                                        <!-- <Image Url="{comparisionurl}" Width="170" Height="170" />    -->
+
+                                      <Clicked>
+                                        <Scale Factor="0.95" Duration=".1" Easing="QuadraticInOut" />
+                                      </Clicked>
+                                      <Text  Value="SELECT IMAGE"  FontSize="14"  Color="primary" Alignment="Center" Font="medium"> </Text>
+                                      <Stroke  Width="2" Color="done"> </Stroke>
+                                    </Rectangle>
+                                    <StackPanel Margin="25,0,0,0" Alignment="VerticalCenter">
+                                        
+                                        <Rectangle   Clicked="{selectImageShow}"> <Icon FontSize="32" Padding="10" Color="primary" >&#xE413;</Icon></Rectangle>
+                                   
+                                        <Rectangle   Clicked="{takePictureShow}"> <Icon FontSize="32" Padding="10" Color="primary" >&#xE439;</Icon></Rectangle>
+                                    </StackPanel>
+                                </DockPanel>
+                                   <StackPanel>
+                                <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon>   
+                                       </DockPanel>                                 
+                                <ComparisonWithPicture IntervalOn="{interval}" RepeatOn="{duration}" EnterQuestion="{comparisionquestion}" Selected="{Selected}" isAgree="false" SelectedStart="{SelectedStart}"/>
+                                 </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>                                      
+                                <ComparisonWithPicture IntervalOn="{interval}" RepeatOn="{duration}" EnterQuestion="{comparisionquestion}" Selected="{Selected}" isAgree="true" SelectedStart="{SelectedStart}"/>
+                                </WhileFalse>
+                            </StackPanel>
+                    <!--             <ComparisonWithPicture IntervalOn="{interval}" RepeatOn="{duration}" EnterQuestion="{comparisionquestion}"/> -->
+                                </StackPanel>                               
+                                
+                                <AddingAnimation>
+                                    <Move RelativeTo="Size" X="8" Duration="0.6" Easing="CircularIn" />
+                                </AddingAnimation>
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+
+                        <Case String="5">
+                            <DockPanel>
+                                <Rectangle Color="primary_dark" Height="32" Dock="Top">
+                                    <DockPanel>
+                                        <Text Value="{label}" FontSize="16" Color="icons" Dock="Left" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{RemoveItem}">&#xE92B;</Icon>
+                                        <Icon Alignment="Center" FontSize="32" Color="icons" Dock="Right" Margin="0,0,16,0" Clicked="{AddNewItem}">&#xE145;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                                
+                                <!--  <MedicineItem Interval="{interval}" Repeat="{duration}" Medicine="{medicinename}" Comment="{medicinecomment}"/> -->
+                                
+                                <!-- Code for medicine item with autocomplete - START ****** --> 
+                                    <StackPanel> 
+                                        <DockPanel Width="83%"> 
+                                            <Brush ux:Property="Background"/> 
+                                            <Panel Dock="Top"> 
+                                                <Text ux:Name="labeltop1" Value="Medicine" Color="primary" Visibility="Hidden" FontSize="18"/>
+                                            </Panel>
+                                            <Panel Dock="Bottom">
+                                        
+                                                <TextInput Clicked="{setFlag}" Value="{medicinename}" ValueChanged="{autoComplete}" ActionTriggered="{machFound}" ux:Name="input"  FontSize="22" >
+
+                                                    <Text ux:Name="label" Value="Medicine" Color="#BDBDBD" FontSize="20" />
+                                                    <Rectangle ux:Name="bottomLine" Fill="#9E9E9E" Height="2" Alignment="Bottom" Layer="Background"/> 
+
+                                                    <WhileContainsText>
+                                                        <Change labeltop1.Visibility="Visible" />
+                                                        <Move X="0" Y="-1" Target="labeltop1" />
+                                                        <Change label.Visibility = "Hidden"  />
+                                                    </WhileContainsText>
+
+                                                    <WhileFocused>
+                                                        <Change bottomLine.Fill="#00BCD4" />
+                                                        <Change label.Color="#00BCD4" />
+                                                        <Change label.FontSize="18" />
+                                                        <Move X="0" Y="-1" Target="label" Duration="0.3" /> 
+                                                    </WhileFocused>
+                                                </TextInput>
+                                                
+                                            </Panel>
+                                        </DockPanel>
+
+                                        <DockPanel>
+                                            <StackPanel Color="White">
+                                                    <Each Items="{matchData}">                          
+                                                        <Text Color="Gray" MinHeight="29" ux:Name="medicine" Margin="30,0,0,0" TextColor="primary" Value="{term}" FontSize="18" Clicked="{optionSelected}">
+                                                            <Clicked>
+                                                                <Move X="0" Y="-10" Target="medicine" Duration="0.1" />
+                                                                <Change medicine.Color="Black"/>
+                                                            </Clicked>
+                                                        </Text>                                                             
+                                                    </Each>
+                                            </StackPanel>    
+                                        </DockPanel>
+
+
+                                    <WhileTrue Value="{isAgree}">
+                                    <DockPanel Margin="32, 8, 32, 0">
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE834;
+                                       </Icon> 
+                                    </DockPanel>  
+               <Dropdown  Alignment="Left" ux:Name="dropTwo" ListItems="{itemsTwo}" BackgroundColor="#FDFDFD" Selected="{Selected}" BorderColor="#BFBFBF" Margin="32, 8, 0, 0" LabelText="Interwal (daytime)" />                                   
+                                </WhileTrue>
+                                 <WhileFalse Value="{isAgree}"> 
+                                 <DockPanel Margin="32, 8, 32, 0">  
+                                    <Text  TextWrapping="Wrap" Dock="Left" TextAlignment="Center" Color="primary" Font="regular" FontSize="20" Margin="0, 4, 0, 0" >Daytime </Text>
+                                       <Icon Dock="Left" Alignment="Center" Clicked="{toogleIsAgree}"  FontSize="30" Color="primary" Margin="0,0,0,0">&#xE835;
+                                       </Icon>  
+                                   </DockPanel>   
+                                        <FloatingLabel Value="{interval}" PlaceholderText="Interval/hours" InputHint="Number" Margin="32, 8, 32, 0" />
+                                   </WhileFalse>     
+                                        <FloatingLabel Value="{duration}" PlaceholderText="Repeat/days" InputHint="Number" Margin="32, 8, 32, 0" />
+                                        <FloatingLabelArea Value="{medicinecomment}" PlaceholderText="Additional comment" Margin="32, 8, 32, 0" />
+               <Dropdown  Alignment="Left" ux:Name="drop3" ListItems="{whenStart}" BackgroundColor="#FDFDFD" Selected="{SelectedStart}" BorderColor="#BFBFBF" Margin="32, 8, 0, 0"  LabelText="Start" />                                         
+                                    
+                                    </StackPanel>
+
+                                <!-- Code for medicine item - END ****** -->
+
+
+                                <AddingAnimation>
+                                    <Move RelativeTo="Size" X="8" Duration="0.6" Easing="CircularIn" />
+                                </AddingAnimation>
+                                <RemovingAnimation>
+                                    <Move RelativeTo="Size" X="-1" Duration="0.4" Easing="CircularOut" />
+                                </RemovingAnimation>
+                            </DockPanel>
+                        </Case>
+                    </Match>
+                </Each>
+                <Panel Width="300" Height="300" />
+                <!--    <ExampleItem Interval="{ExampleInterval}" Repeat="{ExampleRepeat}" Description="{ExampleDescription}"/>
+                <ExampleItem Interval="{ExampleInterval}" Repeat="{ExampleRepeat}"/>-->
+            </StackPanel>
+        </ScrollView>
+                </Case>
+            </Match>
+        
+    </DockPanel>
+</DefaultPage>
