@@ -1,0 +1,44 @@
+<DefaultPage ux:Class="BloodPressure" >
+    <Router ux:Dependency="router" />
+    
+     <DockPanel>
+        <JavaScript File="BloodPressurePage.js" />
+		<ToolbarReload Color="primary" HasBackButton="True" router="router">
+   			<DropShadow />
+  		</ToolbarReload>
+
+		<Match Value="{visibility}">
+		    <Case String="Visible">
+		        <LoadingPage Value="{load}"/>		        
+		    </Case>
+		    <Case String="Collapsed">
+		    	<!-- TUKA VMETNI STAKOT -->
+		    	<StackPanel>
+					<Text  TextWrapping="Wrap" TextAlignment="Center" Color="primary" Font="regular" FontSize="30" Margin="0,50,0,10">Blood Pressure </Text>
+
+	   				<Text FontSize="15"  TextColor="primary" Margin="30,30,0,0" >Systolic Number </Text>
+	   				<Panel Alignment="Center">
+					
+						<Text FontSize="40" Value="{buttontext}" TextColor="{color}"/>
+
+					</Panel>
+	    			<Slider Value="{systolicNumber}" ValueChanged="{changed}" Minimum="0" Maximum="300" Width="350" Alignment="Center" UserStep="1"/>
+					
+
+					<Text FontSize="15"  TextColor="primary" Margin="30,30,0,0" >Diastolic Number </Text>
+					<Panel Alignment="Center">
+					
+						<Text FontSize="40" Value="{buttontext1}" TextColor="{color1}"/>
+
+					</Panel>
+	    			<Slider Value="{diastolicNumber}" ValueChanged="{changed}" Minimum="0" Maximum="300" Width="350" Alignment="Center"  UserStep="1"/>
+					
+
+
+					<RaisedButton BtnText="SAVE" BtnColor="primary" BtnTextColor="icons" Clicked="{save}" Alignment="Center" Margin="0,32,0,0"/>
+				</StackPanel>
+		 	</Case>
+		</Match>	   	
+	
+    </DockPanel>
+</DefaultPage>

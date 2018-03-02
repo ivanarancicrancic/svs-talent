@@ -1,0 +1,52 @@
+<DefaultPage ux:Class="SendImagePage" >
+	<JavaScript File="SendImage.js" />
+    <Router ux:Dependency="router" />
+
+    <DockPanel>
+    		<ToolbarReload Color="primary" Title="Send image from your {part}" HasBackButton="True" router="router">
+				<DropShadow />
+			</ToolbarReload>
+
+			<Rectangle Color="background_color" Layer="Background"/>
+			<Match Value="{visibility}">
+        <Case String="Visible">
+            <LoadingPage Value="{load}"/>             
+        </Case>
+        <Case String="Collapsed">
+			
+			<StackPanel>
+			 	<DockPanel Dock="Top">
+			 		
+			 		<Match Value="{flag}"> 
+                       <Case String="camera"> 
+                        <Image File="{imagePath}" Width="128" Clicked="{selectImageShow}" Height="128" Margin="0,20,80,0"/>
+                      </Case> 
+                      <Case String="storage"> 
+                        <Image Url="{imagePath}" Width="128" Clicked="{selectImageShow}" Height="128" Margin="0,20,80,0"/>
+                      </Case> 
+
+                      <Case String="load"> 
+                       <Image File="{imagePath}" Width="128" Clicked="{selectImageShow}" Height="128" Margin="0,20,80,0"/>
+                      </Case> 
+
+                      <Case String="no_picture"> 
+               			<Image File="../../Assets/image.png" Clicked="{selectImageShow}" Width="128" Height="128" Margin="0,20,80,0"/>
+                      </Case>
+                    </Match>
+			 		<StackPanel>
+						<Rectangle  Alignment="Right" Clicked="{selectImageShow}" Margin="0,20,80,0"> <Icon FontSize="32"  Color="primary" >&#xE413;</Icon></Rectangle>
+						
+						<Rectangle Alignment="Right" Clicked="{takePictureShow}" Margin="0,20,80,0"> <Icon FontSize="32"   Color="primary" >&#xE439;</Icon></Rectangle>
+						
+						<Rectangle Alignment="Right" Clicked="{removePicture}" Margin="0,20,80,0"> <Icon FontSize="32"   Color="primary" >&#xE14C;</Icon></Rectangle>
+					</StackPanel>
+			 	</DockPanel>
+			 	<!-- <Text Value="Send image from your: {part}" FontSize="14"  Color="primary" Alignment="Center" Font="medium"  Margin="0, 16, 0, 0"></Text> -->
+			<RaisedButton BtnText="SEND" BtnColor="primary" BtnTextColor="icons" Clicked="{SendImage}" Alignment="Center" Margin="0,15,0,0"/>
+			</StackPanel>	
+		</Case>
+	</Match>
+  
+    </DockPanel>    
+
+</DefaultPage>

@@ -1,0 +1,426 @@
+<DefaultPage ux:Class="MainPage" >
+
+    <Router ux:Dependency="router" />
+
+    <DockPanel>
+        <JavaScript File="MainPage.js" />
+
+<!--      <OnBackButton>
+        <Callback Handler="{makeCall}" />
+        <Match Value="{backing}">
+            <Case String="1"> 
+                <HomeScreen Type="Finish" />
+            </Case>
+        </Match>
+    </OnBackButton> -->
+        <Panel ux:Class="Divider">
+            <Rectangle ux:Name="spacer" Height="1" Alignment="Bottom" Color="divider" Margin="10,0" />
+        </Panel>
+        <Toolbar Color="primary" Title="Curandus" Icon="&#xE5D2;" router="router" HasSearchButton="true"/>
+        <DockPanel>
+            <Panel ux:Class="Tab" ux:Name="self" ClipToBounds="false" Margin="0,0,0,3" Color="primary">
+                <string ux:Property="Text" />
+                <Text Value="{Property self.Text}" TextColor="#FFFFFF" Font="medium" Alignment="Center" />
+            </Panel>
+           
+
+            <StackPanel Dock="Top" Color="primary">
+                <MultiLayoutPanel Height="48" ux:Name="tabBar">
+                    <GridLayout ColumnCount="2" Rows="1*"/>
+                     <Panel ux:Name="page2Tab"  >
+                        <Placeholder>
+                            <Rectangle ux:Name="indicator" Alignment="Bottom" Height="3" Fill="#ffffff">
+                                <LayoutAnimation>
+                                    <Move RelativeTo="LayoutChange" X="1" Duration="0.3" Easing="BackIn"/>
+                                </LayoutAnimation>
+                            </Rectangle>
+                        </Placeholder>    
+                        <Tab Text="CHAT">
+                            <Clicked>
+                                <Callback Handler="{NavigateBar}" />
+                                 <Set navigation.Active="{activeTab}" />
+                            </Clicked>
+                        </Tab>
+                    </Panel>                    
+                    <Panel ux:Name="page1Tab">
+                        <Placeholder Target="indicator"/>
+                        <Tab Text="CONTACTS"> <!-- CONTACTS -->
+
+                            <Clicked>
+                                <Callback Handler="{NavigateBarContacts}" />
+                                <Set navigation.Active="page1" />
+                            </Clicked>
+                        </Tab>
+                    </Panel>
+                </MultiLayoutPanel>
+                <DropShadow/>
+            </StackPanel>
+            
+            <PageControl ux:Name="navigation" Active="{activeTab}">
+                <Text ux:Class="WelcomeText" FontSize="30" Alignment="Center"/>
+                <!-- CHAT --> 
+                <Page ux:Name="page2" Color="background_color">
+                    <WhileActive Threshold="0.5">
+                        <Set tabBar.LayoutElement="page2Tab" /> 
+                    </WhileActive>
+                    <!-- <ChatsView router="router" />-->
+                    <JavaScript File="../ChatsView/ChatsView.js" />
+                    
+                    <FloatingButton Alignment="BottomRight" BtnColor="#FF5722" BtnIcon="&#xE627;" Clicked="{createSession}" BtnTextColor="icons" />
+                    <ScrollView ClipToBounds="true"> <!-- asdasdasd -->
+                        <StackPanel Orientation="Vertical">
+                            <!-- <Button Clicked="{signIn}" Text="signIn"></Button> -->
+
+                            <Each Items="{dialogs}">
+                                <Match Value="{requestforcall}">
+                                <Case Number="1">   
+                                <DockPanel Margin="7,1,7,0" Clicked="{goToDoctorChat}" ux:Name="alertitem" Color="future">
+                                    <WhileHovering>
+                                        <Change alertitem.Color="divider" />
+                                    </WhileHovering>
+                                    <Circle Height="60" Width="60" Dock="Left" Margin="12,12,0,12" Alignment="TopLeft">
+                                        <ImageFill File="../../Assets/placeholder.jpg" />
+                                        <Match Value="{unread_messages_count}">
+                                            <Case Number="0"></Case>
+                                            <Case Number="1" IsDefault="true">
+                                                <Circle Height="16" Width="16" Alignment="TopRight" Color="online">
+                                                    <Text Value="{unread_messages_count}" FontSize="12" Alignment="TopCenter" Margin="0,1,0,0"></Text>
+                                                </Circle>
+                                            </Case>
+                                        </Match>
+                                    </Circle>
+                                    <StackPanel Margin="12,12,7,7">
+                                        <Text Font="medium" Value="{namenovo}" FontSize="17" TextColor="primary" />
+                                        <Text TextWrapping="Wrap" Font="medium" Value="{last_message}" FontSize="13" TextColor="#212121" />
+                                        <Text Font="medium" Value="{minutes}" FontSize="10" TextColor="secondary_text" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Case>
+                             <Case Number="0">  
+                                <DockPanel Margin="7,1,7,0" Clicked="{goToDoctorChat}" ux:Name="alertitem">
+                                    <WhileHovering>
+                                        <Change alertitem.Color="divider" />
+                                    </WhileHovering>
+                                    <Circle Height="60" Width="60" Dock="Left" Margin="12,12,0,12" Alignment="TopLeft">
+                                        <ImageFill File="../../Assets/placeholder.jpg" />
+                                        <Match Value="{unread_messages_count}">
+                                            <Case Number="0"></Case>
+                                            <Case Number="1" IsDefault="true">
+                                                <Circle Height="16" Width="16" Alignment="TopRight" Color="online">
+                                                    <Text Value="{unread_messages_count}" FontSize="12" Alignment="TopCenter" Margin="0,1,0,0"></Text>
+                                                </Circle>
+                                            </Case>
+                                        </Match>
+                                    </Circle>
+                                    <StackPanel Margin="12,12,7,7">
+                                        <Text Font="medium" Value="{namenovo}" FontSize="17" TextColor="primary" />
+                                        <Text TextWrapping="Wrap" Font="medium" Value="{last_message}" FontSize="13" TextColor="#212121" />
+                                        <Text Font="medium" Value="{minutes}" FontSize="10" TextColor="secondary_text" />
+                                    </StackPanel>
+                                </DockPanel>
+                                </Case>
+                                </Match>                              
+                                <Rectangle Height="1" Alignment="Bottom" Color="divider" Margin="20,0"/>
+                            </Each>
+                        </StackPanel>
+                    </ScrollView>
+                
+                    
+                    
+                </Page>                
+                    <!-- OVA E CONTACT VIEW -->
+         <Page ux:Name="page1" Color="background_color">
+
+        <JavaScript File="MainPage.js" />           
+            <WhileActive Threshold="0.5">
+                        <Set tabBar.LayoutElement="page1Tab" />
+            </WhileActive>
+                <Match Value="{visibility}">
+                <Case String="Visible">
+                    <LoadingPage Value="{load}"> </LoadingPage>
+                </Case>
+                <Case String="Collapsed">
+                        <DockPanel>
+                        <Rectangle Dock="Top" Height="52" Color="background_color">
+                            <DockPanel Alignment="Center" Width="100%">
+                                <Rectangle ux:Name="btn" Dock="Left" Width="50%" Height="52" Clicked="{setPatients}" HitTestMode="LocalBounds">
+                                    <WhileHovering>
+                                        <Change btn.Color="divider" />
+                                    </WhileHovering>
+                                    <Text ux:Name="Patients" FontSize="16" TextAlignment="Right" Value="Patients" TextColor="{PatientsTabColor}" Margin="0,18,18,0"/>
+                                    <Clicked>
+                                       <!--  <Set Patients.TextColor="primary_dark" />
+                                        <Set Doctors.TextColor="secondary_text" /> -->
+                                    </Clicked>
+                                </Rectangle>
+                                <Rectangle ux:Name="btn2" Dock="Right" Width="50%" Height="52" Clicked="{setDoctors}" HitTestMode="LocalBounds">
+                                    <WhileHovering>
+                                        <Change btn2.Color="divider" />
+                                    </WhileHovering>
+                                    <Text ux:Name="Doctors" FontSize="16" TextAlignment="Left" Value="Doctors" TextColor="{DoctorsTabColor}" Margin="18,18,0,0"/>
+                                    <Clicked>
+                                      <!--   <Set Doctors.TextColor="primary_dark" />
+                                        <Set Patients.TextColor="secondary_text" /> -->
+                                    </Clicked>
+                                </Rectangle>
+                            </DockPanel>
+                        </Rectangle>
+                        <Match Value="{isDoctors}" >
+                            <Case Bool="true">
+                                <Rectangle Dock="Top" Color="divider" CornerRadius="7" Width="90%" Alignment="Center" Height="40" Margin="0,0,0,10" >
+                                    <Stroke Width="1" Color="primary_light"/>
+                                    <DockPanel>
+                                        <TextInput  Value="{searchString1}" PlaceholderText="Search" PlaceholderColor="primary" />
+                                        <Icon FontSize="24" Color="primary" Dock="Left" Alignment="Center">&#xE8B6;</Icon>
+                                    </DockPanel>
+                                </Rectangle>
+                            </Case>
+                            <Case Bool="false">
+                                <Rectangle Dock="Top" Color="divider" CornerRadius="7" Width="90%" Alignment="Center" Height="40" Margin="0,0,0,10" >
+                                    <Stroke Width="1" Color="primary_light"/>
+                                    <DockPanel>
+                                        <TextInput Value="{searchString}" PlaceholderText="Search" PlaceholderColor="primary" />
+                                        <Icon FontSize="24" Color="primary" Dock="Left" Alignment="Center">&#xE8B6;</Icon>
+<!--                                         <Dropdown Dock="Top" Margin="0,0,0,0" ux:Name="dropTwo" ListItems="{itemsTwo}" BackgroundColor="#FDFDFD" Selected="{dSelected}" BorderColor="#BFBFBF" /> -->
+                                    </DockPanel>
+
+                                </Rectangle>
+                            </Case>
+                        </Match>
+                        <Rectangle Color="background_color">
+                            <Match Value="{isDoctors}" >
+                                <Case Bool="true">
+                                    <FloatingButton Alignment="BottomRight" BtnColor="#FF5722" BtnIcon="&#xE145;" Clicked="{goToAddDoctors}" BtnTextColor="icons" />
+                                </Case>
+                                <Case Bool="false">
+                                    <FloatingButton Alignment="BottomRight" BtnColor="#FF5722" BtnIcon="&#xE145;" Clicked="{goToAddContact}" BtnTextColor="icons" />
+                                </Case>
+                            </Match>
+                            <Match Value="{isDoctors}" >
+
+                                <Case Bool="true">
+                                    <ScrollView ClipToBounds="True">
+                                        <StackPanel Orientation="Vertical">
+                                            <PullToReload IsLoading="{isLoadingDoctors}" ReloadHandler="{reloadHandlerDoctors}"></PullToReload>
+                                            <Each Items="{filteredItems1}">
+                                                <Match Value="{isLetter}" >
+                                                    <Case Number="0">
+                                                    <Match Value="{typerow}" >
+                                                        <Case Number="0" >
+                                                        <DockPanel Margin="7,1,1,0" ux:Name="contactItem" >
+                                                            <DockPanel Clicked="{AddNewItemDoctor}">
+                                                                <WhileHovering>
+                                                                    <Change contactItem.Color="divider" />
+                                                                </WhileHovering>
+                                                                <Circle Height="40" Width="40" Dock="Left" Margin="12,12,0,12" Alignment="TopLeft">
+                                                                    <ImageFill Url="{ProfileUrl}" />
+                                                                </Circle>
+                                                                <Rectangle HitTestMode="LocalBounds" >
+                                                                    <Text Font="medium" Alignment="CenterLeft"  Value="{fullName}" Margin="16,0,0,0" FontSize="15" TextColor="primary_text" />
+                                                                </Rectangle>
+                                                            </DockPanel>
+                                                        </DockPanel>
+                                                    </Case>
+                                                    <Case Number="1">
+                                                        <DockPanel Height="50" Margin="7,3,1,3" ux:Name="contactItem">
+                                                            <StackPanel Alignment="Center"  Dock="Top" Orientation="Horizontal" Margin="20,0,0,0" >
+                                                                     <DockPanel HitTestMode="LocalBounds" ux:Name="Call" Clicked="{makeCallDoctor}">
+                                                                        <WhileHovering>
+                                                                            <Change Call.Color="divider" />
+                                                                        </WhileHovering>
+                                                                        <Circle Height="25" Width="25" Dock="Top" Alignment="Center" Margin="14,6,14,0">
+                                                                    <Stroke Width="2">
+                                                                        <SolidColor Color="primary" />
+                                                                    </Stroke>
+                                                                    <Icon Alignment="Center" FontSize="15" Color="primary">&#xE0B0;</Icon>
+                                                                     </Circle>
+                                                                        <Text Font="regular" Alignment="Center"  Value="Call" Margin="14,0,14,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel>   
+                                                                      <DockPanel HitTestMode="LocalBounds" ux:Name="Chat" Clicked="{goToDoctorChatDoctor}">
+                                                                        <WhileHovering>
+                                                                            <Change Chat.Color="divider" />
+                                                                        </WhileHovering>
+                                                                        <Circle Height="28" Width="28" Dock="Top" Alignment="Center" Margin="14,6,14,0">
+                                                                            <Stroke Width="2">
+                                                                                <SolidColor Color="primary" />
+                                                                            </Stroke>
+                                                                            <Icon Alignment="Center" FontSize="20" Color="primary">&#xE0B7;</Icon>
+                                                                        </Circle>                                             
+                                                                        <Text Font="regular" Alignment="Center"  Value="Chat" Margin="11,0,11,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel>                                               
+                                                                      <DockPanel HitTestMode="LocalBounds" ux:Name="Edit" Clicked="{editContactDoctor}">
+                                                                        <WhileHovering>
+                                                                            <Change Edit.Color="divider" />
+                                                                        </WhileHovering>
+                                                                        <Circle Height="25" Width="25" Dock="Top" Alignment="Center" Margin="14,6,14,0">
+                                                                            <Stroke Width="2">
+                                                                                <SolidColor Color="primary" />
+                                                                            </Stroke>
+                                                                            <Icon Alignment="Center" FontSize="15" Color="primary">&#xe3c9;</Icon>
+                                                                        </Circle>  
+                                                                        <Text Font="regular" Alignment="Center"  Value="Edit" Margin="11,0,11,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel> 
+                                                                      <DockPanel HitTestMode="LocalBounds" ux:Name="Delete" Clicked="{deleteDoctor}">
+                                                                        <WhileHovering>
+                                                                            <Change Delete.Color="divider" />
+                                                                        </WhileHovering>
+                                                                        <Circle Dock="Top" Height="25" Width="25" Alignment="Center" Margin="14,6,14,0">
+                                                                            <Stroke Width="2">
+                                                                                <SolidColor Color="primary" />
+                                                                            </Stroke>
+                                                                            <Icon Alignment="Center" FontSize="15" Color="primary">&#xE872;</Icon>
+                                                                        </Circle> 
+                                                                        <Text Font="regular" Alignment="Center"  Value="Delete" Margin="11,0,11,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel>                                               
+                                                            </StackPanel>
+                                                                  <AddingAnimation>
+                                                                   <Move RelativeTo="Size" Y="0" Duration="0.15" Easing="CircularIn" />
+                                                                 </AddingAnimation>
+                                                        </DockPanel>   
+                                                                 <Rectangle Height="2" Alignment="Bottom" Color="divider" Margin="0,0">
+                                                                 </Rectangle>    
+                                                    </Case>
+                                                </Match>
+                                            </Case>
+                                                </Match>
+                                                <Match Value="{isLetter}" >
+                                                    <Case Number="1" >
+                                                        <Rectangle Color="primary_dark" Height="32">
+                                                            <Text Value="{FirstName}" FontSize="16" Color="icons" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                                        </Rectangle>
+                                                    </Case>
+                                                </Match>
+                                            </Each>
+                                            <Rectangle Height="1" Alignment="Bottom" Color="divider" Margin="20,0" />
+                                        </StackPanel>
+                                    </ScrollView>
+                                </Case>
+                                <Case Bool="false">
+                                    <ScrollView ClipToBounds="true" >
+                                        <StackPanel Orientation="Vertical">
+                                            <PullToReload IsLoading="{isLoadingContacts}" ReloadHandler="{reloadHandler}"></PullToReload>
+                                            <Each Items="{filteredItems}">
+                                                <Match Value="{isLetter}" >
+                                                    <Case Number="0" >
+                                                        <Match Value="{typerow}" >
+                                                        <Case Number="0" >
+                                                        <DockPanel Margin="7,1,1,0" ux:Name="contactItem" Clicked="{AddNewItem}">
+                                                            <WhileHovering>
+                                                                <Change contactItem.Color="divider" />
+                                                            </WhileHovering>
+                                                            <Circle Height="40" Width="40" Dock="Left" Margin="12,12,0,12" Alignment="TopLeft">
+                                                                <ImageFill File="../../Assets/placeholder.jpg" />
+                                                            </Circle>
+                                                                <Rectangle HitTestMode="LocalBounds">
+                                                                    <Text Font="medium" Alignment="CenterLeft"  Value="{fullName}" Margin="16,0,0,0" FontSize="15" TextColor="primary_text" />
+                                                                </Rectangle>
+                                                        </DockPanel>
+                                                    </Case>
+                                                <Case Number="1" >
+                                                        <DockPanel Height="50" Margin="7,3,1,3" ux:Name="contactItem">
+                                                            <StackPanel Alignment="Center" Dock="Top" Orientation="Horizontal" Margin="20,0,0,0" >
+                                                                    <DockPanel HitTestMode="LocalBounds" ux:Name="Treatment" Clicked="{goToSelectType}">
+                                                                         <WhileHovering>
+                                                                            <Change Treatment.Color="divider" />
+                                                                        </WhileHovering>
+                                                                         <Circle Height="25" Width="25" Dock="Top" Alignment="Center" Margin="14,6,14,0">
+                                                                            <Stroke Width="2">
+                                                                                <SolidColor Color="primary" />
+                                                                            </Stroke>
+                                                                            <Icon Alignment="Center" FontSize="15" Color="primary">&#xe8e8;</Icon>
+                                                                        </Circle>
+                                                                        <Text Font="regular" Alignment="Center"  Value="Treatment" Margin="2,0,2,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel>  
+                                                                     <DockPanel HitTestMode="LocalBounds" ux:Name="Call" Clicked="{makeCall}">
+                                                                        <WhileHovering>
+                                                                            <Change Call.Color="divider" />
+                                                                        </WhileHovering>
+                                                                        <Circle Height="25" Width="25" Dock="Top" Alignment="Center" Margin="14,6,14,0">
+                                                                    <Stroke Width="2">
+                                                                        <SolidColor Color="primary" />
+                                                                    </Stroke>
+                                                                    <Icon Alignment="Center" FontSize="15" Color="primary">&#xE0B0;</Icon>
+                                                                     </Circle>
+                                                                        <Text Font="regular" Alignment="Center"  Value="Call" Margin="14,0,14,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel>   
+                                                                      <DockPanel HitTestMode="LocalBounds" ux:Name="Chat" Clicked="{goToDoctorChatPatient}">
+                                                                        <WhileHovering>
+                                                                            <Change Chat.Color="divider" />
+                                                                        </WhileHovering>
+                                                                        <Circle Height="28" Width="28" Dock="Top" Alignment="Center" Margin="14,6,14,0">
+                                                                            <Stroke Width="2">
+                                                                                <SolidColor Color="primary" />
+                                                                            </Stroke>
+                                                                            <Icon Alignment="Center" FontSize="20" Color="primary">&#xE0B7;</Icon>
+                                                                        </Circle>                                             
+                                                                        <Text Font="regular" Alignment="Center"  Value="Chat" Margin="11,0,11,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel>                                               
+                                                                      <DockPanel HitTestMode="LocalBounds" ux:Name="Edit" Clicked="{editContact}">
+                                                                        <WhileHovering>
+                                                                            <Change Edit.Color="divider" />
+                                                                        </WhileHovering>
+                                                                        <Circle Height="25" Width="25" Dock="Top" Alignment="Center" Margin="14,6,14,0">
+                                                                            <Stroke Width="2">
+                                                                                <SolidColor Color="primary" />
+                                                                            </Stroke>
+                                                                            <Icon Alignment="Center" FontSize="15" Color="primary">&#xe3c9;</Icon>
+                                                                        </Circle>  
+                                                                        <Text Font="regular" Alignment="Center"  Value="Edit" Margin="11,0,11,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel> 
+                                                                      <DockPanel HitTestMode="LocalBounds" ux:Name="Delete" Clicked="{deleteContact}">
+                                                                        <WhileHovering>
+                                                                            <Change Delete.Color="divider" />
+                                                                        </WhileHovering>
+                                                                        <Circle Dock="Top" Height="25" Width="25" Alignment="Center" Margin="14,6,14,0">
+                                                                            <Stroke Width="2">
+                                                                                <SolidColor Color="primary" />
+                                                                            </Stroke>
+                                                                            <Icon Alignment="Center" FontSize="15" Color="primary">&#xE872;</Icon>
+                                                                        </Circle> 
+                                                                        <Text Font="regular" Alignment="Center"  Value="Delete" Margin="11,0,11,0" FontSize="15" TextColor="primary" />
+                                                                    </DockPanel>                                               
+                                                            </StackPanel>
+                                                                  <AddingAnimation>
+                                                                   <Move RelativeTo="Size" Y="0" Duration="0.15" Easing="CircularIn" />
+                                                                 </AddingAnimation>
+<!--                                                                   <RemovingAnimation>
+                                                                   <Move RelativeTo="Size" Y="0" Duration="0.05" Easing="CircularOut" />
+                                                                </RemovingAnimation>  -->                                                               
+                                                        </DockPanel>   
+                                                                 <Rectangle Height="2" Alignment="Bottom" Color="divider" Margin="0,0">
+                                                                 </Rectangle>                                                                                                         
+                                                </Case>
+                                            </Match>
+                                                    </Case>
+                                                </Match>
+                                                <Match Value="{isLetter}" >
+                                                    <Case Number="1" >
+                                                        <Rectangle Color="primary_dark" Height="32">
+                                                            <Text Value="{firstName}" FontSize="16" Color="icons" Alignment="CenterLeft" Margin="16,0,0,0" Font="medium"/>
+                                                        </Rectangle>
+                                                    </Case>
+                                                </Match>
+                                            </Each>
+                                            <Rectangle Height="1" Alignment="Bottom" Color="divider" Margin="20,0" />
+                                        </StackPanel>
+                                    </ScrollView>
+                                </Case>
+                            </Match>
+                        </Rectangle>
+                    </DockPanel>
+                </Case>
+            </Match>
+                
+            
+
+                   <!-- END OF LOADING -->
+                
+               
+             </Page>
+                    
+                     
+                
+            </PageControl>
+        </DockPanel>
+    </DockPanel>
+</DefaultPage>

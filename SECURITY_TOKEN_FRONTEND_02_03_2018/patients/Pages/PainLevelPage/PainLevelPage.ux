@@ -1,0 +1,134 @@
+<DefaultPage ux:Class="PainLevel">
+<Router ux:Dependency="router" />
+
+<JavaScript File="PainLevelPage.js" />
+
+	<DockPanel >         
+		<ToolbarReload Color="primary" HasBackButton="True" router="router">
+	    	<DropShadow />
+	  	</ToolbarReload>
+
+	  	<Match Value="{visibility}">
+		    <Case String="Visible">
+
+				<LoadingPage Value="{load}"/>
+		        
+		    </Case>
+		    <Case String="Collapsed">
+		    	<!-- TUKA VMETNI STAKOT -->
+		    	<Rectangle ux:Class="SelectableRectangle" Width="25" Height="25" CornerRadius="25" Color="{Property SelectionColor}" >
+		    		
+			<string ux:Property="ID" />
+			<Stroke Width="2" Color="#00BCD4"/>
+		<float4 ux:Property="SelectionColor" />
+		<Rectangle ux:Dependency="backgroundRect" />
+
+		<Selectable Value="{ReadProperty ID}" />
+			
+		
+		<Attractor ux:Name="colorAttractor" Target="backgroundRect.Color" Value="#fff" Type="Easing" Duration="0.2" DurationExp="0.3"  />
+		<Selected>
+			<Set colorAttractor.Value="{Property SelectionColor}"  />
+		</Selected>
+		
+		<WhileSelected>
+			<Scale Factor="1.1" Duration="0" Easing="BackOut" EasingBack="BackIn"  />
+			<Rectangle Color="#00BCD4" CornerRadius="30"/>
+		</WhileSelected>
+
+		<Clicked >
+			<ToggleSelection />
+
+		</Clicked>
+	</Rectangle>
+	<ScrollView ClipToBounds="true">
+		  <StackPanel ux:Name="responseArea">
+					<Text  TextWrapping="Wrap" TextAlignment="Center" Color="primary" Font="regular" FontSize="30" Margin="0,5,0,2">Pain level</Text>
+	   				<!-- <Image File="{imagePath}" Width="128" Height="128" Margin="0, 16, 0, 0"/> -->
+	   		<DockPanel>	
+	     			<StackPanel  ItemSpacing="2" Orientation="Vertical" Alignment="Center">
+	     				<Rectangle Layer="Background" Color="#FAFAFA" CornerRadius="3" />
+							<Selection MaxCount="1" MinCount="1" Value="{response}"/>
+
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+						<Text  TextAlignment="Center" Color="primary" Font="regular" Margin="-9,0,0,0" FontSize="15"  >10</Text>
+							<SelectableRectangle ID="10" SelectionColor="White" backgroundRect="background"/>
+				</StackPanel>	     					
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+						<Text  TextAlignment="Center" Color="primary" Font="regular" Margin="0,0,0,0" FontSize="15"  >9</Text>
+							<SelectableRectangle ID="9" SelectionColor="White" backgroundRect="background"/>
+				</StackPanel>			
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >8</Text>
+					<SelectableRectangle ID="8" SelectionColor="White" backgroundRect="background" />
+				</StackPanel>	
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >7</Text>
+					<SelectableRectangle ID="7" SelectionColor="White" backgroundRect="background" />
+				</StackPanel>
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >6</Text>
+					<SelectableRectangle ID="6" SelectionColor="White" backgroundRect="background" />
+				</StackPanel>	
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >5</Text>
+					<SelectableRectangle ID="5" SelectionColor="White" backgroundRect="background" />
+				</StackPanel>	
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >4</Text>
+					<SelectableRectangle ID="4" SelectionColor="White" backgroundRect="background" />
+				</StackPanel>
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >3</Text>
+					<SelectableRectangle ID="3" SelectionColor="White" backgroundRect="background" />
+				</StackPanel>	
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >2</Text>
+					<SelectableRectangle ID="2" SelectionColor="White" backgroundRect="background" />
+				</StackPanel>	
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >1</Text>
+					<SelectableRectangle ID="1" SelectionColor="White" backgroundRect="background" />
+				</StackPanel>	
+				<StackPanel  ItemSpacing="15" Orientation="Horizontal" Alignment="Center">
+					<Text  TextAlignment="Left" Color="primary" Font="regular" FontSize="15"  >0</Text>
+					<SelectableRectangle ID="0" SelectionColor="White" backgroundRect="background" Margin="0,0,0,0"/>
+				</StackPanel>													
+
+
+<!-- 							<SelectableRectangle ID="3" SelectionColor="White" backgroundRect="background" />
+							<SelectableRectangle ID="4" SelectionColor="White" backgroundRect="background" />
+							<SelectableRectangle ID="5" SelectionColor="White" backgroundRect="background" />
+							<SelectableRectangle ID="6" SelectionColor="White" backgroundRect="background" />
+							<SelectableRectangle ID="7" SelectionColor="White" backgroundRect="background" />
+							<SelectableRectangle ID="8" SelectionColor="White" backgroundRect="background" />
+							<SelectableRectangle ID="9" SelectionColor="White" backgroundRect="background" />
+							<SelectableRectangle ID="10" SelectionColor="White" backgroundRect="background" /> -->
+						
+					</StackPanel>
+<!-- 					<StackPanel Orientation="Vertical" ItemSpacing="22" Margin="0,0,50,0" Alignment="Center">
+					<Text  TextAlignment="Center" Color="primary" Font="regular" Margin="0,5,0,0" FontSize="15"  >1</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >2</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >3</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15" >4</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15" >5</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15" >6</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15"  >7</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15" >8</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15" >9</Text>
+					<Text  TextAlignment="Center" Color="primary" Font="regular" FontSize="15" Margin="0,-4,0,0">10</Text>
+					
+					</StackPanel> -->
+			</DockPanel>
+	<Rectangle ux:Name="background" Color="#fff"/>
+				<Text  TextWrapping="Wrap" TextAlignment="Center" Color="primary"  FontSize="16" Margin="0,5,0,0">(0-no pain, 10-worst pain imaginable)</Text>						                  
+	                  
+					<RaisedButton BtnText="SAVE" BtnColor="primary" BtnTextColor="icons" Clicked="{save}" Alignment="Center" Margin="0,-10,0,0" />						
+				</StackPanel>
+		</ScrollView>		
+		 	</Case>
+		</Match>
+
+	</DockPanel>
+
+</DefaultPage>
