@@ -20,6 +20,19 @@ var visibility = Observable("Collapsed");
 
 Storage.write("notification", "welcome");
 
+function diff_minutes(dt2, dt1) 
+ {
+
+  var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+  diff /= 60;
+  return Math.abs(Math.round(diff));
+  
+ }
+
+Date.prototype.addHours = function(h){
+    this.setHours(this.getHours()+h);
+    return this;
+}
 
 console.log("Environment " + Environment.preview);
 Lifecycle.on("enteringForeground", function() {
@@ -30,7 +43,7 @@ Lifecycle.on("enteringInteractive", function() {
     console.log("on enteringInteractive");
     console.log("on enteringForeground so kreiranje na token ");
 
-    var url1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken1";
+    var urlGenerateToken1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken1";
     var send_data = {
         "appID": QConfig.appId,
         "auth_key": QConfig.authKey,
@@ -38,9 +51,12 @@ Lifecycle.on("enteringInteractive", function() {
         "password": "hsadjkvlhs8FhgasG62h1tlasdnhlsdfk"
 
     }
-
-    console.log("BEFORE CALL generateSecurityToken!");
-    fetch(url1, {
+        var currentdate = new Date(); 
+		if ((Storage.readSync("expiryDate") == null) || (Storage.readSync("expiryDate").getTime() < currentdate.getTime() )){
+    // your code here.
+             
+    console.log("BEFORE CALL generateSecurityToken 1!");
+    fetch(urlGenerateToken1, {
         method: 'POST',
         headers: {
             "Content-type": "application/json"
@@ -54,12 +70,15 @@ Lifecycle.on("enteringInteractive", function() {
         response_ok = response.ok; // Is response.status in the 200-range?
         return response.json(); // This returns a promise
     }).then(function(data) {
-        console.log("SECURITY TOKEN IS GENERATED!");
+        console.log("FIRST SECURITY TOKEN IS GENERATED!");
         console.log("responseObject data: " + data);
         var tokenInfo = Observable();
         tokenInfo.value = data;
+        var currentdate7 = new Date().addHours(1); 
         Storage.write("securityToken1", JSON.stringify(data));
-        console.log("SECURITY TOKEN GENERATED AND SAVED IN STORAGE!");
+        Storage.write("expiryDate", JSON.stringify(currentdate7));
+        console.log("FIRST SECURITY TOKEN GENERATED AND VALUE AND EXPIRYDATE SAVED IN STORAGE!");
+        
         Storage.read("userInfo").then(function(content) {
             User = JSON.parse(content);
             console.log("User " + JSON.stringify(User));
@@ -68,14 +87,14 @@ Lifecycle.on("enteringInteractive", function() {
             //p_patientID = User.PatientId;
             // //debug_log("Registered");
             //console.log("procitaj od storage " + JSON.stringify(p_patientID));
-            var url1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken2";
+            var urlGenerateToken2 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken2";
             var phone_obj = {
                 "phone": User.phone,
                 "userType": "provider"
             }
 
             console.log("BEFORE CALL generateSecurityToken2!");
-            fetch(url1, {
+            fetch(urlGenerateToken2, {
                 method: 'POST',
                 headers: {
                     "Content-type": "application/json",
@@ -90,7 +109,7 @@ Lifecycle.on("enteringInteractive", function() {
                 response_ok = response.ok; // Is response.status in the 200-range?
                 return response.json(); // This returns a promise
             }).then(function(data) {
-                console.log("SECOND SECURITY TOKEN GENERATED AND SAVED IN WELCOME PAGE!");
+                console.log("SECOND SECURITY TOKEN GENERATED AND NEW VALUE SAVED IN WELCOME PAGE!");
                 console.log("responseObject data: " + data);
                 console.log("Before STORING IN tokenInfo!");
                 var tokenInfo = Observable();
@@ -127,9 +146,130 @@ Lifecycle.on("enteringInteractive", function() {
     }).catch(function(err) {
         console.log("Fetch data error");
         console.log(err.message);
-    });
+    });      
 
+            
+ }
+		else{
+             
+             var urlUpdateToken1 = activeUrl.URL + "/curandusproject/webapi/api/updateSecurityToken1";
+                
+       if(diff_minutes(Storage.readSync("expiryDate"), currentdate) < 10)
+       {
+     console.log("BEFORE CALL updateSecurityToken 1!");
+    fetch(urlUpdateToken1, {
+        method: 'POST',
+        headers: {
+            "Content-type": "application/json"
+        },
+        dataType: 'json',
+        body: JSON.stringify(send_data)
 
+    }).then(function(response) {
+        console.log("Vleze vo console log");
+        status = response.status; // Get the HTTP status code
+        response_ok = response.ok; // Is response.status in the 200-range?
+        return response.json(); // This returns a promise
+    }).then(function(data) {
+        console.log("FIRST SECURITY TOKEN IS UPDATED!");
+        console.log("responseObject data: " + data);
+        var tokenInfo = Observable();
+        tokenInfo.value = data;
+        var currentdate1 = new Date().addHours(1); 
+        Storage.write("securityToken1", JSON.stringify(data));
+        Storage.write("expiryDate", JSON.stringify(currentdate1));
+        console.log("FIRST SECURITY TOKEN UPDATED AND NEW VALUE AND EXPIRY DATETIME SAVED IN STORAGE!");
+        
+        Storage.read("userInfo").then(function(content) {
+            User = JSON.parse(content);
+            console.log("User " + JSON.stringify(User));
+            console.log("content vo welcome " + content);
+            // p_patientID = Storage.readSync("patientInfo");
+            //p_patientID = User.PatientId;
+            // //debug_log("Registered");
+            //console.log("procitaj od storage " + JSON.stringify(p_patientID));
+            var urlUpdateToken2 = activeUrl.URL + "/curandusproject/webapi/api/updateSecurityToken2";
+            var phone_obj = {
+                "phone": User.phone,
+                "userType": "provider"
+            }
+
+            console.log("BEFORE CALL updateSecurityToken2!");
+            fetch(urlUpdateToken2, {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/json",
+                    'securityToken1': Storage.readSync("securityToken1")
+                },
+                dataType: 'json',
+                body: JSON.stringify(phone_obj)
+
+            }).then(function(response) {
+                console.log("Vleze vo console log");
+                status = response.status; // Get the HTTP status code
+                response_ok = response.ok; // Is response.status in the 200-range?
+                return response.json(); // This returns a promise
+            }).then(function(data) {
+                console.log("SECOND SECURITY TOKEN UPDATED AND SAVED IN WELCOME PAGE!");
+                console.log("responseObject data: " + data);
+                console.log("Before STORING IN tokenInfo!");
+                var tokenInfo = Observable();
+                tokenInfo.value = data;
+                Storage.write("securityToken2", JSON.stringify(data));
+                     
+                setTimeout(function() {
+                    Storage.read("notification_previous").then(function(content) {
+                        if (hasNotification.value == false) {
+                            console.log("notification vo enteringInteractive : " + content);
+                            Storage.write("notification", content);
+                        } else {
+                            hasNotification.value = false;
+                        }
+                        // Storage.write("notification_previous", "welcome");
+                        // console.log("notification_previous", "welcome");
+                    }, function(error) {
+                        console.log("error vo citanje od storage");
+                    });
+
+                }, 1000);
+
+            }).catch(function(err) {
+                console.log("Fetch data error");
+                console.log(err.message);
+            });
+
+        }, function(error) {
+            // //debug_log("Not Registered");
+            // goToLogin();
+        });
+
+        // Storage.write("securityToken", securityToken));
+    }).catch(function(err) {
+        console.log("Fetch data error");
+        console.log(err.message);
+    });   
+           
+       } 
+            else{
+                
+             setTimeout(function() {
+                    Storage.read("notification_previous").then(function(content) {
+                        if (hasNotification.value == false) {
+                            console.log("notification vo enteringInteractive : " + content);
+                            Storage.write("notification", content);
+                        } else {
+                            hasNotification.value = false;
+                        }
+                        // Storage.write("notification_previous", "welcome");
+                        // console.log("notification_previous", "welcome");
+                    }, function(error) {
+                        console.log("error vo citanje od storage");
+                    });
+
+                }, 1000);
+            
+            }
+        }
 
 });
 
@@ -163,7 +303,10 @@ push.on("error", function(reason) {
 push.on("receivedMessage", function(payload, fromNotificationBar) {
     if (fromNotificationBar == true) {
 
-        var url1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken1";
+           var currentdate = new Date(); 
+		if ((Storage.readSync("expiryDate") == null) || (Storage.readSync("expiryDate").getTime() < currentdate.getTime() )){
+    // your code here.
+         var urlGenerateToken1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken1";
         var send_data = {
             "appID": QConfig.appId,
             "auth_key": QConfig.authKey,
@@ -172,8 +315,8 @@ push.on("receivedMessage", function(payload, fromNotificationBar) {
 
         }
 
-        console.log("BEFORE CALL generateSecurityToken!");
-        fetch(url1, {
+        console.log("BEFORE CALL generateSecurityToken 1!");
+        fetch(urlGenerateToken1, {
             method: 'POST',
             headers: {
                 "Content-type": "application/json"
@@ -187,13 +330,16 @@ push.on("receivedMessage", function(payload, fromNotificationBar) {
             response_ok = response.ok; // Is response.status in the 200-range?
             return response.json(); // This returns a promise
         }).then(function(data) {
-            console.log("SECURITY TOKEN IS GENERATED!");
+            console.log("FIRST SECURITY TOKEN IS GENERATED!");
             console.log("responseObject data: " + data);
             var tokenInfo = Observable();
             tokenInfo.value = data;
+            
+            var currentdate8 = new Date().addHours(1); 
             Storage.write("securityToken1", JSON.stringify(data));
-            console.log("SECURITY TOKEN GENERATED AND SAVED IN STORAGE!");
-
+            Storage.write("expiryDate", JSON.stringify(currentdate8));
+            console.log("FIRST SECURITY TOKEN GENERATED AND VALUE AND EXPIRY DATETIME SAVED IN STORAGE!");
+            
             Storage.read("userInfo").then(function(content) {
                 User = JSON.parse(content);
                 console.log("User " + JSON.stringify(User));
@@ -202,15 +348,14 @@ push.on("receivedMessage", function(payload, fromNotificationBar) {
                 //p_patientID = User.PatientId;
                 // //debug_log("Registered");
                 //console.log("procitaj od storage " + JSON.stringify(p_patientID));
-                var url1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken2";
+                var urlGenerateToken2 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken2";
                 var phone_obj = {
                     "phone": User.phone,
-                    "userType": "provider",
-
+                    "userType": "provider"
                 }
 
                 console.log("BEFORE CALL generateSecurityToken2!");
-                fetch(url1, {
+                fetch(urlGenerateToken2, {
                     method: 'POST',
                     headers: {
                         "Content-type": "application/json",
@@ -231,7 +376,6 @@ push.on("receivedMessage", function(payload, fromNotificationBar) {
                     var tokenInfo = Observable();
                     tokenInfo.value = data;
                     Storage.write("securityToken2", JSON.stringify(data));
-
 
                     push.clearAllNotifications();
                     hasNotification.value = true;
@@ -262,7 +406,129 @@ push.on("receivedMessage", function(payload, fromNotificationBar) {
             console.log(err.message);
         });
 
+          
+        }
+        
+        	else{
+             
+             var urlUpdateToken1 = activeUrl.URL + "/curandusproject/webapi/api/updateSecurityToken1";
+                
+       if(diff_minutes(Storage.readSync("expiryDate"), currentdate) < 10)
+       {
+     console.log("BEFORE CALL updateSecurityToken 1!");
+    fetch(urlUpdateToken1, {
+        method: 'POST',
+        headers: {
+            "Content-type": "application/json"
+        },
+        dataType: 'json',
+        body: JSON.stringify(send_data)
 
+    }).then(function(response) {
+        console.log("Vleze vo console log");
+        status = response.status; // Get the HTTP status code
+        response_ok = response.ok; // Is response.status in the 200-range?
+        return response.json(); // This returns a promise
+    }).then(function(data) {
+        console.log("FIRST SECURITY TOKEN IS UPDATED!");
+        console.log("responseObject data: " + data);
+        var tokenInfo = Observable();
+        tokenInfo.value = data;
+        var currentdate1 = new Date().addHours(1); 
+        Storage.write("securityToken1", JSON.stringify(data));
+        Storage.write("expiryDate", JSON.stringify(currentdate1));
+        console.log("FIRST SECURITY TOKEN UPDATED AND NEW VALUE AND EXPIRY DATETIME SAVED IN STORAGE!");
+        
+        Storage.read("userInfo").then(function(content) {
+            User = JSON.parse(content);
+            console.log("User " + JSON.stringify(User));
+            console.log("content vo welcome " + content);
+            // p_patientID = Storage.readSync("patientInfo");
+            //p_patientID = User.PatientId;
+            // //debug_log("Registered");
+            //console.log("procitaj od storage " + JSON.stringify(p_patientID));
+            var urlUpdateToken2 = activeUrl.URL + "/curandusproject/webapi/api/updateSecurityToken2";
+            var phone_obj = {
+                "phone": User.phone,
+                "userType": "provider"
+            }
+
+            console.log("BEFORE CALL updateSecurityToken2!");
+            fetch(urlUpdateToken2, {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/json",
+                    'securityToken1': Storage.readSync("securityToken1")
+                },
+                dataType: 'json',
+                body: JSON.stringify(phone_obj)
+
+            }).then(function(response) {
+                console.log("Vleze vo console log");
+                status = response.status; // Get the HTTP status code
+                response_ok = response.ok; // Is response.status in the 200-range?
+                return response.json(); // This returns a promise
+            }).then(function(data) {
+                console.log("SECOND SECURITY TOKEN UPDATED AND SAVED IN WELCOME PAGE!");
+                console.log("responseObject data: " + data);
+                console.log("Before STORING IN tokenInfo!");
+                var tokenInfo = Observable();
+                tokenInfo.value = data;
+                Storage.write("securityToken2", JSON.stringify(data));
+                     
+                    push.clearAllNotifications();
+                    hasNotification.value = true;
+                    //myToast.toastIt("Stigna vo welcome page ");
+                    //vibration.vibrate(0.8);
+                    console.log("Recieved Push NotificaNotificationtion vo welcome page: " + payload);
+                    Storage.write("notification_previous", "welcome");
+                    Storage.write("notification", "chat");
+                    router.push("chat", {
+                        odwelcome: JSON.parse((JSON.parse(payload)).notification).alert
+                    });
+
+
+            }).catch(function(err) {
+                console.log("Fetch data error");
+                console.log(err.message);
+            });
+
+        }, function(error) {
+            // //debug_log("Not Registered");
+            // goToLogin();
+        });
+
+        // Storage.write("securityToken", securityToken));
+    }).catch(function(err) {
+        console.log("Fetch data error");
+        console.log(err.message);
+    });   
+           
+       }
+                else {
+         Storage.read("userInfo").then(function(content) {
+ 
+               push.clearAllNotifications();
+                    hasNotification.value = true;
+                    //myToast.toastIt("Stigna vo welcome page ");
+                    //vibration.vibrate(0.8);
+                    console.log("Recieved Push NotificaNotificationtion vo welcome page: " + payload);
+                    Storage.write("notification_previous", "welcome");
+                    Storage.write("notification", "chat");
+                    router.push("chat", {
+                        odwelcome: JSON.parse((JSON.parse(payload)).notification).alert
+                    });
+
+             
+           }, function(error) {
+             
+              });                             
+                                       
+       }
+                
+        }
+        
+       
 
     }
 });
@@ -284,16 +550,21 @@ function toogleIsAgree() {
 
 function isLogged() {
     visibility.value = "Visible";
-    console.log("is logged povikana: " + Storage.readSync("userInfo"));
-    Storage.read("userInfo").then(function(content) {
+    
+    var currentdate = new Date(); 
+    if ((Storage.readSync("expiryDate") == null) || (Storage.readSync("expiryDate").getTime() < currentdate.getTime() )){
+        console.log("is logged povikana: " + Storage.readSync("userInfo"));
+        Storage.read("userInfo").then(function(content) {
+        
+        
         User = JSON.parse(content);
 
         console.log("User " + JSON.stringify(User));
         console.log("content vo welcome " + content);
 
-
-        var url1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken1";
-
+     
+    // your code here.
+        var urlGenerateToken1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken1";
         var send_data = {
             "appID": QConfig.appId,
             "auth_key": QConfig.authKey,
@@ -303,7 +574,7 @@ function isLogged() {
         }
 
         console.log("BEFORE CALL generateSecurityToken!");
-        fetch(url1, {
+        fetch(urlGenerateToken1, {
             method: 'POST',
             headers: {
                 "Content-type": "application/json"
@@ -317,22 +588,23 @@ function isLogged() {
             response_ok = response.ok; // Is response.status in the 200-range?
             return response.json(); // This returns a promise
         }).then(function(data) {
-            console.log("SECURITY TOKEN IS GENERATED!");
+            console.log("FIRST SECURITY TOKEN IS GENERATED!");
             console.log("responseObject data: " + data);
             var tokenInfo = Observable();
             tokenInfo.value = data;
+            var currentdate10 = new Date().addHours(1); 
+            Storage.write("expiryDate", JSON.stringify(currentdate10));
             Storage.write("securityToken1", JSON.stringify(data));
-            console.log("SECURITY TOKEN GENERATED AND SAVED IN STORAGE! " + tokenInfo.value);
+            console.log("FIRST SECURITY TOKEN GENERATED AND VALUE AND EXPIRY DATETIME SAVED IN STORAGE! " + tokenInfo.value);
 
-
-            var url2 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken2";
+            var urlGenerateToken2 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken2";
             var phone_obj = {
                 "phone": User.phone,
                 "userType": "provider"
             }
 
             console.log("BEFORE CALL generateSecurityToken2!");
-            fetch(url2, {
+            fetch(urlGenerateToken2, {
                 method: 'POST',
                 headers: {
                     "Content-type": "application/json",
@@ -377,7 +649,7 @@ function isLogged() {
         // //debug_log("Not Registered");
         // goToLogin();
         visibility.value = "Collapsed";
-        var url1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken1";
+        var urlGenerateToken1 = activeUrl.URL + "/curandusproject/webapi/api/generateSecurityToken1";
 
         var send_data = {
             "appID": QConfig.appId,
@@ -387,8 +659,8 @@ function isLogged() {
 
         }
 
-        console.log("BEFORE CALL generateSecurityToken!");
-        fetch(url1, {
+        console.log("BEFORE CALL generateSecurityToken 1!");
+        fetch(urlGenerateToken1, {
             method: 'POST',
             headers: {
                 "Content-type": "application/json"
@@ -402,12 +674,107 @@ function isLogged() {
             response_ok = response.ok; // Is response.status in the 200-range?
             return response.json(); // This returns a promise
         }).then(function(data) {
-            console.log("SECURITY TOKEN IS GENERATED!");
+            console.log("FIRST SECURITY TOKEN IS GENERATED FROM WELCOME PAGE ISLOGGED - NOT REGISTERED!");
             console.log("responseObject data: " + data);
             var tokenInfo = Observable();
             tokenInfo.value = data;
+            var currentdate14 = new Date().addHours(1); 
+            Storage.write("expiryDate", JSON.stringify(currentdate14));
             Storage.write("securityToken1", JSON.stringify(data));
-            console.log("SECURITY TOKEN GENERATED AND SAVED IN STORAGE!");
+            console.log("FIRST SECURITY TOKEN GENERATED, AND NEW VALUE AND EXPIRY DATETIME SAVED IN STORAGE!");
+
+            // Storage.write("securityToken", securityToken));
+        }).catch(function(err) {
+            console.log("Fetch data error");
+            console.log(err.message);
+        });         
+            
+              }); 
+            
+        }
+                                      
+                             
+            	else{
+          if(diff_minutes(Storage.readSync("expiryDate"), currentdate) < 10)
+       {            
+                    
+        console.log("is logged povikana: " + Storage.readSync("userInfo"));
+        Storage.read("userInfo").then(function(content) {
+       
+        User = JSON.parse(content);
+        console.log("User " + JSON.stringify(User));
+        console.log("content vo welcome " + content);
+
+    // your code here.
+        var urlUpdateToken1 = activeUrl.URL + "/curandusproject/webapi/api/updateSecurityToken1";
+        var send_data = {
+            "appID": QConfig.appId,
+            "auth_key": QConfig.authKey,
+            "user": "Admin",
+            "password": "hsadjkvlhs8FhgasG62h1tlasdnhlsdfk"
+
+        }
+
+        console.log("BEFORE CALL updateSecurityToken 1!");
+        fetch(urlGenerateToken1, {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json"
+            },
+            dataType: 'json',
+            body: JSON.stringify(send_data)
+
+        }).then(function(response) {
+            console.log("Vleze vo console log");
+            status = response.status; // Get the HTTP status code
+            response_ok = response.ok; // Is response.status in the 200-range?
+            return response.json(); // This returns a promise
+        }).then(function(data) {
+            console.log("FIRST SECURITY TOKEN IS UPDATED!");
+            console.log("responseObject data: " + data);
+            var tokenInfo = Observable();
+            tokenInfo.value = data;
+            var currentdate10 = new Date().addHours(1); 
+            Storage.write("expiryDate", JSON.stringify(currentdate10));
+            Storage.write("securityToken1", JSON.stringify(data));
+            console.log("FIRST SECURITY TOKEN UPDATED AND NEW TOKEN VALUE AND EXPIRY DATETIME SAVED IN STORAGE! " + tokenInfo.value);
+
+            var urlGenerateToken2 = activeUrl.URL + "/curandusproject/webapi/api/updateSecurityToken2";
+            var phone_obj = {
+                "phone": User.phone,
+                "userType": "provider"
+            }
+
+            console.log("BEFORE CALL updateSecurityToken2!");
+            fetch(urlGenerateToken2, {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/json",
+                    'securityToken1': Storage.readSync("securityToken1")
+                },
+                dataType: 'json',
+                body: JSON.stringify(phone_obj)
+            }).then(function(response) {
+                console.log("Vleze vo console log " + response.status);
+                status = response.status; // Get the HTTP status code
+                response_ok = response.ok; // Is response.status in the 200-range?
+                return response.json(); // This returns a promise
+            }).then(function(data2) {
+                console.log("SECOND SECURITY TOKEN GENERATED AND SAVED IN WELCOME PAGE!");
+                console.log("responseObject data: " + data2);
+                console.log("Before STORING IN tokenInfo!");
+                var tokenInfo2 = Observable();
+                tokenInfo2.value = data2;
+                Storage.write("securityToken2", JSON.stringify(data2));
+                console.log("Before main");
+                visibility.value = "Collapsed";
+                goToMain();
+
+                // Storage.write("securityToken", securityToken));
+            }).catch(function(err) {
+                console.log("Fetch data error");
+                console.log(err.message);
+            });
 
             // Storage.write("securityToken", securityToken));
         }).catch(function(err) {
@@ -416,7 +783,70 @@ function isLogged() {
         });
 
 
-    });
+
+
+    }, function(error) {
+
+        ///tuka da ne se gleda
+        // //debug_log("Not Registered");
+        // goToLogin();
+        visibility.value = "Collapsed";
+        var urlGenerateToken1 = activeUrl.URL + "/curandusproject/webapi/api/updateSecurityToken1";
+
+        var send_data = {
+            "appID": QConfig.appId,
+            "auth_key": QConfig.authKey,
+            "user": "Admin",
+            "password": "hsadjkvlhs8FhgasG62h1tlasdnhlsdfk"
+
+        }
+
+        console.log("BEFORE CALL updateSecurityToken 1!");
+        fetch(urlGenerateToken1, {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json"
+            },
+            dataType: 'json',
+            body: JSON.stringify(send_data)
+
+        }).then(function(response) {
+            console.log("Vleze vo console log");
+            status = response.status; // Get the HTTP status code
+            response_ok = response.ok; // Is response.status in the 200-range?
+            return response.json(); // This returns a promise
+        }).then(function(data) {
+            console.log("FIRST SECURITY TOKEN IS GENERATED FROM WELCOME PAGE ISLOGGED - NOT REGISTERED!");
+            console.log("responseObject data: " + data);
+            var tokenInfo = Observable();
+            tokenInfo.value = data;
+            var currentdate11 = new Date().addHours(1); 
+            Storage.write("expiryDate", JSON.stringify(currentdate11));
+            Storage.write("securityToken1", JSON.stringify(data));
+            console.log("FIRST SECURITY TOKEN GENERATED AND NEW VALUE AND EXPIRY DATETIME SAVED IN STORAGE!");
+
+            // Storage.write("securityToken", securityToken));
+        }).catch(function(err) {
+            console.log("Fetch data error");
+            console.log(err.message);
+        });         
+            
+              }); 
+                 
+       } else {
+         Storage.read("userInfo").then(function(content) {
+ 
+               console.log("Before main");
+                visibility.value = "Collapsed";
+                goToMain();
+             
+           }, function(error) {
+              console.log("User not logged.");
+              });                             
+                                       
+       }
+}
+        
 
 }
 
