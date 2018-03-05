@@ -1,0 +1,550 @@
+<DefaultPage ux:Class="SelectType">
+
+<Router ux:Dependency="router" />
+
+      <OnBackButton>
+        <GoBack />
+      </OnBackButton>   
+<JavaScript> 
+    var Observable = require("FuseJS/Observable");
+    var activeUrl = require("Constants/SERVICE_URL.js"); 
+    var Types = require("Constants/Types.js"); 
+    //console.log("TIPOVI", JSON.stringify(Types.types.value)); 
+    var allTypes = Types.types.value; 
+    exports.values = Observable(); 
+    var savedTreatments;// = Observable(); 
+    var flag = 0;  
+    var finalData = []; 
+    exports.list = Observable("") 
+    var selektirani = Observable("");  
+    var patientId=""; 
+    var providerId; 
+    var Storage = require("FuseJS/Storage"); 
+    var lista = [];  
+    var userInfo = JSON.parse(Storage.readSync("userInfo")); 
+    var templateName=""; 
+    var subtreatmentid="";
+    var SubtreatmentIdOnEDIT="0";
+    var active=Observable("false");
+    var myToast = require("myToast");
+    var namenovo1 = Observable();
+    var namenovo2 = Observable();
+    var name1="";
+    var name2="";
+    var fullname2 = Observable();
+    var fullname3 = Observable();
+    // var name = "MOKI"; 
+    //var patientName = {name:"MOKIIII"}; 
+    var name = Observable();
+    var fullname1 = Observable();
+    providerId= JSON.stringify(userInfo.providerId);
+    
+    exports.values.onValueChanged( module, function() {        
+        exports.list.value = exports.values.toArray().join(",") 
+       // console.log("OVA "+exports.list.value);
+        exports.values = selektirani;
+     })
+
+    this.onParameterChanged(function(param) { 
+console.log("---------------------------------- SELECT TYPE ---------------------------");
+        selektirani.clear(); 
+        finalData=[];
+        templateName="";
+        subtreatmentid="";
+        SubtreatmentIdOnEDIT="0";
+        
+        if(param.nameLastname != null){
+            console.log("EVE GO:" + param.nameLastname);
+            name.value = param.nameLastname;
+        }
+        if(param.namenovo != null){
+            console.log("EVE GO:" + param.namenovo);
+            namenovo1 = param.namenovo;
+          
+        }
+        if(param.namenovo2 != null)
+        {
+            console.log("EVE GO:" + param.namenovo2);
+            namenovo2 = param.namenovo2;
+        }
+        //OD CHAT PAGE !!!!!!!
+        if(param.finalname1 != null)
+        {
+            console.log("EVE GO:" + param.finalname1);
+            name.value = param.finalname1;
+        }
+        if (param.fullname != null)
+        {
+            console.log("EVE GO:" + param.fullname);
+            name.value = param.fullname;
+            fullname1.value = param.fullname;
+        }
+        
+        
+        //OD SAVED TREATMENTS!!!!
+        // if (param.name != null)
+        // {
+        //     fullname2 = param.name;
+        //     console.log("NOV FULLNAME!!! NOVOOOOOOOOOO " + fullname2);
+        //     name.value = fullname2;
+        // }
+
+        //patientId = JSON.stringify(param.user.patientId);
+       // console.log('On Parameter changed vo selectType:'+JSON.stringify(param)); 
+        // KOGA DOAGJA OD SAVEDTREATMENTS
+         if(param.fullname2 != null)
+                {
+                    console.log("FUllANME2: " + param.fullname2);
+                    
+                    fullname3 = param.fullname2;
+                    console.log("FUllANME3: " + fullname3);
+                }
+        if("savedTreatments" in param){
+            active.value = "true"; 
+          //  console.log("TUKA OD SELEKT TYPE SHOW TEMPLATE:"+active);// dali da se pokazhuva kopche load template
+            for(var i = 0 ; i < param.savedTreatments.length; i++){
+
+                if(!param.savedTreatments[i].num){
+
+                    if(param.savedTreatments[i].id){
+                    //    console.log("VO IF if id"+param.savedTreatments[i].id);
+                    }
+                    
+                    else if(param.savedTreatments[i].name){
+                     //   console.log("za selekcija od savedTreatments"+JSON.stringify(param.savedTreatments[i]));
+                        if (!selektirani.contains(param.savedTreatments[i].name)){
+                           selektirani.add(param.savedTreatments[i].name);
+                        }
+                        
+                        finalData[i] = param.savedTreatments[i];
+                        SubtreatmentIdOnEDIT = param.savedTreatments[i].subtreatmentid;
+                      //  console.log("za selekcija od savedTreatments final data"+JSON.stringify(finalData[i]));
+                    }
+
+                    else if(param.savedTreatments[i].templateName){
+                        // console.log("VO ELSEIF nameTemplate"+param[i].templateName);
+                        templateName = param.savedTreatments[i].templateName;
+                        // console.log("VO ELSEIF nameTemplate**"+templateName);
+                    }
+                    else if(param.savedTreatments[i].num1){
+                        
+                    }
+                    else if(param.savedTreatments[i].subtreatmentid){
+                       // console.log("TUKA SE DOAGJA VO SUBTREATMENT ID :"+param.savedTreatments[i].subtreatmentid);
+                        SubtreatmentIdOnEDIT = param.savedTreatments[i].subtreatmentid;
+                    }
+                    else if(param.savedTreatments[i].patientId){
+
+                    }                          
+                    
+                }
+
+            } 
+             if(param.fullname2 != null)
+                {
+                    console.log("FUllANME2: " + param.fullname2);
+                    
+                    fullname3 = param.fullname2;
+                    console.log("FUllANME3: " + fullname3);
+                }
+            console.log("posle for selektirani: "+JSON.stringify(selektirani));
+        }
+
+
+///// koga doagja od page ALERTPAGE
+        else if(param.user.length > 1){
+
+            active.value="false";// dali da se pokazhuva kopche load template
+           //  console.log("TUKA OD ALERT PAGE SHOW TEMPLATE:"+active);
+           // console.log("doagja od page ALERTPAGE");
+           // console.log(JSON.stringify(param));
+          //  console.log('If param length > 0:'+JSON.stringify(param)); 
+            for(var i = 0 ; i < param.user.length; i++){
+                if(param.user[i].patientId){
+                    patientId = param.user[i].patientId;
+                 //   console.log("tuka patientid:"+patientId);
+                    Storage.write("patientId", JSON.stringify(patientId));
+                }
+                else if(param.user[i].subtrementID){
+                    SubtreatmentIdOnEDIT = param.user[i].subtrementID;
+                } 
+                else if (param.user[i].fullName){
+                    name.value = param.user[i].fullName
+                }
+            }
+
+            ///// kod za selekcija na tabovite vo select type
+            for(var i = 0 ; i < param.user.length; i++){
+               // console.log("VO FOOOOR"+JSON.stringify(param.user[i]));
+                if(!param.user[i].num){
+                    if(param.user[i].id){
+                       // console.log("VO IF if id"+param.user[i].id);
+                    }
+                    else if(param.user[i].templateName){
+                       // console.log("VO ELSEIF nameTemplate"+param[i].templateName);
+                        templateName = param.user[i].templateName;
+                       // console.log("VO ELSEIF nameTemplate**"+templateName);
+                    }
+
+                    else if(param.user[i].num1){
+
+                    }
+
+                    else if(param.user[i].subtrementID){
+                        //console.log(" vo else if select type subtreatmentid: "+param[i]);
+                       SubtreatmentIdOnEDIT = param.user[i].subtrementID;
+                    }
+
+                    else if(param.user[i].patientId){
+
+                    }
+
+                    else if (param.user[i].fullName){
+                        name.value = param.user[i].fullName
+                    }
+
+                    else{
+                      //  console.log("VO IF elseeeeeeeeeeeee"+param.user[i].name);
+                      if (!selektirani.contains(param.user[i].name)){
+                           selektirani.add(param.user[i].name);
+                        }
+                       
+                        finalData[i] = param.user[i];
+                    }
+                    
+                }
+            } 
+
+            //vadenje na duplikati od selektirani
+        } // kraj 
+
+        /// koga doagja od CONTACTS
+        else if("user" in param){
+            active.value="true";// dali da se pokazhuva kopche load template
+           // console.log("TUKA OD CONTACT - :"+active);
+            patientId = JSON.stringify(param.user.patientId);
+           // console.log(JSON.stringify(param.user.fullName));
+            name.value = param.user.fullName;
+            Storage.write("patientId", JSON.stringify(patientId));
+            subtreatmentid = param.user.subtreatmentid;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+          ///  console.log("PRED FOR PATIENTID "+patientId);
+           // console.log("POSLE FOR selektirani "+JSON.stringify(selektirani));
+    });
+
+    
+  
+    // ADD SELECTED ITEM 
+    function AddSelectedItem(item){
+        for(var i = 0 ; i < item.data.length; i++){
+             selektirani.add(item[i]);
+        }
+    }
+
+    function goToSavedTreatments(e) {  
+        lista=[]; 
+       
+        var url = activeUrl.URL + "/curandusproject/webapi/api/getsavedtreatmenttemplatebyprovider/"+providerId 
+        console.log(url); 
+        fetch(url, { 
+            method: 'GET', 
+            headers: { 
+                "Content-type": "application/json" 
+            },
+            dataType: 'json' 
+        }).then(function(response) {  
+            status = response.status; // Get the HTTP status code  
+            response_ok = response.ok; // Is response.status in the 200-range?  
+            return response.json(); // This returns a promise  
+        }).then(function(data) {
+            var tmp ={};
+            for (var i = 0; i < data.length; i++) { 
+                tmp = { 
+                    "savedTreatmentTemplateId":data[i].savedTreatmentTemplateId, 
+                    "nameTreatment":data[i].nameTreatment,                      
+                    "created":data[i].created,                          
+                    "createdBy":data[i].createdBy,                           
+                    "modified":data[i].modified,                               
+                    "modifiedBy":data[i].modifiedBy,   
+                    "isAgree":data[i].daytime,   
+                    "start":data[i].start, 
+                    "intervaldaytime": data[i].intervaldaytime, 
+                    "SelectedStart":data[i].starttime,                          
+                    "providerDetail":data[i].providerDetail                
+                } 
+                lista[i] = tmp; 
+            } 
+
+            lista[lista.length] = {"name":name.value} 
+             console.log("OVAAAAAA KOGA SE PRAKJA LISTA OD SELECTYPE: "+JSON.stringify(lista));
+         router.push("savedTreatment", { 
+            lista,
+            //name: name.value,
+            fullname1: fullname1.value,
+
+
+          });
+
+        }).catch(function(err) { 
+            console.log("Fetch data error"); 
+            console.log(err.message); 
+        }); 
+    }
+
+
+    function goToSelectItems(){       
+        var sendData = [{}];
+        var k = 0;
+        var flag=0;
+        
+        // selektirani = selektirani.filter(function(elem, index, self) {
+        // return index == self.indexOf(elem);
+        // })
+      //  console.log("finalData: "+JSON.stringify(finalData));
+        console.log("SELEKTIRANI TUKAAAAAAAAA: "+JSON.stringify(selektirani))
+        console.log("FINAAALLLLL TUKAAAAAAAAA: "+JSON.stringify(finalData))
+        //console.log("Fullname3 za vo selectItems: " + fullanem3);
+        //celata logika za doselektiranite prazni tretmani i za zachuvanite da ostanat so data
+        for(var i = 0 ; i < selektirani.length;i++){ 
+           flag = 0;
+           
+           if(finalData.length == 0 && selektirani.length > 0){
+            console.log("VLEGUVAAA **************** gore vo if");
+                var tmp = {
+                        "name": selektirani.getAt(i), 
+                        "duration": null, 
+                        "createdBy": 0, 
+                        "treatmentItemId": 0, 
+                        "subtreatmentid": 0, 
+                        "created": null, 
+                        "modified": null, 
+                        "modifiedBy": 0, 
+                        "typeT": "", 
+                        "repeatT": "", 
+                        "isAgree": false, 
+                        "Selected":"",
+                        "SelectedStart":"Today",
+                        "intervaldaytime":"",
+                        "renderingInfo": null 
+                    }
+                    sendData[k] = tmp;
+                    k++;
+                    flag = 2;
+           }
+           for(var j = 0; j < finalData.length; j++){
+
+                if(selektirani.getAt(i).localeCompare(finalData[j].name) == 0){
+                        console.log("vleze vo if flag == 0 i= "+i+" j="+j);
+                        console.log("vleze vo if flag == 0 finalData[j]: "+JSON.stringify(finalData[j]));
+                            var tmp1 = {
+                            "name": finalData[j].name, 
+                            "duration": finalData[j].duration, 
+                            "createdBy": finalData[j].createdBy, 
+                            "treatmentItemId": finalData[j].treatmentItemId, 
+                            "subtreatmentid": finalData[j].subtreatmentid, 
+                            "created": finalData[j].created, 
+                            "modified": finalData[j].modified, 
+                            "modifiedBy": finalData[j].modifiedBy, 
+                            "typeT": finalData[j].typeT, 
+                            "repeatT": finalData[j].repeatT, 
+                            "isAgree":finalData[j].daytime,   
+                            "start":finalData[j].start,  
+                            "intervaldaytime":finalData[j].intervaldaytime,  
+                            "SelectedStart":finalData[j].starttime,  
+                            "renderingInfo": finalData[j].renderingInfo
+                            }
+                        sendData[k] = tmp1; 
+                       
+                        //if(j==finalData.length-1){ flag = 1;}
+                        k++;         
+                        flag = 1; //najden e selektiran element vo selektirani koj go ima kako zachuvan tretman so data
+                } // end if               
+            } // for J
+             if(flag == 0){
+                //console.log("VLEGUVAAA **************** dole vo if");
+                    var tmp = {
+                        "name": selektirani.getAt(i), 
+                        "duration": null, 
+                        "createdBy": 0, 
+                        "treatmentItemId": 0, 
+                        "subtreatmentid": 0, 
+                        "created": null, 
+                        "modified": null, 
+                        "modifiedBy": 0, 
+                        "typeT": "", 
+                        "repeatT": "", 
+                        "isAgree": false, 
+                        "Selected":"",   
+                        "SelectedStart":"Today",                    
+                        "renderingInfo": null,
+                        "intervaldaytime":"", 
+                    }
+                    sendData[k] = tmp;
+                    k++;
+                    flag = 0;
+
+            }// end if
+        }// for i
+        k=0; // bitno!
+ 
+        console.log("PRED DA SE PRATI DO SELECT ITEMS: "+patientId); 
+        console.log("PRED DA SE PRATI DO SELECT ITEMS namenovo2.value: "+namenovo2); 
+        sendData[sendData.length] = {"patientId":patientId } 
+        sendData[sendData.length] = {"templateName":templateName } 
+        sendData[sendData.length] = {"SubtreatmentIdOnEDIT":SubtreatmentIdOnEDIT } 
+        
+        //console.log("OVA E PATIENTID: "+Storage.readSync("patientId"));
+        
+        sendData = sendData.filter(function(n){ return n != null }); 
+
+
+        if(selektirani.length != 0)
+        {
+            name1=namenovo1.value;
+            name2=namenovo2.value;
+
+            router.push("SelectItems", { 
+                sendData,
+                namenovo1: name1,
+                fullname2: fullname2.value,
+                fullname1: fullname1.value,
+                name: name.value
+
+             });
+        }
+        else 
+        {
+           //  TUKA TREBA DA PREMINA NA SELECTITEM
+            console.log("NEMOZEEEEEE!!!!!!!!!!!!!!!");
+            myToast.toastIt("Please select a treatment");
+        }
+    }
+
+        function goBack() {
+            router.goBack();
+        }   
+    
+    module.exports = { 
+        goToSelectItems:goToSelectItems, 
+        goBack: goBack,
+        goToSavedTreatments:goToSavedTreatments, 
+        selektirani:selektirani, 
+        AddSelectedItem:AddSelectedItem , 
+        savedTreatments:savedTreatments , 
+        name:name ,
+        allTypes:allTypes,
+        active:active
+    } 
+    
+    
+</JavaScript>
+
+
+
+<!-- **************** Treatment item   **************** -->
+<Rectangle ux:Class="MyItem" Color="primary" CornerRadius="7" Width="65%"  Alignment="Center" Height="60" Margin="  0,10,0,0" HitTestMode="LocalBounds" Clicked="{AddSelectedItem}">  
+    <string ux:Property="Label"/> 
+    <string ux:Property="Value"/> 
+
+    <Selectable Value="{ReadProperty this.Value}"/> 
+   
+    <WhilePressed>
+        <Scale Factor="1.3" Duration="0.2"/> 
+    </WhilePressed>
+    <Text ux:Name="text" Color="White" Font="regular" FontSize="16" Value="{ReadProperty this.Label}" Alignment="Center"/> 
+    <DropShadow/>  
+    <WhileSelected> 
+        <Change this.Color="#0097A7" Duration="0.2"/> 
+    </WhileSelected> 
+    <Tapped>  
+        <ToggleSelection /> 
+    </Tapped> 
+
+</Rectangle>  
+
+<!-- **************** Tabs   **************** -->
+<Rectangle ux:Class="TabName" Color="primary_dark" Width="100%" > 
+    <string ux:Property="Label"/> 
+    <string ux:Property="Value"/> 
+    <Selectable Value="{ReadProperty this.Label}"/>
+    <Text Alignment="CenterLeft"  Font="regular" Color="White" Margin="10,0,0,0" Value="{ReadProperty this.Label}" />
+    
+</Rectangle>
+
+
+<!-- **************** Tabs1   **************** -->
+<Rectangle ux:Class="TabName1" Color="primary_dark" Width="100%" > 
+    <string ux:Property="Label"/>
+    <float4 ux:Property="TextColor"/>
+    <Selectable Value="{ReadProperty this.Label}"/>
+    <DockPanel>
+        <Icon FontSize="24" Color="{ReadProperty this.TextColor}" Dock="Right" Alignment="Center" Margin="0,0,8,0">&#xE873;</Icon>
+        <Text Alignment="CenterRight" Color="{ReadProperty this.TextColor}"  Dock="Right"   Font="regular"  Value="{ReadProperty this.Label}" />
+        <WhilePressed>
+            <Scale Factor="1.1" Duration="0.2"/>
+        </WhilePressed>
+    </DockPanel>
+    
+</Rectangle>
+
+
+    <DockPanel>
+        <Toolbar Color="primary" Title="{name}" HasBackButton="True" router="router"> 
+            <!-- <Rectangle Height="1" Alignment="Bottom">
+                <SolidColor Color="White"/>
+            </Rectangle> -->
+        </Toolbar>
+
+        
+        <Rectangle Alignment="Top" Height="45" Width="100%">
+            <Grid Columns="1*,1*" >
+                <Selection Value="Types"/>
+                <TabName  ></TabName>
+                <Match Value="{active}">
+                    <Case String="true">
+                        <TabName1 TextColor="White" Clicked="{goToSavedTreatments}" Label="LOAD"></TabName1>
+                    </Case>
+                    <Case String="false">
+                        <TabName1  Label="LOAD" TextColor="primary_light" ></TabName1>
+                    </Case>
+                </Match>   
+            </Grid>
+            <DropShadow/> 
+        </Rectangle> 
+        
+
+        <Rectangle Color="background_color">  
+            
+            <FloatingButton Alignment="BottomRight" BtnColor="#FF5722CC" BtnIcon="&#xE409;" Clicked="{goToSelectItems}" BtnTextColor="icons" /> 
+            
+            <ScrollView Margin="0,60,0,0"> 
+                <StackPanel>
+                    <Selection Values="{selektirani}"/> 
+
+                    <Each Items="{allTypes}">
+                        <MyItem Label="{label}" Value="{id}"/> 
+                    </Each>
+
+                <!-- 
+                    <MyItem Label="Blood Pressure Check" Value="2"/> 
+                    <MyItem Label="Pulse Check" Value="3"/> 
+                    <MyItem Label="Pain Level" Value="4"/> 
+                    <MyItem Label="Medicines" Value="5"/> 
+                    <MyItem Label="Send Image" Value="6"/>
+                    <MyItem Label="Comparison With Picture" Value="7"/>  
+                    <MyItem Label="Diet" Value="8"/> 
+                    <MyItem Label="Activity" Value="9"/> 
+                    <MyItem Label="Hygiene" Value="10"/> 
+                    <MyItem Label="Other Instructions" Value="11"/>  
+                -->
+                   
+                </StackPanel>
+            </ScrollView>
+        </Rectangle>
+
+    </DockPanel>
+
+
+</DefaultPage>

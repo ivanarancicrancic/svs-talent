@@ -1,0 +1,18 @@
+<DefaultPage ux:Class="Terms">
+	<Router ux:Dependency="router" />
+	<DockPanel >
+		<Toolbar Color="primary" Title="Terms and conditions" HasBackButton="True" router="router">
+			<DropShadow />
+		</Toolbar>
+
+	
+	<Text TextWrapping="Wrap" Padding="4" Margin="8" TextColor="Gray" FontSize="14" >
+        Thank you for your interest in and use of our products and services, and the content contained therein (the "Services").Curandus ("Curandus", "we", "us", or "our") provides these Services to you ("you" or "your"), subject to the terms contained in this Curandus Services Terms of Use (this "Agreement"). 
+        This Agreement is a binding legal agreement between you and the applicable Curandus Entity depending upon the country of your residence. Please read the terms and conditions of this Agreement carefully before using our Services.   The Services and all data, design, text, images, graphics, including all arrangements thereof, contained therein are proprietary, confidential, and are licensed to you under this Agreement, not sold to you. By accessing or otherwise using any portion of the Services, you agree to be bound by the terms of this Agreement.         If you are not willing to be bound by the terms of this Agreement, you may not access or otherwise use any portion of the Services.
+	</Text>
+
+	</DockPanel>
+
+
+
+</DefaultPage>
