@@ -1,86 +1,59 @@
 <DefaultPage ux:Class="ChatPage">
 	<JavaScript File="ChatPage.js" />
-      <OnBackButton>
-      	<Callback Handler="{goBack}" />
-      </OnBackButton>    	
 	<Router ux:Dependency="router" />
-	<Panel Visibility="{visibility1}">
-		<LoadingPage Value="{load}"/>
-	</Panel>
 	<DockPanel>
-<!-- 		<ToolbarReload Color="primary" Title="{fullname}" HasBackButton="True" router="router">
+		<ToolbarReload Color="primary" Title="{fullname}" HasBackButton="True" router="router">
 			<DropShadow />
-		</ToolbarReload> -->
-	<DockPanel ux:Name="mainDock" Height="56" Padding="0, 0" Color="primary" Dock="Top" >
-		<Panel Dock="Left" Alignment="CenterLeft">
-			<DockPanel Alignment="CenterLeft" >
-					<Rectangle Dock="Left" Width="35" Height="56" Clicked="{goBack}" HitTestMode="LocalBounds">
-						<Icon FontSize="24" Alignment="Center">&#xE5C4;</Icon>
-					</Rectangle>	
-					<Text Dock="Left" Value="{fullname}" Alignment="CenterLeft" Font="medium" FontSize="20" Margin="4,0" TextColor="#fff" Clicked="{makeCall}"/>
-                    <Circle  Height="30" Width="30" Dock="Left" Alignment="Center" Margin="0,0,0,0">
-                        <Stroke Width="2">
-                            <SolidColor Color="#fff" />
-                        </Stroke>
-                        <Icon Alignment="Center" FontSize="20" Color="#fff" Clicked="{makeCall}">&#xE0B0;</Icon>
-                    </Circle>
-			</DockPanel>		
-		</Panel>	
-			<Panel Dock="Right" Alignment="CenterLeft" Clicked="{goToTreatment}" Visibility="{panelVisibility}">
-				<DockPanel Alignment="CenterLeft">
-					<Icon Dock="Right" Alignment="CenterLeft" FontSize="20" Margin="0,0,0,0" Color="White">&#xE3C9;</Icon>
-					<Text Value="Treatment" Dock="Right" Alignment="CenterRight" Font="medium" FontSize="22" Margin="0,0" TextColor="#fff" />
-				</DockPanel>
-			</Panel>									
-	</DockPanel>	
-<!-- 	<OnBackButton Handler="{goBack}" /> -->
+		</ToolbarReload>
+
+	<OnBackButton Handler="{goToMain}" />
 		<Rectangle Color="#EEE" Layer="Background"/>
 		<FloatingButton Alignment="BottomRight" BtnColor="#FF5722" BtnIcon="&#xE627;" Clicked="{getAllMesages}" BtnTextColor="icons" />
 		<Rectangle>           
-		<ScrollView ux:Name="myScrollView" ClipToBounds="true" Margin="0,0,0,10"> 
+		<ScrollView ux:Name="myScrollView" ClipToBounds="true" Margin="0,0,0,10">
 			<Match Value="{visibility}">
-				<Case String="Visible">
-						<StackPanel Alignment="Bottom" Width="100%">
-							<Each Items="{messagesLoading}">
-								<DockPanel Margin="10" Clicked="{goToTreatmentFromChat}">
-									<Text TextColor="#727272" Value="{info}" Alignment="Center" Dock="{dock}" FontSize="12" Opacity=".5" />
-									<Panel Padding="10" Margin="0,0,0,0">			
-										<Match Value="{from}">
-											<Case String="You">
-												<Rectangle Layer="Background" CornerRadius="10" Color="#00BCD4"/>
-												<Text TextColor="White" Value="{text}" TextWrapping="Wrap" Alignment="CenterLeft" />
-											</Case>
-											<Case String="Other">
-												<Rectangle Layer="Background" CornerRadius="10" Color="White" Margin="0,0,60,0"/>
-												<Text TextColor="#212121" Value="{text}" TextWrapping="Wrap" Alignment="CenterLeft" />
-											</Case>
-											<Case String="Curandus">
-												<Rectangle Layer="Background" CornerRadius="10" Color="#018a9b"/>
-												<Text TextColor="White" Value="{text}" TextWrapping="Wrap" Alignment="CenterLeft" />
-											</Case>
-										</Match>
-									</Panel>
-									<AddingAnimation>
-										<Scale Factor="0" Duration=".5" Easing="QuinticIn" />
-									</AddingAnimation>
-								</DockPanel>
-							</Each>
-							<LayoutAnimation>
-								<Move RelativeTo="PositionChange" Y="1" Duration=".5" Easing="QuinticInOut" />
-							</LayoutAnimation>
-						</StackPanel>			    
-					</Case>
-			  <Case String="Collapsed">
-
+			<Case String="Visible">			
+			<StackPanel Alignment="Bottom" Width="100%" >
+				<Each Items="{messagesLoading}">
+					<DockPanel Margin="10" Clicked="{goToTreatmentFromChat}">
+						<Text TextColor="#727272" Value="{info}" Alignment="Center" Dock="{dock}" FontSize="12" Opacity=".5" />
+						<Panel Padding="10" Margin="10,0,10,0">
+							<Match Value="{dock}">
+								<Case String="Right">
+									<Rectangle Layer="Background" CornerRadius="10" Color="#00BCD4"/>
+									<Text TextColor="White" Value="{text}" TextWrapping="Wrap" Alignment="CenterLeft" />
+								</Case>
+								<Case String="Left">
+									<Rectangle Layer="Background" CornerRadius="10" Color="White"/>
+									<Text TextColor="#212121" Value="{text}" TextWrapping="Wrap" Alignment="CenterLeft" />
+								</Case>
+								<Case String="Top">
+									<Rectangle Layer="Background" CornerRadius="10" Color="#018a9b"/>
+									<Text TextColor="White" Value="{text}" TextWrapping="Wrap" Alignment="CenterLeft" />
+								</Case>
+							</Match>
+						</Panel>
+						<AddingAnimation>
+							<Scale Factor="0" Duration=".5" Easing="QuinticIn" />
+						</AddingAnimation>
+					</DockPanel>
+				</Each>
+				<LayoutAnimation>
+					<Move RelativeTo="PositionChange" Y="1" Duration=".5" Easing="QuinticInOut" />
+				</LayoutAnimation>
+			</StackPanel>
+		</Case>
+		 <Case String="Collapsed">
 			<StackPanel Alignment="Bottom" Width="100%" >
 				<Each Items="{messages}">
-					<DockPanel Margin="8" Clicked="{goToTreatmentFromChat}">
+					<DockPanel Margin="10" Clicked="{goToTreatmentFromChat}">
+						<!-- <Text TextColor="#727272" Value="{info}" Alignment="Center" Dock="{dock}" FontSize="12" Opacity=".5" /> -->
 						<Match Value="{from}">
 							<Case String="You">
 								<Text TextColor="#727272" Value="{info}" Alignment="Right" Margin="0,0,0,0" Dock="Top" FontSize="12" Opacity=".5" />
 							</Case>
 							<Case String="Other">
-								<Text TextColor="#727272" Value="{info}" Alignment="Left" Margin="0,0,0,0" Dock="Top" FontSize="12" Opacity=".5" />
+								<Text TextColor="#727272" Value="{info}" Alignment="Left" Margin="0,0,0,0"  Dock="Top" FontSize="12" Opacity=".5" />
 							</Case>		
 							<Case String="Curandus">
 								<Text TextColor="#727272" Value="{info}" Alignment="Center" Margin="0,0,0,0" Dock="Top" FontSize="12" Opacity=".5" />
@@ -88,8 +61,7 @@
 							<Case String="">
 								<Text TextColor="#727272" Value="{info}" Font="BoldFont" Alignment="Center" Margin="0,0,0,-10" Dock="Top" FontSize="16" Opacity=".5" />
 							</Case>								
-						</Match>	
-									
+						</Match>						
 							<Match Value="{from}">
 								<Case String="You">
 									<Panel Padding="10" Margin="0,0,0,0">	
@@ -113,53 +85,47 @@
 									<Panel Padding="0" Margin="0,0,0,0">
 									</Panel>
 								</Case>
-				</Match>
+							</Match>
 						<AddingAnimation>
 							<Scale Factor="0" Duration=".5" Easing="QuinticIn" />
 						</AddingAnimation>
 					</DockPanel>
 				</Each>
-				<!-- <Text TextColor="#727272" Value="{Seen}" Margin="0,0,8,0" FontSize="12" Alignment="BottomRight" /> -->
 				<LayoutAnimation>
 					<Move RelativeTo="PositionChange" Y="1" Duration=".5" Easing="QuinticInOut" />
 				</LayoutAnimation>
-			</StackPanel>
-		</Case>
-	</Match>
-
-
-<!-- 				<Scrolled To="End" Within="200">
-					<Callback Handler="{loadMore1}" />
-				</Scrolled>	 -->
+			</StackPanel>		 	
+		 </Case>
+		</Match>
 				<Scrolled  To="Start">
-					<!-- <ScrollTo Target="myScrollView" RelativePosition="1,0" /> -->
-					<!-- <ScrollTo Target="myScrollView" Position="100, 100" /> -->
-					<!-- <Callback Handler="{loadMore}" /> -->
 					<Callback Handler="{loadMore}" />
-				</Scrolled>								
+				</Scrolled>									
 		</ScrollView>
-		<Text TextColor="#727272" Value="{Seen}" Margin="0,10,8,0" FontSize="14" Alignment="BottomRight" />
+		<Text TextColor="#727272" Value="{Seen}" Margin="0,10,8,0" FontSize="14" Alignment="BottomRight" />		
 	</Rectangle>
 <!-- 		<StackPanel Orientation="Horizontal" Dock="Bottom" MinHeight="60" Color="primary">
 			<RaisedButton BtnText="SignIn" BtnTextColor="White" Clicked="{signIn}" />
 			<RaisedButton BtnText="getAllMesages" BtnTextColor="White" Clicked="{getAllMesages}" />
 		</StackPanel> -->
-		
-		<DockPanel Dock="Bottom" MinHeight="45" MaxHeight="70" >
+		<DockPanel Dock="Bottom" MinHeight="45" MaxHeight="70">
 			<Rectangle Layer="Background" Height="1" Alignment="Top" Color="primary_dark" Opacity=".1" />
 			<Rectangle Layer="Background" Height="1" Alignment="Bottom" Color="primary_dark" Opacity=".1" />
 			<Button  Dock="Right" Width="90" Height="60" Margin="0,0,0,0" Clicked="{addMesageToChat}" IsEnabled="{canSendMessage}">
+				 <Clicked>
+
+            <ScrollTo Target="myScrollView" RelativePosition="1, 1" />
+        </Clicked>
 				<Icon FontSize="24" Color="primary" Alignment="Center">&#xE163;</Icon>
-			</Button>
+			</Button>		
 <!-- 			<Button Dock="Left" Margin="0,0,10,0" Clicked="{attach}" IsEnabled="{canSendMessage}">
 				<Icon FontSize="24" Color="primary" Alignment="Center">&#xE145;</Icon>
 			</Button> -->
+<!-- 			<TextInput Value="{message}" PlaceholderText="Send a message!" PlaceholderColor="secondary_text" CaretColor="primary" TextColor="primary_text" ActionStyle="Send" ActionTriggered="{addMesageToChat}" /> -->
 			<TextView  Height="50" MaxHeight="60" Margin="20,25,0,0" Value="{message}" TextWrapping="Wrap" Alignment="VerticalCenter" CaretColor="primary" TextColor="primary_text">
 			 	<WhileString Test="IsEmpty">
            			 <Text TextWrapping="Wrap">Send a message!</Text>
        		    </WhileString>
-       		</TextView>    
-
+       		</TextView>      
 
 
 		</DockPanel>

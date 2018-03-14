@@ -1,764 +1,955 @@
 var Observable = require("FuseJS/Observable");
+var Modal = require('Modal');
+var myToast = require("myToast");
+
 var activeUrl = require("Constants/SERVICE_URL.js");
 var Storage = require("FuseJS/Storage");
-var Device = require('Device');
-var securityToken = Storage.readSync("securityToken");
-console.log("SecurityTokeeen: " + securityToken);
-
-
+var securityToken2 = Storage.readSync("securityToken2");
 var errorMessage = Observable();
+var providername = Observable("your doctor ");
 var isLoading = Observable(false);
-var activePage = Observable();
-var activeTab = Observable();
-var backing = Observable("1");
-//activeTab.value = "page2";
-//activePage.value = "page2Tab";
+var templejt = Observable();
+var sesija = Observable();
+//var patientId = Observable();
+var firstID = 0;
+var lastID = 0;
+var load = Observable("Loading treatments...");
+var patientid = ""; //JSON.parse(Storage.readSync("patientInfo")); //'239'; 
+var User = "";
+var responseInfo1 = Observable();
+var SendMessage = require('Scripts/SendMessage.js');
+var RoomId = Observable();
+var response1 = Observable();
+var treatmentitemlistId = Observable();
+var stateApp = Observable("active");
+var Panel1Visibility = Observable("Collapsed");
+//var push = require("FuseJS/Push");
+var registration_id = Observable();
+var vibration = require('FuseJS/Vibration');
+var hasNotification = Observable("false");
 var push = require("FuseJS/Push");
-var finalname = Observable();
-var dSelected = Observable();
-var userfullname = Observable();
-push.on("registrationSucceeded", function(regID) {
-    console.log("Reg Succeeded: " + regID);
-});
-var ComesFromDoctorChat = Observable(false);
+var providerChatId = Observable();
 
-// var itemsTwo = Observable({
-//     name: "today"
-// }, {
-//     name: "1 day from now"
-// }, {
-//     name: "2 days from now"
-// }, {
-//     name: "3 days from now"
-// }, {
-//     name: "4 days from now"
-// }, {
-//     name: "5 days from now"
-// }, {
-//     name: "6 days from now"
-// }, {
-//     name: "7 days from now"
-// }, {
-//     name: "8 days from now"
-// }, {
-//     name: "9 days from now"
-// }, {
-//     name: "10 days from now"
-// });
-var itemsTwo = Observable({
-    name: "Interval"
-}, {
-    name: "B.I.D."
-}, {
-    name: "T.I.D."
-}, {
-    name: "Q.I.D."
-}, {
-    name: "Once a day"
-}, {
-    name: "Every 2 days"
-}, {
-    name: "Every 3 days"
-}, {
-    name: "Every 4 days"
-}, {
-    name: "Every 5 days"
-}, {
-    name: "Every 6 days"
-}, {
-    name: "Every 7 days"
-}, {
-    name: "Every 14 days"
-}, {
-    name: "Every 30 days"
-});
-////////////// dodadeni promenlivi od ContactsView.js
-var Modal = require("Modal");
-var myToast = require("myToast");
-var imagePath = Observable();
-var visibility = Observable("Collapsed");
-var phone = require("FuseJS/Phone");
-var load = Observable("Loading...");
-var UserInfo = JSON.parse(Storage.readSync("userInfo"));
-var isDoctors = Observable(false);
-var data = Observable();
-var dataDoctors = Observable();
-var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-var fullName = "";
-var final = [];
-var finalDoctors = [];
-var userfullname = Observable();
-var DoctorsTabColor = Observable("#727272");
-var PatientsTabColor = Observable("#0097A7");
-var isLoadingContacts = Observable(false);
-var isLoadingDoctors = Observable(false);
+var currentPage = Observable("page1");
+var hasChange = Observable(0);
 
-searchString = Observable("");
-searchString1 = Observable("");
-
-/////////////// do tuka
-
-
-this.onParameterChanged(function(param) {
-    backing.value = "1";
-    Storage.write("patientchatidpom", "patientchatidpom konecno");
-    //setTimeout(function() {
-    //console.log("vleze vo onParameterChanged ");
-    //activeTab.value = "page2";
-    //activePage.value = "page2Tab";
-    console.log("PARAMETAR OD CHAT!!!!" + JSON.stringify(param));
-
-    if (param.odwelcome) {
-        reloadHandler();
-        reloadHandlerDoctors();
-        setPatients();
-    }
-    if (param.newContact) {
-        console.log("param.newContact " + JSON.stringify(param.newContact));
-        reloadHandler();
-    } else if (param.newDoctor) {
-        console.log("param.newDoctor " + JSON.stringify(param.newDoctor));
-        reloadHandlerDoctors();
-    }
-
-    if (param.user) {
-        // console.log("main " + param.user);
-        var obj = {
-            "num": Math.random()
-
-        }
-
-        router.push("alert", {
-            user: param.user,
-            obj: JSON.stringify(obj),
-            finalname: finalname.value
-                //userfullname: e.data.fullName 
-        });
-        // console.log("posle push " + param.user);
-    }
-    if (param.OdListaChat) {
-        //setPatients();
-        //console.log("main " + param.user);
-        var obj = {
-            "num": Math.random()
-        }
-        router.push("chat", {
-            OdListaChat: param.OdListaChat
-        });
-    }
-
-    // ako doagja od ChatDoktori...bitno za selekcija na tab doktori
-    if (param.comesFromContactsDoctors) {
-        activeTab.value = "page1";
-        activePage.value = "page1Tab";
-        setDoctors();
-        reloadHandlerDoctors();
-        isDoctors.value = true;
-    }
-
-    if (param.OdListaChatLista) {
-        activeTab.value = "page2";
-        activePage.value = "page2Tab";
-        // setDoctors();
-        reloadHandlerDoctors();
-        // isDoctors.value = false;
-    }
-    // ako doagja od ChatDoktori...bitno za selekcija na tab doktori
-    if (param.comesFromContactsPatients) {
-        activeTab.value = "page1";
-        activePage.value = "page1Tab";
-        setPatients();
-        //reloadHandler();
-        reloadHandlerDoctors();
-        isDoctors.value = false;
-    }
-
-    if (param.comesFromAlertPage) {
-        activeTab.value = "page1";
-        activePage.value = "page1Tab";
-        setPatients();
-        reloadHandlerDoctors();
-        isDoctors.value = false;
-    }
-
-    if (param.comesFromChatPage) {
-
-        setPatients();
-        reloadHandlerDoctors();
-        isDoctors.value = false;
-    }
-
-    if (param.comesFromEditPatient) {
-        setPatients();
-        reloadHandler();
-        reloadHandlerDoctors();
-        isDoctors.value = false;
-    }
-    //}, 500);
+var SendNotification = require('Scripts/SendNotification.js');
+var RegId = Observable();
+var User = {};
+var scrollPos = Observable([0, 80]);
+Storage.read("sesijaQuickblox").then(function(content) {
+    console.log("content " + content);
+    sesija.value = content;
+}, function(error) {
+    console.log("eror vo storage " + error.message);
 });
 
-
-/////////////////////////////////////////////////// kod od ContactsView.js prenesen tuka
-function reloadHandler() {
-    isLoadingContacts.value = true;
-    fetchData();
-}
-
-function reloadHandlerDoctors() {
-    isLoadingDoctors.value = true;
-    fetchDataDoctors();
-    //setDoctors();
-}
-
-
-
-function editContact(e) {
-    router.push("EditContact", {
-        user: e.data,
-        comesfrom: "patient"
-    });
-}
-
-function editContactDoctor(e) {
-    router.push("EditContact", {
-        user: e.data,
-        comesfrom: "provider"
-    });
-}
-
-function stringContainsString(main, filter) {
-    return main.toLowerCase().indexOf(filter.toLowerCase()) != -1;
-}
-
-function endLoadingContacts() {
-    isLoadingContacts.value = false;
-}
-
-function endLoadingDoctors() {
-    isLoadingDoctors.value = false;
-    // setDoctors();
-    //isDoctors.value=true;
-}
-
-function setDoctors() {
-    isDoctors.value = true;
-    DoctorsTabColor.value = "#0097A7";
-    PatientsTabColor.value = "#727272"
-        //var PatientsTabColor = Observable("#727272");
-        //fetchDataDoctors();
-        //  console.log("povikana funkcijaaaaaa set doctors");
-
-    //console.log(imagePath.value);
-}
-
-function setPatients() {
-    //console.log("POVIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIK");
-    isDoctors.value = false;
-    DoctorsTabColor.value = "#727272";
-    PatientsTabColor.value = "#0097A7"
-}
-
-function fetchDataDoctors() {
-    finalDoctors = [];
-    dataDoctors.replaceAll([]);
-
-    //finalDoctors.replaceAll([]);
-    // ТРЕБА ДА СЕ СМЕНИ
-    visibility.value = "Visible"; //OVDE VISIBILITY E COLLAPSED
-
-    var urlProvider = activeUrl.URL + "/curandusproject/webapi/api/getprovidersdatabyprovider/ProviderProviderId=" + UserInfo.providerId + "&&securityToken=" + securityToken;
-    //console.log(urlProvider);
-    fetch(urlProvider, {
-        method: 'GET',
-        headers: {
-            "Content-type": "application/json"
-        },
-        dataType: 'json'
-    }).then(function(response) {
-        return response.json(); // This returns a promise
-    }).then(function(contacts) {
-
-        // LOADING E VISIBBLE
-        var flag = false;
-
-        for (var i = contacts.length - 1; i >= 0; i--) {
-            //console.log("dsadasdasda", contacts[i].FirstName);
-            if (contacts[i].FirstName != null && contacts[i].FirstName != "undefined") {
-                contacts[i].firstLetter = contacts[i].FirstName.charAt(0).toUpperCase();
-                contacts[i].fullName = SubstringName(contacts[i].FirstName + " " + contacts[i].LastName);
-                //// dodadeno od moki go zemam full name za da go prikazham vo selekttype koga se odi kon selekttype od contacts
-                fullName = contacts[i].fullName;
-                contacts[i].isLetter = 0;
-                contacts[i].typerow = 0;
-                contacts[i].flag = 0;
-                // console.log("pred uslovi kontakti "+JSON.stringify(contacts[i].ProfileUrl));
-                if ('ProfileUrl' in contacts[i]) {
-                    var image_num = contacts[i].ProfileUrl;
-                    contacts[i].ProfileUrl = activeUrl.URL + "\/curandusImages" + "\/" + image_num + ".jpg";
-                    console.log("imaa profile url: " + JSON.stringify(contacts[i].ProfileUrl));
-                } else if (contacts[i].ProfileUrl == undefined) {
-                    contacts[i].ProfileUrl = activeUrl.URL + "\/curandusImages\/Assets\/placeholder.jpg";
-                    console.log("kontaktot nema profile url" + JSON.stringify(contacts[i]));
-                }
-            }
-        }
-        console.log("finalDoctors pred for" + JSON.stringify(finalDoctors));
-        finalDoctors = [];
-        dataDoctors.replaceAll([]);
-        for (var i = 0; i < letters.length; i++) {
-            flag = false;
-            var tmp = {
-                "FirstName": letters[i],
-                "isLetter": 1
-            }
-            finalDoctors.push(tmp);
-            for (var j = 0; j < contacts.length; j++) {
-                if (letters[i] == contacts[j].firstLetter) {
-                    finalDoctors.push(contacts[j]);
-                    flag = true;
-                } else {
-                    continue;
-                }
-            }
-            if (flag == false) {
-                finalDoctors.pop();
-            }
-        }
-
-        for (var j = 0; j < finalDoctors.length; j++) {
-            finalDoctors[j].index = j;
-            finalDoctors[j].flag = 0;
-        }
-        //console.log("finalDoctors posle for" + JSON.stringify(finalDoctors));
-        dataDoctors.replaceAll(finalDoctors);
-        //console.log("This isiiiiiii**********finalDoctors*************"+JSON.stringify(finalDoctors));
-        //console.log("This isiiiiiii***************dataDoctors ********"+JSON.stringify(dataDoctors));
-        endLoadingDoctors();
-        visibility.value = "Collapsed";
-        // isDoctors.value = false;
-        console.log("dataDoctors ****************: " + JSON.stringify(dataDoctors));
-    }).catch(function(err) {
-        dataDoctors.replaceAll([]);
-        visibility.value = "Collapsed";
-        console.log("Fetch data error");
-        console.log(err.message);
-        // isDoctors.value = true;
-        //visibility.value = "Visible"; //LOADING E VISIBLE AKO IMA GRESHKA
-    });
-}
-
-function AddNewItemDoctor(sender) {
-    // console.log("vleze vo addnewitem ");
-    // console.log("vleze vo addnewitem " + data.length);
-    if (dataDoctors.getAt(sender.data.index).flag == 0) {
-        dataDoctors.getAt(sender.data.index).flag = 1;
-        var row = sender.data;
-        row.typerow = 1;
-        dataDoctors.insertAt(sender.data.index + 1, (row));
-        for (var i = 0; i < dataDoctors.length; i++) {
-            dataDoctors.getAt(i).index = i;
-        }
-    } else {
-        console.log("vleze vo minim");
-        dataDoctors.removeAt(sender.data.index);
-        for (var i = 0; i < dataDoctors.length; i++) {
-            dataDoctors.getAt(i).index = i;
-        }
-        dataDoctors.getAt(sender.data.index).flag = 0;
-    }
-    console.log("data " + data.length);
-}
-
-function AddNewItem(sender) {
-    console.log("vleze vo addnewitem patient ");
-    //console.log("vleze vo addnewitem " + data.length);
-    if (data.getAt(sender.data.index).flag == 0) {
-        data.getAt(sender.data.index).flag = 1;
-        var row = sender.data;
-        row.typerow = 1;
-        data.insertAt(sender.data.index + 1, (row));
-        for (var i = 0; i < data.length; i++) {
-            data.getAt(i).index = i;
-        }
-    } else {
-        console.log("vleze vo minim");
-        data.removeAt(sender.data.index);
-        for (var i = 0; i < data.length; i++) {
-            data.getAt(i).index = i;
-        }
-        data.getAt(sender.data.index).flag = 0;
-    }
-
-    console.log("data " + data.length);
-}
-
-// kod kontakti
-function fetchData() {
-    final = [];
-    // ТРЕБА ДА СЕ СМЕНИ
-    visibility.value = "Visible";
-
-    console.log("pred api");
-    console.log("Security token sent to this site: " + securityToken);
-    var urlPatient = activeUrl.URL + "/curandusproject/webapi/api/patients/providerId=" + UserInfo.providerId + "&securityToken=" + securityToken;
-    console.log(urlPatient);
-    fetch(urlPatient, {
-        method: 'GET',
-        headers: {
-            "Content-type": "application/json"
-        },
-        dataType: 'json'
-    }).then(function(response) {
-
-        return response.json(); // This returns a promise
-    }).then(function(contacts) {
-
-        var flag = false;
-
-        for (var i = contacts.length - 1; i >= 0; i--) {
-            contacts[i].firstLetter = contacts[i].firstName.charAt(0).toUpperCase();
-            contacts[i].fullName = SubstringName(contacts[i].firstName + " " + contacts[i].lastName);
-            contacts[i].isLetter = 0;
-            contacts[i].typerow = 0;
-            contacts[i].flag = 0;
-        }
-        // contacts[1].typerow = 1;
-        final = [];
-        //data = [];
-
-        for (var i = 0; i < letters.length; i++) {
-            flag = false;
-            var tmp = {
-                "firstName": letters[i],
-                "isLetter": 1
-            }
-            final.push(tmp);
-            for (var j = 0; j < contacts.length; j++) {
-                if (letters[i] == contacts[j].firstLetter) {
-                    final.push(contacts[j]);
-                    flag = true;
-                } else {
-                    continue;
-                }
-            }
-            if (flag == false) {
-                final.pop();
-            }
-        }
-        for (var j = 0; j < final.length; j++) {
-            final[j].index = j;
-            final[j].flag = 0;
-        }
-
-        data.replaceAll(final);
-        endLoadingContacts();
-        console.log("Success VO DATA!!!!!!!!!");
-        visibility.value = "Collapsed";
-
-    }).catch(function(err) {
-        data.replaceAll([]);
-        visibility.value = "Collapsed";
-        console.log("Fetch data error");
-        console.log(err.message);
-
-        //visibility.value = "Visible";
-
-    });
-} // end function checkData
-
-fetchData();
-//fetchDataDoctors();
-
-function goToSelectType(e) {
-    backing.value = "0";
-    if (e.data.activetreatmenId == 0) {
-        e.data.num = Math.random();
-        Storage.write("nameLastname", JSON.stringify(fullName));
-        //console.log("od tuka se prakja kon SelectType" + JSON.stringify(e.data));
-
-        router.push("SelectType", {
-            user: e.data
-        });
-    } else {
-        goToTreatment(e);
-    }
-}
-
-function deleteContact(e) {
-    var patientId = e.data.patientId;
-    if (e.data.activetreatmenId != 0) {
-        myToast.toastIt("You cannot delete this contact because it has active treatment!");
-    } else {
-        // console.log(JSON.stringify(e.data.patientId));
-        Modal.showModal(
-            "Delete Contact",
-            "Are you sure you want to delete " + e.data.fullName + "?", ["Yes", "No"],
-            function(s) {
-                if (s == "Yes") {
-                    fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderPatient/" + UserInfo.providerId + "&&" + patientId + "&&securityToken=" + securityToken, {
-                        method: 'GET',
-                        headers: {
-                            "Content-type": "application/json"
-                        }
-                    }).then(function(response) {
-                        return response.json(); // This returns a promise
-                    }).then(function(responseObject) {
-                        console.log("Success Delete Contact");
-                        reloadHandler();
-                    }).catch(function(err) {
-                        console.log("Error", err.message);
-                    });
-                }
-            });
-    }
-
-}
-
-function deleteDoctor(e) {
-    var providerContactId = e.data.ProviderDetail2l;
-    Modal.showModal(
-        "Delete Contact",
-        "Are you sure you want to delete " + e.data.fullName + "?", ["Yes", "No"],
-        function(s) {
-            if (s == "Yes") {
-                console.log("SECURITY TOKEN: " + securityToken);
-                fetch(activeUrl.URL + "/curandusproject/webapi/api/deleteProviderProvider/" + UserInfo.providerId + "&&" + providerContactId + "&&securityToken=" +
-                    securityToken, {
-                        method: 'GET',
-                        headers: {
-                            "Content-type": "application/json"
-                        }
-                    }).then(function(response) {
-                    return response.json(); // This returns a promise
-                }).then(function(responseObject) {
-                    console.log("Success Delete Contact");
-                    reloadHandlerDoctors();
-                }).catch(function(err) {
-                    console.log("Error", err.message);
-                });
-            }
-        });
-}
-
-function goToTreatment(e) {
-    backing.value = "0";
-    var obj = {
-        "num": Math.random(),
-    }
-    console.log("PARAMETAR!!!!!!!!1" + JSON.stringify(data));
-    router.push("alert", {
-        user: e.data,
-        objjj: JSON.stringify(obj),
-        userfullname: e.data.fullName,
-        comesfrom: "main"
-    });
-}
-
-function goToAddContact() {
-    // console.log("vleze vo addnewitem " + dSelected.value);
-    backing.value = "0";
-    router.push("addContact", {});
-}
-
-function goToAddDoctors() {
-    backing.value = "0";
-    router.push("addDoctor", {});
-}
-
-function goToChat(e) {
-    backing.value = "0";
-    router.push("chat", {
-        user: e.data,
-
-    });
-}
-
-function makeCall(e) {
-    //console.log("backing " + backing.value);
-
-    //console.log("makeCall");
-
-    phone.call("+1" + e.data.phone);
-}
-
-function makeCallDoctor(e) {
-    var dphone = e.data.ModifiedBy;
-    while (dphone.length != 10) {
-        dphone = "0" + dphone;
-    }
-    phone.call("+1" + dphone);
-
-}
-
-
-function goToDoctorChatDoctor(e) {
-    backing.value = "0";
-    router.goto("chat", {
-        doctorChatRoomId: e.data,
-        comesFromContactsDoctors: true,
-        tmp: Math.random()
-
-    });
-
-    console.log(JSON.stringify(e));
-}
-
-function goToDoctorChatPatient(e) {
-    backing.value = "0";
-    router.push("chat", {
-        doctorChatRoomId: e.data,
-        comesFromContactsPatient: true,
-        tmp: Math.random()
-
-    });
-
-    console.log(JSON.stringify(e));
-}
-
-var filteredItems = searchString.flatMap(function(searchValue) {
-    return data.where(function(item) {
-        return stringContainsString(item.firstName, searchValue);
-    });
-});
-
-
-
-var filteredItems1 = searchString1.flatMap(function(searchValue) {
-    return dataDoctors.where(function(item) {
-        return stringContainsString(item.FirstName, searchValue);
-    });
-});
-
-function SubstringName(str) {
-    var ret;
-    if (str.length > 20) {
-        ret = str.substring(1, 17) + "...";
-    } else {
-        ret = str;
-    }
-    return ret;
-}
-
-/////////////////////////////////////////////////////////////////// do tuka kod od ContactsView.js
-
-//activeTab.value = "page2";
-//activePage.value = "page2Tab";0097A7
-// var push = require("FuseJS/Push");
 
 // push.on("registrationSucceeded", function(regID) {
-//     var push_token = {
-//                     "environment": "development",
-//                     "client_identification_sequence": regID
-//                     };
-
-//     var device = {
-//                     "platform":"android",
-//                     "udid":Device.UUID
-//                     };
-
-//     console.log("Reg Succeeded: " + regID);
-
-
+//     console.log("regID " + regID);
 // });
 
-// push.on("registrationSucceeded", function(regID) {
-//     console.log("Reg Succeeded: " + regID);
-// });
 // push.on("error", function(reason) {
 //     console.log("Reg Failed: " + reason);
 // });
-// push.on("receivedMessage", function(payload) {
-//     console.log("Recieved Push Notification: " + payload);
+
+
+push.on("receivedMessage", function(payload, fromNotificationBar) {
+    console.log(" payloaddddddddddddd wo main page " + payload);
+    if (fromNotificationBar == false) {
+        Storage.read("patientInfo").then(function(content) {
+            User = JSON.parse(content);
+        }, function(error) {});
+
+        if (User.notificationEnabled == 1 || User.NotificationEnabled == 1) {
+            Storage.read("notification").then(function(content) {
+                console.log("kade da prakja notification: " + content);
+                if (content == "main") {
+                    console.log("primanje notifikacija vo timeline");
+                    console.log("currentPage.value " + currentPage.value);
+                    console.log(" json poraka " + JSON.parse(JSON.parse((JSON.parse(payload)).notification).alert).row);
+                    var push_from = JSON.parse((JSON.parse(payload)).notification).alert.from;
+                    if (currentPage.value == "page1") { // || (currentPage.value == "page2")) {
+                        if (push_from == "Curandus") {
+                            initload();
+                        }
+                        myToast.toastIt(JSON.parse((JSON.parse(payload)).notification).alert.title + ":  " + (JSON.parse(payload)).message);
+                        vibration.vibrate(0.8);
+                        console.log("Recieved Push NotificaNotificationtion vo main page: " + payload);
+                    } else if (currentPage.value == "page2") {
+                        myToast.toastIt(JSON.parse((JSON.parse(payload)).notification).alert.title + ":  " + (JSON.parse(payload)).message);
+                        hasChange.value = 1;
+                    }
+                }
+            }, function(error) {
+                console.log("error vo citanje od storage");
+            });
+        }
+    }
+});
+
+//var LocalNotify = require("FuseJS/LocalNotifications");
+
+// LocalNotify.on("receivedMessage", function(payload) {
+//     console.log("Received Local Notification: " + payload);
+//     LocalNotify.clearAllNotifications();
+
+//     //LocalNotify.now("Boom!", "Just like that", "payload", true);
 // });
+
+function sendNow() {
+    console.log("sendNow 4 sendNow 4 sendNow 4");
+    Storage.write("notification", "main");
+    //LocalNotify.later(2, "Finally!", "Push notififikacija!!!!", "hmm?", true);
+}
+
+function sendLater() {
+    console.log("sendNow sendNow sendNow");
+    //LocalNotify.now("Boom!" + Math.random(), "Just like that" + Math.random(), "payload" + Math.random(), true);
+}
+
+
+// toolbar function
+function goBack() {
+    router.goBack();
+};
+
+
+
+// toolbar function
+function sendRequestForCall() {
+    //console.log("This is the room id:"+RoomId.value);
+    //console.log( "Request for call from patient: "+User.firstName+" "+User.lastName);
+    if (providername.value == "your doctor ") {
+        console.log("You dont have active treatment. " +
+            "In case of emergency, call 911. If it is not emergency, call " + providername.value + "'s office");
+        myToast.toastIt(" You dont have active treatment. " +
+            "In case of emergency, call 911. If it is not emergency, call " + providername.value + "'s office");
+    } else {
+        Storage.read("sesijaQuickblox").then(function(content) {
+            console.log("content " + content);
+            sesija.value = content;
+            var urlPatient =
+                "https://api.quickblox.com/chat/Message.json?chat_dialog_id=" + RoomId.value + "&sender_id=28505875&message[ctn]=Request&read_ids[nin]=" + providerChatId.value;
+            console.log("urlPatient " + urlPatient);
+            fetch(urlPatient, {
+                method: 'GET',
+                headers: {
+                    'QB-Token': content
+                }
+            }).then(function(response) {
+                return response.json(); // This returns a promise
+            }).then(function(contacts) {
+                console.log(" Neprocitani " + (JSON.parse(JSON.stringify(contacts.items))).length);
+                if ((JSON.parse(JSON.stringify(contacts.items))).length > 4) {
+                    console.log(providername.value + " may not be able to answer your call. " +
+                        "In case of emergency, call 911. If it is not emergency, call " + providername.value + "'s office");
+                    myToast.toastIt(providername.value + " may not be able to answer your call. " +
+                        "In case of emergency, call 911. If it is not emergency, call " + providername.value + "'s office");
+                } else {
+                    if (RoomId.value != null) {
+                        SendMessage.createSession(RoomId.value, "Request for call");
+
+                        setTimeout(function() {
+                            console.log("time out");
+                            SendNotification.sendPushNotification(
+                                User.FirstName + " " + User.LastName,
+                                "Request for call",
+                                "Request for call",
+                                "Curandus",
+                                RegId.value,
+                                RoomId.value,
+                                User.FirstName + " " + User.LastName,
+                                User.ChatId);
+                        }, 1000);
+                        console.log("Request for call was sent.");
+                        myToast.toastIt("Request for call was sent.");
+                    }
+                }
+            }).catch(function(err) {
+                console.log(" error vo neprocitani poraki");
+                console.log(err.message);
+            });
+        }, function(error) {
+            console.log("eror vo storage " + error.message);
+        });
+    }
+}
+
+
+this.onParameterChanged(function(param) {
+
+    // var Lifecycle = require('FuseJS/Lifecycle');
+    // Lifecycle.on("enteringForeground", function() {
+    //     console.log("on enteringForeground");
+    // });
+    // Lifecycle.on("enteringInteractive", function() {
+    //     console.log("on enteringInteractive");
+    // });
+    // Lifecycle.on("exitedInteractive", function() {
+    //     console.log("on exitedInteractive");
+    // });
+    // Lifecycle.on("enteringBackground", function() {
+    //     console.log("on enteringBackground");
+    // });
+    // Lifecycle.on("stateChanged", function(newState) {
+    //     console.log("on stateChanged " + newState);
+    // });
+
+
+    // push.on("registrationSucceeded", function(regID) {
+    //     console.log("Reg Succeeded: " + regID);
+    //     //registration_id.value = regID;
+    // });
+
+    // push.on("registrationSucceeded", function(regID) {
+    //     console.log("Reg Succeeded: " + regID);
+    //     registration_id.value = regID;
+    // });
+
+    // push.on("error", function(reason) {
+    //     console.log("Reg Failed: " + reason);
+    // });
+    // push.on("receivedMessage", function(payload) {
+    //     console.log("Recieved Push Notification: " + payload);
+    //     vibration.vibrate(0.8);
+    //     hasNotification.value = "true";
+    //     //timeoet
+    //     hasNotification.value = "false";
+    // });
+    Panel1Visibility.value = "Visible";
+    if (param.comesfromchat) {
+        initload();
+
+        currentPage.value = "page2";
+        NavigateBarChat();
+
+    } else {
+        initload();
+    }
+    Storage.write("notification", "main");
+    console.log("onParameterChanged vo  MAIN PAGE: " + JSON.stringify(param));
+    // if (currentPage.value == "page1") {
+    //     initload();
+    // }
+    Storage.read("patientInfo").then(function(content) {
+        User = JSON.parse(content);
+        name.value = User.firstName;
+        surname.value = User.lastName;
+        chronicDiseases.value = User.ChronicDiseases;
+        allergies.value = User.Allergies;
+        medicationsThatRecieves.value = User.MedicationsThatRecieves;
+        additionalInnfo.value = User.AdditionalInnfo;
+    }, function(error) {
+
+    });
+    Panel1Visibility.value = "Collapsed";
+
+
+}); // end on param change
 
 
 function endLoading() {
     isLoading.value = false;
 }
 
-function myTimeOutSetTab() {
-    setTimeout(function() {
-        console.log("time out");
-        activeTab.value = "page2";
-        activePage.value = "page2Tab";
-    }, 500);
-}
-
-function NavigateBar() {
-    activeTab.value = "page2";
-    activePage.value = "page2Tab";
-}
-
-function NavigateBarContacts() {
-    activeTab.value = "page1";
-    activePage.value = "page1Tab";
-    setPatients();
-}
-
 function toolbarSearch() {
     console.log('da');
 }
 
-// FOR TESTING ONLY
-function deleteStorage() {
-    var success = Storage.deleteSync("userInfo");
-    if (success) {
-        console.log("Deleted file");
-    } else {
-        console.log("An error occured!");
-    }
+function initload() {
+    Storage.read("patientInfo").then(function(content) {
+        // console.log("povik**************88");
+        User = JSON.parse(content);
+        console.log("User " + JSON.stringify(User));
+        //console.log("content vo main page " + content);
+        // p_patientID = Storage.readSync("patientInfo");
+        patientid = User.PatientId;
+
+        Panel1Visibility.value = "Collapsed";
+
+        fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlist/patientid=" + patientid, {
+            method: 'GET',
+            headers: {
+                "Content-type": "application/json",
+                'securityToken2': securityToken2
+            },
+            dataType: 'json'
+        }).then(function(response) {
+            response_ok = response.ok; // Is response.status in the 200-range?
+            return response.json(); // This returns a promise
+            Panel1Visibility.value = "Visible";
+        }).then(function(responseObject) {
+                Panel1Visibility.value = "Visible";
+                // Panel1Visibility.value = "Visible";
+                console.log("Success");
+                //console.log(JSON.stringify(responseObject));
+
+                firstID = responseObject[0].treatmentItemListId;
+                treatmentitemlistId.value = responseObject[0].treatmentItemListId;
+                lastID = responseObject[responseObject.length - 1].treatmentItemListId;
+                providerChatId.value = responseObject[0].providerChatId;
+                providername.value = "DR. " + responseObject[0].providername;
+                //   console.log(firstID, lastID);
+                for (var i = 0; i < responseObject.length; i++) {
+
+                    if (responseObject[i].responseInfo != null) {
+                        var label = responseObject[i].label;
+                        if (label == "Comparison With Picture" || label == "X Percription" || label == "Diet" || label == "Activity" || label == "Hygiene" || label == "Other Instructions") {
+
+                            if (responseObject[i].responseInfo != null) {
+
+                                responseObject[i].response1 = JSON.parse(responseObject[i].responseInfo).response;
+                                //  response1.value = JSON.parse(responseObject[i].responseInfo).response;
+                                // response1.value = JSON.parse(responseObject[i].responseInfo).response;
+
+
+                            } else {
+                                responseObject[i].response1 = null;
+                                // responseObject[i].responseInfo = null;
+                            }
+
+                            responseObject[i].response1 = JSON.parse(responseObject[i].responseInfo).response;
+                        } else if (label == "Send Image") {
+                            //**** if response info containt image sent
+                            if (responseObject[i].responseInfo != null) {
+                                responseObject[i].responseInfoSendImage = "Image sent";
+                            } else {
+                                responseObject[i].responseInfoSendImage = null;
+                            }
+                        } else if (label == "Blood Pressure") {
+
+                            if (responseObject[i].responseInfo != null) {
+
+                                responseObject[i].responseBloodPressure = JSON.stringify(responseObject[i].responseInfo);
+                                var systolic = JSON.parse(JSON.parse(responseObject[i].responseBloodPressure)).systolicNumber;
+                                var diastolic = JSON.parse(JSON.parse(responseObject[i].responseBloodPressure)).diastolicNumber;
+                                var response2 = systolic + "/" + diastolic;
+                                responseObject[i].response2 = systolic + "/" + diastolic;
+
+                            } else {
+                                responseObject[i].response2 = null;
+                                // responseObject[i].responseInfo = null;
+                            }
+                        }
+                    }
+
+
+                    var tmpDate = new Date(responseObject[i].timeScheduled);
+
+                    var days = tmpDate.getDate();
+                    var months = tmpDate.getMonth() + 1;
+                    var year = tmpDate.getFullYear();
+                    var hours = tmpDate.getHours();
+                    if (hours == "00") {
+                        hours = "23";
+                    } else {
+                        hours = hours - 1;
+                    }
+                    var min = tmpDate.getMinutes();
+
+                    ////////////////////////////////////////////////////////////////////
+                    var converted_hours = tmpDate.getHours();
+                    var converted_minutes = tmpDate.getMinutes();
+                    var ampm = converted_hours >= 12 ? 'PM' : 'AM';
+                    converted_hours = converted_hours % 12;
+                    converted_hours = converted_hours ? converted_hours : 12; // the hour '0' should be '12'
+                    converted_minutes = converted_minutes < 10 ? '0' + converted_minutes : converted_minutes;
+                    var strTime = converted_hours + ':' + converted_minutes + ' ' + ampm;
+
+                    ///////////////////////////////////////////////////////////////////////////////
+
+
+
+                    //var fullDate = ('0' + tmpDate.getDate()).slice(-2) + '.' + ('0' + (tmpDate.getMonth() + 1)).slice(-2) + '.' + tmpDate.getFullYear();
+
+                    var fullDate = ('0' + (tmpDate.getMonth() + 1)).slice(-2) + '-' + ('0' + tmpDate.getDate()).slice(-2) + '-' + tmpDate.getFullYear();
+                    //var fulltime = ('0' + hours).slice(-2) + ':' + ('0' + min).slice(-2);
+                    var fulltime = ('0' + converted_hours).slice(-2) + ':' + ('0' + converted_minutes).slice(-2) + ' ' + ampm;
+
+                    responseObject[i].fullDate = fullDate;
+                    responseObject[i].fullTime = fulltime;
+                    RoomId.value = responseObject[i].roomId;
+                    RegId.value = responseObject[i].regId;
+                    Storage.write("patientRoomId", responseObject[i].roomId);
+
+
+
+                    //  console.log("Tuka treba da se kreiraat objektite: " + JSON.stringify(responseObject[i]));
+
+                }
+                templejt.replaceAll(responseObject);
+
+                //console.log("User vo init load111 " + JSON.stringify(User));
+                patientid = User.PatientId;
+                //console.log("pacientID vo main page " + patientid);
+                //console.log("LOAD");
+                Panel1Visibility.value = "Collapsed";
+            },
+            function(error) {
+                //debug_log("Not Registered");
+                templejt.replaceAll([]);
+                Panel1Visibility.value = "Collapsed";
+                //console.log("404");
+            });
+
+
+    }).catch(function(err) {
+        console.log("Error", err.message);
+
+    }); // kraj na chitanje od storage
 }
 
 
+function loadMore() {
+
+    console.log("LOAD");
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscrollpatient/treatmentitemlistid=" + lastID + "&updown=D&range=10", {
+        method: 'GET',
+        headers: {
+            "Content-type": "application/json",
+            'securityToken2': securityToken2
+        },
+        dataType: 'json'
+    }).then(function(response) {
+        response_ok = response.ok; // Is response.status in the 200-range?
+        return response.json(); // This returns a promise
+    }).then(function(responseObject) {
+        console.log("Success");
+        //console.log(JSON.stringify(responseObject));
+
+        lastID = responseObject[responseObject.length - 1].treatmentItemListId;
+
+        for (var i = 0; i < responseObject.length; i++) {
+
+            if (responseObject[i].responseInfo != null) {
+                var label = responseObject[i].label;
+                // console.log("LABEL " + responseObject[i].label);
+                if (label == "Comparison With Picture" || label == "X Percription" || label == "Diet" || label == "Activity" || label == "Hygiene" || label == "Other Instructions") {
+
+                    if (responseObject[i].responseInfo != null) {
+
+                        responseObject[i].response1 = JSON.parse(responseObject[i].responseInfo).response;
+
+
+                    } else {
+                        responseObject[i].response1 = null;
+                        // responseObject[i].responseInfo = null;
+                    }
+
+                    responseObject[i].response1 = JSON.parse(responseObject[i].responseInfo).response;
+                } else if (label == "Send Image") {
+                    //**** if response info containt image sent
+                    if (responseObject[i].responseInfo != null) {
+                        responseObject[i].responseInfoSendImage = "Image sent";
+                    } else {
+                        responseObject[i].responseInfoSendImage = null;
+                    }
+                } else if (label == "Blood Pressure") {
+
+                    if (responseObject[i].responseInfo != null) {
+
+
+
+                        responseObject[i].responseBloodPressure = JSON.stringify(responseObject[i].responseInfo);
+
+                        var systolic = JSON.parse(JSON.parse(responseObject[i].responseBloodPressure)).systolicNumber;
+                        var diastolic = JSON.parse(JSON.parse(responseObject[i].responseBloodPressure)).diastolicNumber;
+
+                        var response2 = systolic + "/" + diastolic;
+
+
+                        responseObject[i].response2 = systolic + "/" + diastolic;
+
+                    } else {
+                        responseObject[i].response2 = null;
+                        // responseObject[i].responseInfo = null;
+                    }
+
+
+                }
+
+            }
+
+
+
+            var tmpDate = new Date(responseObject[i].timeScheduled);
+
+            var days = tmpDate.getDate();
+            var months = tmpDate.getMonth() + 1;
+            var year = tmpDate.getFullYear();
+            var hours = tmpDate.getHours();
+
+            if (hours == "00") {
+                hours = "23";
+            } else {
+                hours = hours - 1;
+            }
+            var min = tmpDate.getMinutes();
+
+            ////////////////////////////////////////////////////////////////////
+            var converted_hours = tmpDate.getHours();
+            var converted_minutes = tmpDate.getMinutes();
+            var ampm = converted_hours >= 12 ? 'PM' : 'AM';
+            converted_hours = converted_hours % 12;
+            converted_hours = converted_hours ? converted_hours : 12; // the hour '0' should be '12'
+            converted_minutes = converted_minutes < 10 ? '0' + converted_minutes : converted_minutes;
+            var strTime = converted_hours + ':' + converted_minutes + ' ' + ampm;
+
+            ///////////////////////////////////////////////////////////////////////////////
+
+
+            //var fullDate = ('0' + tmpDate.getDate()).slice(-2) + '.' + ('0' + (tmpDate.getMonth() + 1)).slice(-2) + '.' + tmpDate.getFullYear();
+
+            var fullDate = ('0' + (tmpDate.getMonth() + 1)).slice(-2) + '-' + ('0' + tmpDate.getDate()).slice(-2) + '-' + tmpDate.getFullYear();
+            //var fulltime = ('0' + hours).slice(-2) + ':' + ('0' + min).slice(-2);
+            var fulltime = ('0' + converted_hours).slice(-2) + ':' + ('0' + converted_minutes).slice(-2) + ' ' + ampm;
+
+
+            responseObject[i].fullDate = fullDate;
+            responseObject[i].fullTime = fulltime;
+
+
+
+            templejt.add(responseObject[i])
+        }
+
+    }).catch(function(err) {
+        console.log("Error", err.message);
+
+    });
+}
+
+
+function loadMore1() {
+
+    //console.log("LOAD111111");
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/treatmentitemlistscrollpatient/treatmentitemlistid=" + firstID + "&updown=U&range=10", {
+        method: 'GET',
+        headers: {
+            "Content-type": "application/json",
+            'securityToken2': securityToken2
+        },
+        dataType: 'json'
+    }).then(function(response) {
+        response_ok = response.ok; // Is response.status in the 200-range?
+        return response.json(); // This returns a promise
+    }).then(function(responseObject) {
+        console.log("Success");
+        //console.log(JSON.stringify(responseObject));;
+        if (responseObject.length == 10) {
+            scrollPos.value = [0, 80];
+        };
+        firstID = responseObject[0].treatmentItemListId;
+
+        for (var i = responseObject.length - 1; i >= 0; i--) {
+
+            if (responseObject[i].responseInfo != null) {
+                var label = responseObject[i].label;
+                //console.log("LABEL " + responseObject[i].label);
+                if (label == "Comparison With Picture" || label == "X Percription" || label == "Diet" || label == "Activity" || label == "Hygiene" || label == "Other Instructions") {
+
+                    if (responseObject[i].responseInfo != null) {
+
+                        responseObject[i].response1 = JSON.parse(responseObject[i].responseInfo).response;
+
+
+                    } else {
+                        responseObject[i].response1 = null;
+                        // responseObject[i].responseInfo = null;
+                    }
+
+                    responseObject[i].response1 = JSON.parse(responseObject[i].responseInfo).response;
+                } else if (label == "Send Image") {
+                    //**** if response info containt image sent
+                    if (responseObject[i].responseInfo != null) {
+                        responseObject[i].responseInfoSendImage = "Image sent";
+                    } else {
+                        responseObject[i].responseInfoSendImage = null;
+                    }
+                } else if (label == "Blood Pressure") {
+
+                    if (responseObject[i].responseInfo != null) {
+
+
+                        responseObject[i].responseBloodPressure = JSON.stringify(responseObject[i].responseInfo);
+
+                        var systolic = JSON.parse(JSON.parse(responseObject[i].responseBloodPressure)).systolicNumber;
+                        var diastolic = JSON.parse(JSON.parse(responseObject[i].responseBloodPressure)).diastolicNumber;
+
+
+                        var response2 = systolic + "/" + diastolic;
+
+
+                        responseObject[i].response2 = systolic + "/" + diastolic;
+
+
+                    } else {
+                        responseObject[i].response2 = null;
+                        // responseObject[i].responseInfo = null;
+                    }
+
+
+                }
+
+            }
+
+            var tmpDate = new Date(responseObject[i].timeScheduled);
+
+            var days = tmpDate.getDate();
+            var months = tmpDate.getMonth() + 1;
+            var year = tmpDate.getFullYear();
+            var hours = tmpDate.getHours();
+            if (hours == "00") {
+                hours = "23";
+            } else {
+                hours = hours - 1;
+            }
+            var min = tmpDate.getMinutes();
+
+            ////////////////////////////////////////////////////////////////////
+            var converted_hours = tmpDate.getHours();
+            var converted_minutes = tmpDate.getMinutes();
+            var ampm = converted_hours >= 12 ? 'PM' : 'AM';
+            converted_hours = converted_hours % 12;
+            converted_hours = converted_hours ? converted_hours : 12; // the hour '0' should be '12'
+            converted_minutes = converted_minutes < 10 ? '0' + converted_minutes : converted_minutes;
+            var strTime = converted_hours + ':' + converted_minutes + ' ' + ampm;
+
+            ///////////////////////////////////////////////////////////////////////////////
+
+
+
+            var fullDate = ('0' + (tmpDate.getMonth() + 1)).slice(-2) + '-' + ('0' + tmpDate.getDate()).slice(-2) + '-' + tmpDate.getFullYear();
+            // var fullDate = ('0' + tmpDate.getDate()).slice(-2) + '.' + ('0' + (tmpDate.getMonth() + 1)).slice(-2) + '.' + tmpDate.getFullYear();
+            //var fulltime = ('0' + hours).slice(-2) + ':' + ('0' + min).slice(-2);
+            var fulltime = ('0' + converted_hours).slice(-2) + ':' + ('0' + converted_minutes).slice(-2) + ' ' + ampm;
+
+
+            responseObject[i].fullDate = fullDate;
+            responseObject[i].fullTime = fulltime;
+            //**** if response info containt image sent
+            /*   if (responseObject[i].responseInfo != null) {
+                   responseObject[i].responseInfoSendImage = "Image sent";
+               } else {
+                   responseObject[i].responseInfoSendImage = null;
+               }*/
+
+            templejt.insertAt(0, responseObject[i])
+        }
+
+
+    }).catch(function(err) {
+        console.log("Error", err.message);
+
+    });
+}
+
+function setResponse(arg) {
+    var label = arg.data.label;
+    var time = arg.data.fullTime;
+    var dateTreatment = new Date(arg.data.timeScheduled);
+    var now = new Date();
+    var patientTreatmentHours = dateTreatment.getHours();
+    var nowDayMonth = now.getDate() + "" + now.getMonth();
+    var patientTreatmentDayMonth = dateTreatment.getDate() + "" + dateTreatment.getMonth();
+    var razlikaPast = 0;
+    var razlikaFuture = 0;
+
+    if (now > dateTreatment) {
+        razlikaPast = (now.getTime() % dateTreatment.getTime()) / 3600000;
+        console.log(" Pogolem e segasniot " + razlikaPast);
+    } else {
+        razlikaFuture = (dateTreatment.getTime() % now.getTime()) / 3600000;
+        console.log(" Pogolem e od itemot " + razlikaFuture);
+    }
+
+    if (razlikaPast < 9 && razlikaFuture < 1) {
+        console.log("Moze da se odgovara");
+
+        if (label == "Blood Pressure") {
+            router.goto("BloodPressure", {
+                "treatmentitemlist": arg.data
+            });
+        } else if (label == "Temperature") {
+            // router.goto("TempPulse");
+            router.goto("Temperature", {
+                "treatmentitemlist": arg.data
+            });
+        } else if (label == "Pain") { // here
+            // router.goto("TempPulse");        // here
+            router.goto("PainLevel", { // here
+                "treatmentitemlist": arg.data // here
+            });
+        } else if (label == "Heart rate") {
+            //console.log("hear rate");
+            router.goto("HeartRate", {
+                "treatmentitemlist": arg.data
+            });
+
+        } else if (label == "Send Image") {
+
+            if ((arg.data.status == "FUTURE") || (arg.data.status == "EXPIRED")) {
+                //  console.log("send image FUTURE");
+                router.goto("SendImagePage", {
+                    "treatmentitemlist": arg.data
+                });
+
+            } else if (arg.data.status == "DONE") {
+                // console.log("send image DONE");
+                if (arg.data.responseInfo != null) {
+                    responseInfo1.value = "imageSent";
+                }
+                // console.log("labelata Image sent " + (arg.data.responseInfo));
+                router.goto("ShowImage", {
+                    "num": Math.random(),
+                    "treatmentitemlist": arg.data
+                });
+            }
+        } else if (arg.data.label == "Comparison With Picture") {
+            var parsData = JSON.parse(JSON.parse(arg.data.renderingInfo));
+            //console.log("Comparison With Picture seeResponse function: " + JSON.stringify(arg.data.treatmentItemListId));
+            Storage.write("patientRoomId", RoomId.value);
+            router.goto("ShowImageCompared", {
+                "num": Math.random(),
+                "data": parsData,
+                "treatmentitemlist": arg.data,
+                "treatmentitemlistId": arg.data.treatmentItemListId,
+                "RoomId": RoomId.value
+            });
+            initload();
+
+        } else if (label == "X Percription" || label == "Diet" || label == "Activity" || label == "Hygiene" || label == "Other Instructions") {
+            skip(arg);
+        }
+    } else {
+        console.log("The window to answer this question is closed ");
+        myToast.toastIt("The window to answer this question is closed ");
+    }
+} // end function
+
+
+
+function skip(arg) {
+    var label = arg.data.label;
+    var text = "";
+    var textYes = "";
+    var textNo = "";
+    //console.log("medicine " + medicine.medicinename);
+    if (label == "Diet") {
+        //console.log("labelata " + arg.data.label);
+        var diet = JSON.parse(JSON.parse(arg.data.renderingInfo));
+        text = "Did you follow advices for diet: " + diet.diet + "?";
+        textYes = "Followed advice for diet.";
+        textNo = " Not Followed advice for diet.";
+    } else if (label == "Activity") {
+        //console.log("labelata " + arg.data.label);
+        var activity = JSON.parse(JSON.parse(arg.data.renderingInfo));
+        text = "Did you follow advices for activity: " + activity.activity + "?"
+        textYes = "Followed advice for activity.";
+        textNo = " Not Followed advice for activity.";
+    } else if (label == "Hygiene") {
+        //console.log("labelata " + arg.data.label);
+        var hygiene = JSON.parse(JSON.parse(arg.data.renderingInfo));
+        text = "Did you follow advices for hygiene: " + hygiene.hygiene + "?"
+        textYes = "Followed advice for hygiene.";
+        textNo = " Not Followed advice for hygiene.";
+    } else if (label == "X Percription") {
+        //console.log("labelata " + arg.data.label);
+        var medicine = JSON.parse(JSON.parse(arg.data.renderingInfo));
+        text = "Did you take " + medicine.medicinename + "?";
+        textYes = "Medicine " + medicine.medicinename + " taken.";
+        textNo = " Medicine " + medicine.medicinename + " not taken.";
+    }
+    //else if (label == "Comparison With Picture") {
+    //     console.log("labelata comparision" + arg.data.label);
+    //     var comparision = JSON.parse(JSON.parse(arg.data.renderingInfo));
+    //     console.log("tekst " + comparision.comparisionquestion);
+    //     text = "Did you compare?";
+    //     textYes = "Compared with picture.";
+    //     textNo = "Not comparison with picture.";
+    // } 
+    else {
+
+        var instructions = JSON.parse(JSON.parse(arg.data.renderingInfo));
+        text = "Did you follow advices for other instructions: " + instructions.otherinstruction + "?"
+
+        textYes = "Followed advices for other instructions.";
+        textNo = "Not followed advices for other instructions.";
+
+    }
+
+
+
+    Modal.showModal(
+        " ",
+        text, ["Yes", "No"],
+        function(s) {
+            // console.log("s" + s)
+            if (s == "Yes") {
+                var responseInfo = {
+                    "response": s
+                }
+                var data = {
+                    "createdBy": arg.data.createdBy,
+                    "status": "DONE",
+                    "treatmentItemListId": arg.data.treatmentItemListId,
+                    "created": arg.data.created,
+                    "modifiedBy": arg.data.modifiedBy,
+                    "responseInfo": JSON.stringify(responseInfo)
+                };
+                //////////////////
+                //fetch
+                Panel1Visibility.value = "Visible";
+
+                fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + arg.data.treatmentItemListId, {
+                    method: 'POST',
+                    headers: {
+                        "Content-type": "application/json",
+                        'securityToken2': securityToken2
+                    },
+                    dataType: 'json',
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    status = response.status; // Get the HTTP status code
+                    console.log('status', status);
+                    return response.json(); // This returns a promise
+                }).then(function(responseObject) {
+                    Panel1Visibility.value = "Visible";
+                    console.log("Success");
+                    //console.log(JSON.stringify(responseObject));
+                    // init();
+                    //  router.goto("main", JSON.stringify(obj));
+                    //RoomId.value = param.treatmentitemlist.roomId;
+                    //console.log("Ova e roomid vo main page: "+param.treatmentitemlist.roomId);
+                    SendMessage.createSession(RoomId.value, textYes);
+
+                    if (arg.data.notificationEnabled == 1) {
+                        SendNotification.sendPushNotification(
+                            User.FirstName + " " + User.LastName,
+                            textYes,
+                            textYes,
+                            "Curandus",
+                            arg.data.regId,
+                            RoomId.value,
+                            User.FirstName + " " + User.LastName,
+                            User.ChatId);
+                    }
+
+                    initload();
+                    //console.log("responseObject= " + JSON.stringify(responseObject));
+                }).catch(function(err) {
+                    console.log("Error", err.message);
+                    Panel1Visibility.value = "Collapsed";
+                });
+                /////////////////
+
+                //console.log("tuka vo if");
+                // statusFunc(item.data.treatmentItemListId);
+            } //if s=YES
+            else {
+
+                var responseInfo = {
+                    "response": s
+                }
+
+
+                var data = {
+                    "createdBy": arg.data.createdBy,
+                    "status": "DONE",
+                    "treatmentItemListId": arg.data.treatmentItemListId,
+                    "created": arg.data.created,
+                    "modifiedBy": arg.data.modifiedBy,
+                    "responseInfo": JSON.stringify(responseInfo)
+                }
+
+                //////////////////
+                //fetch
+                Panel1Visibility.value = "Visible";
+
+                fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + arg.data.treatmentItemListId, {
+                    method: 'POST',
+                    headers: {
+                        "Content-type": "application/json",
+                        'securityToken2': securityToken2
+                    },
+                    dataType: 'json',
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    status = response.status; // Get the HTTP status code
+                    //console.log('status', status);
+                    return response.json(); // This returns a promise
+                }).then(function(responseObject) {
+                    Panel1Visibility.value = "Visible";
+                    console.log("Success");
+                    //console.log(JSON.stringify(responseObject));
+                    // init();
+                    //  router.push("main", JSON.stringify(obj));
+                    //console.log("This after update : - roomid: " + responseObject.roomId + " this is the text:" + textNo);
+                    SendMessage.createSession(RoomId.value, textNo);
+
+                    if (arg.data.notificationEnabled == 1) {
+                        SendNotification.sendPushNotification(
+                            User.FirstName + " " + User.LastName,
+                            textNo,
+                            textNo,
+                            "Curandus",
+                            arg.data.regId,
+                            RoomId.value,
+                            User.FirstName + " " + User.LastName,
+                            User.ChatId);
+                    }
+                    initload();
+                }).catch(function(err) {
+                    console.log("Error", err.message);
+                    Panel1Visibility.value = "Collapsed";
+                });
+
+                ///////////////
+
+
+                //console.log("tuka vo else");
+            }
+        });
+}
+
+
+function NavigateBarTimeline() {
+    console.log(" Navigation ");
+    currentPage.value = "page1";
+    if (hasChange.value == 1) {
+        initload();
+        hasChange.value = 0;
+    }
+}
+
+function NavigateBarChat() {
+    console.log(" Chat ");
+    currentPage.value = "page2";
+}
 
 module.exports = {
     errorMessage: errorMessage,
-    backing: backing,
-    dSelected: dSelected,
-    itemsTwo: itemsTwo,
-    AddNewItem: AddNewItem,
-    AddNewItemDoctor: AddNewItemDoctor,
-    editContact: editContact,
-    editContactDoctor: editContactDoctor,
-    activeTab: activeTab,
-    NavigateBar: NavigateBar,
-    NavigateBarContacts: NavigateBarContacts,
+    currentPage: currentPage,
+    NavigateBarTimeline: NavigateBarTimeline,
+    NavigateBarChat: NavigateBarChat,
+    hasNotification: hasNotification,
     isLoading: isLoading,
-    activePage: activePage,
-    deleteStorage: deleteStorage,
     toolbarSearch: toolbarSearch,
-    ////////////// ContactsView.js //////////////////
-    fetchData: fetchData,
-    fetchDataDoctors: fetchDataDoctors,
-    data: data,
-    SubstringName: SubstringName,
-    dataDoctors: dataDoctors,
-    isDoctors: isDoctors,
-    goToSelectType: goToSelectType,
-    goToAddContact: goToAddContact,
-    goToAddDoctors: goToAddDoctors,
-    setDoctors: setDoctors,
-    setPatients: setPatients,
-    goToTreatment: goToTreatment,
-    isLoadingContacts: isLoadingContacts,
-    reloadHandler: reloadHandler,
-    reloadHandlerDoctors: reloadHandlerDoctors,
-    isLoadingDoctors: isLoadingDoctors,
-    goToChat: goToChat,
-    filteredItems: filteredItems,
-    searchString: searchString,
-    searchString1: searchString1,
-    goToDoctorChatDoctor: goToDoctorChatDoctor,
-    goToDoctorChatPatient: goToDoctorChatPatient,
-    deleteDoctor: deleteDoctor,
-    deleteContact: deleteContact,
-    filteredItems1: filteredItems1,
-    imagePath: imagePath,
-    visibility: visibility,
-    makeCall: makeCall,
-    load: load,
-    DoctorsTabColor: DoctorsTabColor,
-    PatientsTabColor: PatientsTabColor,
-    makeCallDoctor: makeCallDoctor
-        ////////////////////////////////
+    templejt: templejt,
+    initload: initload,
+    loadMore: loadMore,
+    loadMore1: loadMore1,
+    setResponse: setResponse,
+    skip: skip,
+    vibration: vibration,
+    responseInfo1: responseInfo1,
+    response1: response1,
+    Panel1Visibility: Panel1Visibility,
+    sendRequestForCall: sendRequestForCall,
+    goBack: goBack,
+    sendNow: sendNow,
+    scrollPos: scrollPos,
+    sendLater: sendLater,
+    load: load
 };

@@ -3,7 +3,6 @@ var activeUrl = require("Constants/SERVICE_URL.js");
 var myToast = require("myToast");
 //var Modal = require('Modal');
 var SendMessage = require("Scripts/SendMessage.js");
-var securityToken = require('Pages/ActivationPage/ActivationPage.js');
 var response = Observable();
 var item = Observable();
 var RoomId = Observable();
@@ -13,6 +12,7 @@ var load = Observable("Saving...");
 var SendNotification = require('Scripts/SendNotification.js');
 var RegId = Observable();
 var Storage = require("FuseJS/Storage");
+var securityToken2 = Storage.readSync("securityToken2");
 var User = {};
 
 
@@ -82,10 +82,11 @@ function saveFunc() {
     fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId, {
         method: 'POST',
         headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            'securityToken2': securityToken2
         },
         dataType: 'json',
-        body: JSON.stringify(data, securityToken.value)
+        body: JSON.stringify(data)
     }).then(function(response) {
         visibility.value = "Visible";
         status = response.status; // Get the HTTP status code

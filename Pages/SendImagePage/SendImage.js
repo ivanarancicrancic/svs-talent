@@ -4,8 +4,8 @@ var CameraRoll = require("FuseJS/CameraRoll");
 var Camera = require("FuseJS/Camera");
 var ImageTools = require("FuseJS/ImageTools");
 var Storage = require("FuseJS/Storage");
+var securityToken2 = Storage.readSync("securityToken2");
 var myToast = require("myToast");
-var securityToken = Storage.readSync("securityToken");
 var imagePath = Observable("../../Assets/placeholder.png");
 var imageName = Observable();
 var imageSize = Observable();
@@ -163,10 +163,11 @@ function updatePatient(brojSlika) {
 
     console.log("so ova se povikuva update na sendData.treatmentItemListId: " + JSON.stringify(data));
 
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + sendData.value.treatmentItemListId + "&securityToken=" + securityToken, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + sendData.value.treatmentItemListId, {
         method: 'POST',
         headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            'securityToken2': securityToken2
         },
         dataType: 'json',
         body: JSON.stringify(data)
@@ -227,12 +228,13 @@ function SendImage() {
         };
         visibility.value = "Visible";
 
-        var url1 = activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage/securityToken=" + securityToken;
+        var url1 = activeUrl.URL + "/curandusproject/webapi/api/inserttreatmentitemimage";
         //var url1 = "http://192.168.0.110:8080/curandusproject/webapi/api/inserttreatmentitemimage";
         fetch(url1, {
             method: 'POST',
             headers: {
-                "Content-type": "application/json"
+                "Content-type": "application/json",
+                'securityToken2': securityToken2
             },
             dataType: 'json',
             body: JSON.stringify(tmp)

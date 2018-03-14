@@ -1,8 +1,6 @@
 var Observable = require("FuseJS/Observable");
 var activeUrl = require("Constants/SERVICE_URL.js");
 var Modal = require('Modal');
-var Storage = require("FuseJS/Storage");
-var securityToken = Storage.readSync("securityToken");
 var response = Observable();
 var item = Observable();
 var imageUrl = Observable();
@@ -16,6 +14,7 @@ var visibility = Observable("Collapsed");
 var SendNotification = require('Scripts/SendNotification.js');
 var RegId = Observable();
 var Storage = require("FuseJS/Storage");
+var securityToken2 = Storage.readSync("securityToken2");
 var User = {};
 
 
@@ -55,10 +54,11 @@ function updatePatientAnswerNo() {
     //////////////////
 
     //fetch
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + treatmentItemListId_temp.value + "&securityToken=" + securityToken, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + treatmentItemListId_temp.value, {
         method: 'POST',
         headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            'securityToken2': securityToken2
         },
         dataType: 'json',
         body: JSON.stringify(data1)
@@ -98,10 +98,11 @@ function updatePatientAnswerYes() {
     //////////////////
     //fetch
 
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + treatmentItemListId_temp.value + "&securityToken=" + securityToken, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + treatmentItemListId_temp.value, {
         method: 'POST',
         headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            'securityToken2': securityToken2
         },
         dataType: 'json',
         body: JSON.stringify(data1)

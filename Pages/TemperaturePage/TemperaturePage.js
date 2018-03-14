@@ -2,8 +2,6 @@ var Observable = require("FuseJS/Observable");
 var activeUrl = require("Constants/SERVICE_URL.js");
 var myToast = require("myToast");
 var Modal = require('Modal');
-var Storage = require("FuseJS/Storage");
-var securityToken = Storage.readSync("securityToken");
 var response = Observable(97.0);
 var item = Observable();
 var RoomId = Observable();
@@ -14,6 +12,7 @@ var color = Observable("#00BCD4");
 var SendNotification = require('Scripts/SendNotification.js');
 var RegId = Observable();
 var Storage = require("FuseJS/Storage");
+var securityToken2 = Storage.readSync("securityToken2");
 var User = {};
 
 this.onParameterChanged(function(param) {
@@ -91,10 +90,11 @@ function saveFunc() {
 
     visibility.value = "Visible";
 
-    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId + "&securityToken=" + securityToken, {
+    fetch(activeUrl.URL + "/curandusproject/webapi/api/updatetreatmenitemlist/TreatmentItemListId=" + data.treatmentItemListId, {
         method: 'POST',
         headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            'securityToken2': securityToken2
         },
         dataType: 'json',
         body: JSON.stringify(data)
