@@ -1,0 +1,259 @@
+<DefaultPage ux:Class="MainPage" >
+    <JavaScript File="MainPage.js" />
+    <Router ux:Dependency="router" />
+    <Match Value="{Panel1Visibility}">
+        <Case String="Visible">
+            <LoadingPage> </LoadingPage>                
+        </Case>
+        <Case String="Collapsed">
+        <DockPanel>
+            <WhileTrue Value="{hasNotification}">
+                <PlaySound File="../../Assets/Sounds/sound.mp3"/> 
+            </WhileTrue>    
+            <!-- LOADING -->
+            <!-- <Panel ux:Name="Panel1" Visibility="{Panel1Visibility}">            
+                <Circle ux:Name="rotatingStroke" Height="80" StartAngleDegrees="-45" EndAngleDegrees="180">
+                    <Stroke Width="2" Color="White" >
+                        <LinearGradient>
+                            <GradientStop Offset="0" Color="White" />
+                            <GradientStop Offset="1" Color="White" />
+                        </LinearGradient>
+                    </Stroke>
+                </Circle>
+
+                <WhileFalse>                
+                    <Spin Target="rotatingStroke" Frequency="1" />
+                </WhileFalse>
+               
+                <Text Color="#fff6" Alignment="Bottom" TextAlignment="Center" Margin="0,40" FontSize="25">Loading ... </Text>
+            </Panel> -->
+
+            <Panel ux:Class="Divider">
+                <Rectangle ux:Name="spacer" Height="1" Alignment="Bottom" Color="divider" Margin="10,0" />
+            </Panel>
+            <!-- <ToolbarRequestCall Color="primary" Title="Curandus" Icon="&#xE5D2;" router="router" HasSearchButton="true"/> -->
+            <!-- <StackPanel> -->
+                
+
+                <DockPanel >
+                    <Panel ux:Class="Tab" ux:Name="self" ClipToBounds="false" Margin="0,0,0,3" Color="primary">
+                        <string ux:Property="Text" />
+                        <Text Value="{Property self.Text}" TextColor="#FFFFFF" Font="medium" Alignment="Center" />
+                    </Panel>
+                    <StackPanel Dock="Top" Color="primary">
+                        <!-- Od tuka toolbar izmeneto vo kod poradi request for call -->               
+                        <DockPanel  ux:Name="mainDock" Height="56" Padding="0, 0" Color="primary">
+                               
+                            <Rectangle ux:Name="callBtn" Width="50%" Alignment="Right" Clicked="{sendRequestForCall}">
+                                <DockPanel>
+                                    <Text Alignment="CenterLeft" Margin="45,0,0,0" TextWrapping="Wrap" Color="White" Font="regular" FontSize="16">Request call</Text>
+                                    <Icon FontSize="25" Margin="0,0,20,0" Alignment="CenterRight">&#xE0B0;</Icon> 
+                                </DockPanel>
+                                <Clicked>
+                                    <Move X="3" Y="3" Duration="0.2" Easing="BackOut" />
+                                </Clicked>          
+                            </Rectangle>                       
+                                
+                            <Panel Dock="Left">                            
+                                <Rectangle Width="56" Height="56" Clicked="{OpenMenu}" HitTestMode="LocalBounds">
+                                    <Icon FontSize="24" Alignment="Center">&#xE5D2;</Icon>
+                                </Rectangle>                        
+                            </Panel>
+                            <Text Value="Curandus" Alignment="CenterLeft" Font="medium" FontSize="20" Margin="16,0" TextColor="#fff" />                      
+                        </DockPanel>
+                        <!-- do tuka toolbar end *****************-->
+                        <MultiLayoutPanel Height="48" ux:Name="tabBar">
+                            <GridLayout ColumnCount="2" Rows="1*"/>
+                            <Panel ux:Name="page1Tab">
+                                <Placeholder>
+                                    <Rectangle ux:Name="indicator" Alignment="Bottom" Height="3" Fill="#ffffff">
+                                        <LayoutAnimation>
+                                            <Move RelativeTo="LayoutChange" X="1" Duration="0.3" Easing="BackIn"/>
+                                        </LayoutAnimation>
+                                    </Rectangle>
+                                </Placeholder>
+                                <Tab Text="TREATMENT TIMELINE">
+                                    <Clicked>
+                                        <Callback Handler="{NavigateBarTimeline}" />
+                                        <Set navigation.Active="{currentPage}" />
+                                    </Clicked>
+                                </Tab>
+                            </Panel>
+                            <Panel ux:Name="page2Tab">
+                                <Placeholder Target="indicator"/>
+                                <Tab Text="CHAT">
+                                    <Clicked>
+                                        <Callback Handler="{NavigateBarChat}" />
+                                        <Set navigation.Active="{currentPage}" />
+                                    </Clicked>
+                                </Tab>
+                            </Panel>
+                        </MultiLayoutPanel>
+                        <DropShadow/>
+                    </StackPanel>
+                    <PageControl ux:Name="navigation" Active="{currentPage}">
+                        <WhileActive Threshold="0.5">
+                            <Callback Handler="{sendNow}" />
+                        </WhileActive>
+                        <Text ux:Class="WelcomeText" FontSize="30" Alignment="Center"/>
+                        <Page Name="page1" Color="background_color">
+                            <WhileActive Threshold="0.5">
+                                <Callback Handler="{sendNow}" />
+                                <Set tabBar.LayoutElement="page1Tab" />
+                            </WhileActive>
+                            <!-- <JavaScript File="../ContactsView/ContactsView.js" /> -->
+
+                           
+                    
+                    <Rectangle Color="primary">
+                        <FloatingButton Alignment="BottomRight" BtnColor="#FF5722" BtnIcon="&#xE627;" Clicked="{sendNow}" BtnTextColor="icons" />
+                        <ScrollView  ClipToBounds="true" Width="100%" ScrollPosition="{scrollPos}">
+                            <StackPanel Color="primary">
+                                <Each Items="{templejt}">
+                                    <Rectangle Width="90%" Height="64" Color="White" Margin="0,16,0,0" CornerRadius="8"  Clicked="{setResponse}" HitTestMode="LocalVisual">
+                                        <Deferred>
+                                            <DockPanel >
+                                                <Match Value="{status}">
+                                                    
+                                                    <Case String="FUTURE">
+                                                        <Rectangle Dock="Left" Height="100%" Width="10" Color="lightgreen" CornerRadius="8,0,0,8"/>
+                                                    </Case>
+                                                    <Case String="DONE">
+                                                        <Rectangle Dock="Left" Height="100%" Width="10" Color="done" CornerRadius="8,0,0,8"/>
+                                                    </Case>
+                                                    <Case String="EXPIRED">
+                                                        <Rectangle Dock="Left" Height="100%" Width="10" Color="future" CornerRadius="8,0,0,8"/>
+                                                    </Case>
+                                                </Match>
+                                                <StackPanel Dock="Left">
+                                                    <StackPanel Dock="Left" Height="100%" Width="120" Color="White" Orientation="Horizontal" Padding="10,2,0,0">
+                                                        <Text Alignment="Left" Font="regular" FontSize="12" Value="Date: " Color="primary" Margin="0,10,0,0" />
+                                                        <Text Alignment="Left" Font="medium"  FontSize="12" Value="{fullDate}" Color="primary" Margin="0,10,0,0" />
+                                                    </StackPanel>
+                                                    <StackPanel Dock="Left" Height="100%" Width="120" Color="White" Orientation="Horizontal" Padding="10,2,0,0">
+                                                        <Text Alignment="Left" Font="regular" FontSize="12" Value="Time: " Color="primary" Margin="0,10,0,0" />
+                                                        <Text Alignment="Left" Font="medium"  FontSize="12" Value="{fullTime}" Color="primary" Margin="0,10,0,0" />
+
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <Rectangle Dock="Left" Width="1" Height="60" Color="divider"/>
+                                               
+                                                <StackPanel Dock="Left" Height="100%" Color="White">
+                                                    <StackPanel Dock="Left" Height="100%" Width="120" Color="White" Orientation="Horizontal" Padding="10,2,0,0">
+                                                        <Text Alignment="Left" Font="regular" FontSize="12" Value="Doctor: " Color="primary" Margin="0,10,0,0" />
+                                                        <Text Alignment="Left" TextAlignment="Center" Font="medium"  FontSize="12" Value=" {providername}" Color="lightgreen" Margin="10,10,0,0" />
+                                                    </StackPanel>
+                                                    <StackPanel Dock="Left" Height="100%" Width="120" Color="White" Orientation="Horizontal" Padding="10,2,0,0">
+                                                        <Text Alignment="Left" Font="regular" FontSize="12" Value="{label}" Color="primary" Margin="0,10,0,0" />
+                                                        
+                                                        <!-- if response is image  -->
+                                                        <Match Value="{label}">
+                                                            <Case String="Send Image">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{responseInfoSendImage}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Comparison With Picture">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{response1}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Temperature">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{responseInfo}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Blood Pressure">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{response2}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Heart rate">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{responseInfo}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Pain">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{responseInfo}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="X Percription">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{response1}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Diet">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{response1}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Activity">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{response1}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Hygiene">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{response1}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                            <Case String="Other Instructions">
+                                                                <Text Alignment="Left" Font="medium"  FontSize="12" Value="{response1}" Color="lightorange" Margin="10,10,0,0" />
+                                                            </Case>
+                                                           
+                                                        </Match>
+                                                        <!-- **** -->
+                                                        
+                                                        
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Deferred>
+                                    </Rectangle>
+                                </Each>
+
+                            </StackPanel>
+                            <Scrolled To="End" Within="200">
+                                <Callback Handler="{loadMore}" />
+                            </Scrolled>
+                            <Scrolled To="Start">
+                                <Callback Handler="{loadMore1}" />
+                            </Scrolled>
+
+                        </ScrollView>
+
+                    </Rectangle>
+                           
+                        </Page>
+                        <Page Name="page2" Color="background_color">
+                            <WhileActive Threshold="0.5">
+                                <Set tabBar.LayoutElement="page2Tab" />
+                            </WhileActive>
+                            <!-- <ChatsView router="router" />-->
+                            <JavaScript File="../ChatsView/ChatsView.js" />
+                            <FloatingButton Alignment="BottomRight" BtnColor="#FF5722" BtnIcon="&#xE627;" Clicked="{getDialogs}" BtnTextColor="icons" />
+                            <ScrollView ClipToBounds="true">
+                                <StackPanel Orientation="Vertical">
+                                    <!-- <Button Clicked="{signIn}" Text="signIn"></Button> -->
+                                    <Each Items="{dialogs}">
+                                        <DockPanel Margin="7,1,7,0" Clicked="{goToDoctorChat}" ux:Name="alertitem">
+                                            <WhileHovering>
+                                                <Change alertitem.Color="divider" />
+                                            </WhileHovering>
+                                              <WhileTrue Value="{hasNotification}">
+                                                <PlaySound File="../../Assets/Sounds/sound.mp3"/> 
+                                            </WhileTrue> 
+                                            <Circle Height="60" Width="60" Dock="Left" Margin="12,12,0,12" Alignment="TopLeft">
+                                                <ImageFill File="../../Assets/placeholder.png" />
+                                                <Match Value="{unread_messages_count}">
+                                                    <Case Number="0"></Case>
+                                                    <Case Number="1" IsDefault="true">
+                                                        <Circle Height="16" Width="16" Alignment="TopRight" Color="online">
+                                                            <Text Value="{unread_messages_count}" FontSize="12" Alignment="TopCenter" Margin="0,1,0,0"></Text>
+                                                        </Circle>
+                                                    </Case>
+                                                </Match>
+                                            </Circle>
+                                            <StackPanel Margin="12,12,7,7">
+                                                <Text Font="medium" Value="{namenovo}" FontSize="17" TextColor="primary" />
+                                                <Text TextWrapping="Wrap" Font="medium" Value="{last_message}" FontSize="13" TextColor="#212121" />
+                                                <Text Font="medium" Value="{minutes}" FontSize="10" TextColor="secondary_text" />
+                                            </StackPanel>
+
+                                        </DockPanel>
+                                        <Rectangle Height="1" Alignment="Bottom" Color="divider" Margin="20,0"/>
+                                    </Each>
+                                </StackPanel>
+                            </ScrollView>
+                            <!-- <ChatsView router="router" /> -->
+                        </Page>
+                    </PageControl>
+                </DockPanel>
+      <!--       </StackPanel> -->
+        </DockPanel>
+    </Case>
+</Match>
+       
+
+</DefaultPage>
